@@ -1,0 +1,14 @@
+.sideBar{
+    flex: 1;
+    height: calc(100vh - 50px);
+    position: sticky;
+    top: 50px;
+}
+.color-backgroundIcon{
+    color:rgba(58,65,111,0.90);
+}
+.nav-link.active .color-backgroundIcon {
+color: aliceblue;
+}
+
+

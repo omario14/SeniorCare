@@ -1,0 +1,28 @@
+.topbarWrapper{
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.topbar{
+    background-color: rgb(255, 255, 255);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+.topLeft{
+    flex: 1;
+    padding-top: 0.40625rem;
+    padding-bottom: 0.40625rem;
+    margin-right: 1rem;
+    font-size: 1.125rem;
+    white-space: nowrap;
+}
+
+
+.topRight{
+    flex: 4;
+    margin-top: 0;
+    z-index: 999;
+}
