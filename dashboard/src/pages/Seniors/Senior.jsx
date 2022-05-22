@@ -1,305 +1,367 @@
 
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { NavLink } from "react-router-dom";
+import TopBar from "../../components/TopBar/TopBar";
+import seniorService from "../../services/senior.service";
 import { TabTitle } from "../../utils/GeneralFunctions";
+import { Modal, Button, Form } from 'react-bootstrap';
+import Dialog from "./dialogDelete";
 import "./Senior.css";
 
-export default function Senior() {
-TabTitle('Senior');
+class Senior extends Component {
+    constructor(props) {
+        super(props);
+
+        this.handleDialog = this.handleDialog.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
+
+        this.myRef = React.createRef();
+        this.state = {
+
+            seniors: [""],
+            message: "",
+            isLoading: false,
+            editDialog: false,
+            senior: null,
+            name: "",
+            lastName: "",
+            telephone: "",
+            sexOption: "",
+            birthDate: "",
+            interests: "",
+            cin: "",
+
+
+        };
+    }
+
+
+    componentDidMount() {
+        seniorService.getAll()
+            .then(res => {
+                const seniors = res.data;
+                this.setState({ seniors });
+            })
+    }
     
-    return (
-        <div className="seniorList">
-            
-            <div class="row">
-                <div class="col-12">
-                    <div class="card mb-4">
-                        <div class="card-header pb-0">
-                            <h6>Senior table</h6>
-                        </div>
-                        <div class="card-body px-0 pt-0 pb-2">
-                            <div class="table-responsive p-0">
-                                <table class="table align-items-center mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Senior
-                                            </th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Function
-                                            </th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Status
-                                            </th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Employed
-                                            </th>
-                                            <th class="text-secondary opacity-7"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div>
-                                                        <img
-                                                            src="../assets/img/team-2.jpg"
-                                                            class="avatar avatar-sm me-3"
-                                                            alt="user1"
-                                                        />
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">John Michael</h6>
-                                                        <p class="text-xs text-secondary mb-0">
-                                                            john@creative-tim.com
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">Manager</p>
-                                                <p class="text-xs text-secondary mb-0">Organization</p>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="badge badge-sm bg-gradient-success">
-                                                    Online
-                                                </span>
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                <span class="text-secondary text-xs font-weight-bold">
-                                                    23/04/18
-                                                </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a
-                                                    href="/"
-                                                    class="text-secondary font-weight-bold text-xs"
-                                                    data-toggle="tooltip"
-                                                    data-original-title="Edit user"
-                                                >
-                                                    Edit
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div>
-                                                        <img
-                                                            src="../assets/img/team-3.jpg"
-                                                            class="avatar avatar-sm me-3"
-                                                            alt="user2"
-                                                        />
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Alexa Liras</h6>
-                                                        <p class="text-xs text-secondary mb-0">
-                                                            alexa@creative-tim.com
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">Programator</p>
-                                                <p class="text-xs text-secondary mb-0">Developer</p>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="badge badge-sm bg-gradient-secondary">
-                                                    Offline
-                                                </span>
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                <span class="text-secondary text-xs font-weight-bold">
-                                                    11/01/19
-                                                </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a
-                                                    href="/"
-                                                    class="text-secondary font-weight-bold text-xs"
-                                                    data-toggle="tooltip"
-                                                    data-original-title="Edit user"
-                                                >
-                                                    Edit
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div>
-                                                        <img
-                                                            src="../assets/img/team-4.jpg"
-                                                            class="avatar avatar-sm me-3"
-                                                            alt="user3"
-                                                        />
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Laurent Perrier</h6>
-                                                        <p class="text-xs text-secondary mb-0">
-                                                            laurent@creative-tim.com
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">Executive</p>
-                                                <p class="text-xs text-secondary mb-0">Projects</p>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="badge badge-sm bg-gradient-success">
-                                                    Online
-                                                </span>
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                <span class="text-secondary text-xs font-weight-bold">
-                                                    19/09/17
-                                                </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a
-                                                    href="/"
-                                                    class="text-secondary font-weight-bold text-xs"
-                                                    data-toggle="tooltip"
-                                                    data-original-title="Edit user"
-                                                >
-                                                    Edit
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div>
-                                                        <img
-                                                            src="../assets/img/team-3.jpg"
-                                                            class="avatar avatar-sm me-3"
-                                                            alt="user4"
-                                                        />
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Michael Levi</h6>
-                                                        <p class="text-xs text-secondary mb-0">
-                                                            michael@creative-tim.com
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">Programator</p>
-                                                <p class="text-xs text-secondary mb-0">Developer</p>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="badge badge-sm bg-gradient-success">
-                                                    Online
-                                                </span>
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                <span class="text-secondary text-xs font-weight-bold">
-                                                    24/12/08
-                                                </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a
-                                                    href="/"
-                                                    class="text-secondary font-weight-bold text-xs"
-                                                    data-toggle="tooltip"
-                                                    data-original-title="Edit user"
-                                                >
-                                                    Edit
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div>
-                                                        <img
-                                                            src="../assets/img/team-2.jpg"
-                                                            class="avatar avatar-sm me-3"
-                                                            alt="user5"
-                                                        />
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Richard Gran</h6>
-                                                        <p class="text-xs text-secondary mb-0">
-                                                            richard@creative-tim.com
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">Manager</p>
-                                                <p class="text-xs text-secondary mb-0">Executive</p>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="badge badge-sm bg-gradient-secondary">
-                                                    Offline
-                                                </span>
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                <span class="text-secondary text-xs font-weight-bold">
-                                                    04/10/21
-                                                </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a
-                                                    href="/"
-                                                    class="text-secondary font-weight-bold text-xs"
-                                                    data-toggle="tooltip"
-                                                    data-original-title="Edit user"
-                                                >
-                                                    Edit
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div>
-                                                        <img
-                                                            src="../assets/img/team-4.jpg"
-                                                            class="avatar avatar-sm me-3"
-                                                            alt="user6"
-                                                        />
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Miriam Eric</h6>
-                                                        <p class="text-xs text-secondary mb-0">
-                                                            miriam@creative-tim.com
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <p class="text-xs font-weight-bold mb-0">Programtor</p>
-                                                <p class="text-xs text-secondary mb-0">Developer</p>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="badge badge-sm bg-gradient-secondary">
-                                                    Offline
-                                                </span>
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                <span class="text-secondary text-xs font-weight-bold">
-                                                    14/09/20
-                                                </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a
-                                                    href="/"
-                                                    class="text-secondary font-weight-bold text-xs"
-                                                    data-toggle="tooltip"
-                                                    data-original-title="Edit user"
-                                                >
-                                                    Edit
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+      
+    handleDialog = (message, isLoading) => {
+        this.setState({
+            message: message,
+            isLoading: isLoading,
+            //Update
+
+        });
+    };
+    handleClose = ()=>{
+        this.setState({
+            editDialog: false,
+           
+        })
+    }
+
+    deleteSenior(id) {
+        this.handleDialog("Are you sure you want to delete?", true)
+        this.myRef.current = id;
+    }
+
+    areUSureDelete = (choose) => {
+        if (choose) {
+            const seniors = this.state.seniors.filter(item => item.id !== this.myRef.current);
+            seniorService.delete(this.myRef.current)
+                .then(res => {
+                    console.log(res);
+                    console.log(res.data);
+                    this.setState({
+                        seniors
+                    })
+
+                });
+            this.handleDialog("", false);
+        } else {
+            this.handleDialog("", false);
+        }
+    };
+
+    handleShow = (senior,editDialog) => {
+        this.myRef.current = senior;
+        this.setState({
+            editDialog: editDialog,
+            name: this.myRef.current.name,
+            lastName: this.myRef.current.lastname,
+            cin: this.myRef.current.cin,
+            telephone: this.myRef.current.telephone,
+        })
+
+
+    }
+    handleUpdate = (e) => {
+        e.preventDefault();
+        const id = this.myRef.current.id;
+        let senior = {
+            name: this.state.name,
+            lastname: this.state.lastName,
+            telephone: this.state.telephone,
+            cin: this.state.cin,
+
+        };
+        seniorService.update(id, senior);
+        this.handleClose();
+
+    }
+
+    onChangeName = (e) => {
+        this.setState({
+            name: e.target.value
+            ,
+        })
+    }
+    onChangelastname = (e) => {
+        this.setState({
+            lastName: e.target.value,
+        });
+    }
+    onChangeTelephone = (e) => {
+        this.setState({
+            telephone: e.target.value,
+        });
+    }
+    onChangeSex = (e) => {
+        this.setState({
+            sexOption: e.target.value,
+        });
+    }
+    onChangeBirthDate = (e) => {
+        this.setState({
+            birthDate: e.target.value,
+        });
+    }
+    onChangeInterests = (value) => {
+        this.setState({
+            interests: value,
+        });
+    }
+
+    onChangeCin = (e) => {
+        this.setState({
+            cin: e.target.value,
+        });
+    }
+
+    render() {
+
+        TabTitle('Senior');
+        const { user: currentUser } = this.props;
+        if (!currentUser) {
+            return console.log("Helloo");
+        }
+
+
+        return (
+            <div className="seniorList">
+                <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+                    <TopBar title={'Senior'} />
+                    <div className="container-fluid py-4">
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="card mb-4">
+                                    <div className="card-header pb-0" style={{ display: "flex", justifyContent: "space-between" }}>
+                                        <div><h6>Senior table</h6></div>
+                                        <div>
+                                            <NavLink class="btn btn-primary btn-lg btn-floating" style={{ backgroundColor: "rgba(173, 57, 123,0.4)" }} to="/newSenior" role="button">
+                                                <i class="fa fa-plus" style={{ fontSize: "36px", paddingTop: "8px" }}></i>
+                                            </NavLink>
+
+                                        </div>
+                                    </div>
+                                    <div className="card-body px-0 pt-0 pb-2">
+                                        <div className="table-responsive p-0">
+                                            <table className="table align-items-center mb-0">
+                                                <thead key="thead">
+                                                    <tr key={"thead"}>
+                                                        <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                            Senior
+                                                        </th>
+                                                        <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                            CIN
+                                                        </th>
+                                                        <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                            Sex
+                                                        </th>
+                                                        <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                            Birth Date
+                                                        </th>
+                                                        <th className="text-secondary opacity-7"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody key="tbody">
+                                                    {
+                                                        this.state.seniors
+                                                            .map((senior, i) =>
+                                                                <tr key={i}>
+                                                                    <td>
+                                                                        <div className="d-flex px-2 py-1">
+                                                                            <div>
+                                                                                <img
+                                                                                    src="../assets/img/team-2.jpg"
+                                                                                    className="avatar avatar-sm me-3"
+                                                                                    alt="user1"
+                                                                                />
+                                                                            </div>
+                                                                            <div className="d-flex flex-column justify-content-center">
+                                                                                <h6 className="mb-0 text-sm">{senior.name}</h6>
+                                                                                <p className="text-xs text-secondary mb-0">
+                                                                                    {senior.lastname}
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p className="text-xs font-weight-bold mb-0"><i class="fa fa-id-card" aria-hidden="true"></i> {senior.cin} </p>
+                                                                        <p className="text-xs text-secondary mb-0"><i class="fa fa-phone" aria-hidden="true"></i> {senior.telephone} </p>
+                                                                    </td>
+                                                                    <td className="align-middle text-center text-sm">
+                                                                        <span className="badge badge-sm bg-gradient-info">
+                                                                            {senior.sex}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td className="align-middle text-center">
+                                                                        <span className="text-secondary text-xs font-weight-bold">
+                                                                            {senior.dateOfBirth}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td className="align-middle">
+                                                                        <a
+                                                                            href="#"
+                                                                            className="text-secondary font-weight-bold text-xs"
+                                                                            data-toggle="tooltip"
+                                                                            data-original-title="Edit user"
+                                                                            onClick={(e) => this.handleShow(senior,true)}
+                                                                        >
+                                                                            Edit
+                                                                        </a>
+
+                                                                    </td>
+                                                                    <td className="align-middle">
+                                                                        <a
+                                                                            href="#"
+                                                                            className="text-secondary font-weight-bold text-xs"
+                                                                            data-toggle="tooltip"
+                                                                            data-original-title="Edit user"
+                                                                            onClick={(e) => this.deleteSenior(senior.id, e)}
+                                                                        >
+                                                                            Delete
+                                                                        </a>
+
+                                                                    </td>
+                                                                </tr>)
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </main>
+                
+                <Modal show={this.state.editDialog} onHide={this.handleClose} >
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            Edit Senior
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form onSubmit={this.handleUpdate}>
+                            <Form.Group style={{padding:"12px 12px 0"}}>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Name *"
+                                    name="name"
+                                    value={this.state.name}
+                                    onChange={this.onChangeName}
+
+                                    required
+                                />
+                            </Form.Group>
+                            <Form.Group style={{padding:"12px 12px 0"}}>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Last Name *"
+                                    name="lastName"
+                                    value={this.state.lastName}
+                                    onChange={this.onChangelastname}
+                                    required
+                                />
+                            </Form.Group>
+                            <Form.Group style={{padding:"12px 12px 0"}}>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Cin"
+
+                                    name="cin"
+
+                                    value={this.state.cin}
+                                    onChange={this.onChangeCin}
+                                />
+                            </Form.Group>
+                            <Form.Group style={{padding:"12px 12px 10px"}}>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Phone"
+                                    name="phone"
+                                    value={this.state.telephone}
+                                    onChange={this.onChangeTelephone}
+                                />
+                            </Form.Group>
+                            
+                            <Button variant="success" type="submit" block className="btn  btn-rounded"
+              style={{
+                border: "2px solid ",
+                alignItems: "center",
+                marginLeft: "100px",
+               backgroundColor:"#D24548",
+                cursor: "pointer",
+                
+              }}> 
+                                Edit Senior
+                            </Button>
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" className="btn  btn-rounded" style={{
+                border: "2px solid ",
+                alignItems: "center",
+                marginRight: "175px",
+              
+                cursor: "pointer",
+                left: "50%",
+              }} onClick={this.handleClose}>
+                            Cancel
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+                
+                {this.state.isLoading && (
+                    <Dialog
+                        onDialog={this.areUSureDelete}
+                        message={this.state.message}
+
+                    />
+                )}
             </div>
-        </div>
-    );
+        );
+    }
 }
+function mapStateToProps(state) {
+    const { user } = state.auth;
+    return {
+        user,
+    };
+}
+
+
+
+export default connect(mapStateToProps)(Senior);

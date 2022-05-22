@@ -1,14 +1,30 @@
 .sideBar{
-    flex: 1;
+    flex :0.1 1 0;
     height: calc(100vh - 50px);
-    position: sticky;
-    top: 50px;
+    max-width: 300px;
+    position: relative;
+    top: 0;
+    z-index: 999;
+    
 }
+
 .color-backgroundIcon{
     color:rgba(58,65,111,0.90);
 }
 .nav-link.active .color-backgroundIcon {
 color: aliceblue;
 }
+
+
+@media (max-width:1024px){
+.sideBar{
+    max-width: 200px;
+}
+}
+
+
+
+
+
 
 

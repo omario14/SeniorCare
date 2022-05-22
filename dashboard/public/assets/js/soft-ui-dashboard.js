@@ -24,6 +24,7 @@
       var ps3 = new PerfectScrollbar(fixedplugin);
     };
   };
+  
 })();
 
 // Verify navbar blur on scroll
@@ -354,36 +355,7 @@ function sidebarType(a) {
 }
 
 
-// Toggle Sidenav
-const iconNavbarSidenav = document.getElementById('iconNavbarSidenav');
-const iconSidenav = document.getElementById('iconSidenav');
-const sidenav = document.getElementById('sidenav-main');
-let body = document.getElementsByTagName('body')[0];
-let className = 'g-sidenav-pinned';
 
-if (iconNavbarSidenav) {
-  iconNavbarSidenav.addEventListener("click", toggleSidenav);
-}
-
-if (iconSidenav) {
-  iconSidenav.addEventListener("click", toggleSidenav);
-}
-
-function toggleSidenav() {
-  if (body.classList.contains(className)) {
-    body.classList.remove(className);
-    setTimeout(function() {
-      sidenav.classList.remove('bg-white');
-    }, 100);
-    sidenav.classList.remove('bg-transparent');
-
-  } else {
-    body.classList.add(className);
-    sidenav.classList.add('bg-white');
-    sidenav.classList.remove('bg-transparent');
-    iconSidenav.classList.remove('d-none');
-  }
-}
 
 // Resize navbar color depends on configurator active type of sidenav
 
@@ -420,3 +392,25 @@ function sidenavTypeOnResize() {
     });
   }
 }
+
+
+const imagePicker = document.getElementById("file-1")
+  const previewContainer=document.getElementById("imageePreview")
+  const previewImage=previewContainer.querySelector("#image-preview")
+  const previewDefaultText=previewContainer.querySelector (".imag")
+
+  imagePicker.addEventListener ("change", function(){
+  const file=this.files[0];
+
+ if (file){
+      const reader=new FileReader();
+      
+      reader.addEventListener("load", function(){
+          console.log(this);
+          previewImage.setAttribute("src", this.result);
+      });
+      reader.readAsDataURL (file);
+
+}      });
+  
+

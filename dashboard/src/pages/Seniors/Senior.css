@@ -1,5 +1,31 @@
 .seniorList{
-
-    flex:6.5;
+    flex:20;
     width: 2000px;
+    background-color: rgb(247, 247, 247);
 }
+
+.dialogg{
+    --stripe: #cfd8dc;
+    --bg: #e1e1e1;
+  
+    background: linear-gradient(135deg, var(--bg) 25%, transparent 25%) -50px 0,
+      linear-gradient(225deg, var(--bg) 25%, transparent 25%) -50px 0,
+      linear-gradient(315deg, var(--bg) 25%, transparent 25%),
+      linear-gradient(45deg, var(--bg) 25%, transparent 25%);
+    background-size: 100px 100px;
+    background-color: var(--stripe);
+
+    display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+           
+            padding: 100px 70px;
+            border-radius: 10px;
+}
+
+

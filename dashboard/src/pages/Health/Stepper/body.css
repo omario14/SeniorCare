@@ -1,0 +1,147 @@
+.human-body {
+  width: 207px;
+  position: relative;
+  padding-top: 240px;
+  height: 260px;
+  display: flex;
+  margin: 80px auto 2px;
+  transform: scale(0.7);
+}
+.human-body svg:hover {
+  cursor: pointer;
+}
+
+.human-body svg:hover path {
+  fill: #ff7d16;
+}
+
+.human-body svg:visited path {
+  fill: #145057;
+}
+.popoverbody {
+  width: 100%;
+  /*border-radius: 25px;*/
+  border: 2px solid rgba(0, 0, 0, 0.096);
+  position: relative;
+  background-color: #f3f5f7;
+  padding: 15px 15px 15px 15px;
+  
+}
+.popoverbody .closebUtton {
+  fill: rgb(0, 0, 0);
+  position: absolute;
+  margin: 10px 10px;
+  top: 0;
+  right: 0;
+}
+.titlepopover {
+  text-align: center;
+  
+  color: #757a7e;
+  
+  text-transform: uppercase;
+  
+  
+}
+
+.closebUtton:hover {
+  fill: #57c9d5;
+  cursor: pointer;
+}
+
+.human-body svg {
+  position: absolute;
+  left: 50%;
+  fill: #57c9d5;
+}
+
+.human-body svg#head {
+  margin-left: -28.5px;
+  top: -6px;
+}
+
+.human-body svg#left-shoulder {
+  margin-left: -53.5px;
+  top: 69px;
+}
+
+.human-body svg#right-shoulder {
+  margin-left: 13.5px;
+  top: 69px;
+}
+
+.human-body svg#left-arm {
+  margin-left: -78px;
+  top: 112px;
+ 
+}
+
+.human-body svg#right-arm {
+  margin-left: 38px;
+  top: 112px;
+  z-index: 10001;
+}
+
+.human-body svg#chest {
+  margin-left: -43.5px;
+  top: 88px;
+  z-index: 10001;
+}
+
+.human-body svg#stomach {
+  margin-left: -37.5px;
+  top: 130px;
+  z-index: 9999;
+}
+
+.human-body svg#left-leg {
+  margin-left: -46.5px;
+  top: 205px;
+  z-index: 9999;
+}
+
+.human-body svg#right-leg {
+  margin-left: 1.5px;
+  top: 205px;
+  z-index: 9999;
+}
+
+.human-body svg#left-hand {
+  margin-left: -102.5px;
+  top: 224px;
+}
+
+.human-body svg#right-hand {
+  margin-left: 66.5px;
+  top: 224px;
+  z-index: 10000;
+}
+
+.human-body svg#left-foot {
+  margin-left: -35.5px;
+  top: 455px;
+}
+
+.human-body svg#right-foot {
+  margin-left: 5.5px;
+  top: 455px;
+}
+.popoverFooter{
+    position: relative;
+    margin: 0 12px 10px 12px;
+    left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+
+@media (max-width: 1199.98px) {
+  .human-body {
+    
+    padding-top: 340px;
+   z-index: 9999;
+    display: block;
+    margin: 120px auto 50px;
+    transform: scale(0.5);
+  }
+}

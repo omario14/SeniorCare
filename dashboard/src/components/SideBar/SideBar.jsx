@@ -1,5 +1,5 @@
 import "./SideBar.css";
-import { MdElderly ,MdNoFood , MdBookmarkBorder} from "react-icons/md";
+import { MdElderly ,MdNoFood } from "react-icons/md";
 import { BiHealth , BiCalendar } from "react-icons/bi";
 import { FaHome } from "react-icons/fa";
 
@@ -8,30 +8,50 @@ export default function SideBar({setTitle}) {
   const onButtonClick=(title)=>{
     setTitle(title); 
   }
+
+  
+   // Toggle Sidenav
+
+const iconSidenav = document.getElementById('iconSidenav');
+const sidenav = document.getElementById('sidenav-main');
+let body = document.getElementsByTagName('body')[0];
+let className = 'g-sidenav-pinned';
+
+
+
+function toggleSidenav() {
+  if (body.classList.contains(className)) {
+    body.classList.remove(className);
+    setTimeout(function() {
+      sidenav.classList.remove("bg-white");
+    }, 10000);
+   
+
+  } else {
+    body.classList.add(className);
+    sidenav.classList.add("bg-white");
+    sidenav.classList.remove("bg-transparent");
+    iconSidenav.classList.remove('d-none');
+  }
+}
+ 
   return (
     
-    <div className="sideBar">
+    <div className="sideBar" >
+       
       
-      <aside
-        className="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3  "
-        style={{ top: "70px", overflow: "hidden" }}
+      <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 ps ps--active-y bg-white "
+       
         id="sidenav-main"
       >
-        <div className="sidenav-header">
-          <i
-            className="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
-            aria-hidden="true"
-            id="iconSidenav"
-          ></i>
-          <a
-            className="navbar-brand m-0"
-            href="https://demos.creative-tim.com/soft-ui-dashboard/pages/dashboard.html"
-          >
-            <MdBookmarkBorder
-            />
-            <span className="ms-1 font-weight-bold">Welcome again <br/>Mr Omar Benamor</span>
-          </a>
-        </div>
+         <div className="sidenav-header" onClick={toggleSidenav}>
+        <i className="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+                    <a className="navbar-brand m-0" href="/"  >
+                        <img src="../../../../assets/img/logos/utssLogo.png" className="navbar-brand-img h-75" alt="main_logo" />
+                        
+                    </a>
+                    </div>
+       
         <hr className="horizontal dark mt-0" />
         <div
           className="collapse navbar-collapse  w-auto  max-height-vh-100 h-100"
@@ -41,7 +61,7 @@ export default function SideBar({setTitle}) {
             
             <li className="nav-item">
               
-            <NavLink exact to="/" onClick={()=>onButtonClick('Home')} className="nav-link" activeClassName="nav-link active">
+            <NavLink  to="/" onClick={()=>onButtonClick('Home')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                  <div> <FaHome className="color-backgroundIcon" size="1.5em" /></div>
                 </div>
@@ -54,7 +74,7 @@ export default function SideBar({setTitle}) {
             <li className="nav-item">
             
               
-              <NavLink to="/senior"  onClick={()=>onButtonClick('Senior')} className="nav-link" activeClassName="nav-link active">
+              <NavLink to="/senior"  onClick={()=>onButtonClick('Senior')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 
                 <div><MdElderly className="color-backgroundIcon" size="1.5em" /></div>
@@ -69,7 +89,7 @@ export default function SideBar({setTitle}) {
             </li>
                         
             <li className="nav-item">
-            <NavLink to="/health" onClick={()=>onButtonClick('Health')} className="nav-link" activeClassName="nav-link active">
+            <NavLink to="/health" onClick={()=>onButtonClick('Health')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                   
                 <div  ><BiHealth className="color-backgroundIcon" size="1.5em" /></div>
@@ -79,7 +99,7 @@ export default function SideBar({setTitle}) {
             </NavLink>
             </li>
             <li className="nav-item">
-            <NavLink to="/food"  onClick={()=>onButtonClick('Food')} className="nav-link" activeClassName="nav-link active">
+            <NavLink to="/food"  onClick={()=>onButtonClick('Food')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                   
                 <div  ><MdNoFood className="color-backgroundIcon" size="1.5em" /></div>
@@ -88,7 +108,7 @@ export default function SideBar({setTitle}) {
             </NavLink>
             </li>
             <li className="nav-item">
-            <NavLink to="/calendar" onClick={()=>onButtonClick('Calendar')} className="nav-link" activeClassName="nav-link active">
+            <NavLink to="/calendar" onClick={()=>onButtonClick('Calendar')} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <div> <BiCalendar className="color-backgroundIcon" size="1.5em"/></div>
                 </div>
@@ -101,7 +121,7 @@ export default function SideBar({setTitle}) {
               </h6>
             </li>
             <li className="nav-item">
-              <a className="nav-link  " href="../pages/profile.html">
+            <NavLink to="/profile" onClick={()=>onButtonClick('Profile')} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                   <svg
                     width="12px"
@@ -143,7 +163,7 @@ export default function SideBar({setTitle}) {
                   </svg>
                 </div>
                 <span className="nav-link-text ms-1 ">Profile</span>
-              </a>
+            </NavLink>
             </li>
             <li className="nav-item">
               <a className="nav-link  " href="../pages/sign-in.html">

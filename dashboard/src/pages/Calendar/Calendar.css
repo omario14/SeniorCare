@@ -1,4 +1,5 @@
 .calendar{
-    flex:6.5;
+    flex:20;
     width: 2000px;
+    background-color: rgb(247, 247, 247);
 }
