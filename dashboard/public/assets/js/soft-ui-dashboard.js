@@ -412,5 +412,5 @@ const imagePicker = document.getElementById("file-1")
       reader.readAsDataURL (file);
 
 }      });
-  
+
 

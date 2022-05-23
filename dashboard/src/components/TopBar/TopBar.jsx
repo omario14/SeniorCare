@@ -17,7 +17,7 @@ class TopBar extends Component {
       showModeratorBoard: false,
       showAdminBoard: false,
       currentUser: undefined,
-      title:this.props,
+      
     };
     
     history.listen((location) => {
@@ -42,7 +42,7 @@ class TopBar extends Component {
       // Toggle Sidenav
 
 const iconSidenav = document.getElementById('iconSidenav');
-let sidenav = document.getElementsByTagName('aside')[0];
+
 let body = document.getElementsByTagName('body')[0];
 let className = 'g-sidenav-pinned';
 
@@ -61,6 +61,7 @@ function toggleSidenav() {
 
   }
   const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+  const title = this.props.title;
   return (
     
     <div className="topbar">
@@ -83,7 +84,7 @@ function toggleSidenav() {
                       className="breadcrumb-item text-sm text-dark active font-weight-bolder mb-0"
                       aria-current="page"
                     >
-                      {this.title}
+                      {title}
                     </li>
                   </ol>
                 </nav>

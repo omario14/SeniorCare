@@ -1,7 +1,7 @@
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { Navigate, NavLink } from "react-router-dom";
 import TopBar from "../../components/TopBar/TopBar";
 import seniorService from "../../services/senior.service";
 import { TabTitle } from "../../utils/GeneralFunctions";
@@ -153,8 +153,9 @@ class Senior extends Component {
 
         TabTitle('Senior');
         const { user: currentUser } = this.props;
-        if (!currentUser) {
-            return console.log("Helloo");
+        if (!currentUser || !currentUser.roles.includes("ROLE_ACCOMPAGNANT")) {
+            return <Navigate to="/notFound"/>;
+            
         }
 
 
