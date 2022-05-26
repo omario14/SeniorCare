@@ -53,10 +53,10 @@ const SidebarLayout = () => (
    {
      loading ?
      <div className="ringBody">
-     <div class="ring ring1"></div>
-     <div class="ring ring2"></div>
-     <div class="ring ring3"></div>
-     <div class="ring ring4"></div>
+     <div className="ring ring1"></div>
+     <div className="ring ring2"></div>
+     <div className="ring ring3"></div>
+     <div className="ring ring4"></div>
      </div>
      :
    

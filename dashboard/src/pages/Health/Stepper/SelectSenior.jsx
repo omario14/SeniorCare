@@ -1,9 +1,11 @@
-import Select, { components } from 'react-select';
+import { components } from 'react-select';
 import AsyncSelect from "react-select/async";
 import React, { Component } from 'react'
 import httpCommon  from '../../../http-common';
 import ElderlyIcon from '@mui/icons-material/Elderly';
 import authHeader from '../../../services/auth-header';
+
+import {Controller, useFormContext} from 'react-hook-form'
 
 export default class SelectSenior extends Component {
     constructor(props) {
@@ -67,22 +69,38 @@ const DropdownIndicator = props => {
         { value: 'playing', label: '♟️ Playing' },
         { value: 'listening', label: '📻 Listening' }
     ]
-    return (
-      <div>
-         <div> {JSON.stringify(this.state.selectedValue || {},null,2)}</div>
+    
 
+    const Form =()=>
+    {
+      const {control}=useFormContext();
+      return(
+
+        <Controller control={control} 
+        name="senior"
+        render={({field})=>(
           <AsyncSelect
-          cacheOptions
-          defaultOptions
+            cacheOptions
+            defaultOptions
             value={this.selectedValue}
             getOptionLabel={e=>e.name+'  '+e.lastname}
             getOptionValue={e=>e.id}
             loadOptions={this.fetchData}
             onInputChange={this.onInputChange}
             onChange={this.handleChange}
-
+            components={{ DropdownIndicator }}
+            {...field}
+            />
+        )}
            
           />
+      )
+
+    }
+    return (
+      <div>
+         <div> {JSON.stringify(this.state.selectedValue || {},null,2)}</div>
+         <Form/>
           
       </div>
     )
