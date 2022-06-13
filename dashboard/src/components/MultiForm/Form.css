@@ -165,6 +165,8 @@
     position: relative;
     width: 40%;
     display: flex;
+    margin-bottom: 2rem;
+    
     flex-direction: row;
     justify-content: space-between;
     margin-top: 1.25rem;
@@ -207,8 +209,8 @@
      
         
         -ms-transform: translateY(40%);
-        transform: translateY(40%);
-        margin: 10px;
+        transform: translateY(60%);
+       margin: 10px;
     }
     .searchSymptom{
         left: 18%;
@@ -490,4 +492,12 @@ element.style {
     margin-bottom: -90px;
     transform: scale(0.8);
    
+}
+
+
+.allSymptoms {
+margin-bottom : auto;
+height: 150px;
+
+overflow-x:auto;
 }

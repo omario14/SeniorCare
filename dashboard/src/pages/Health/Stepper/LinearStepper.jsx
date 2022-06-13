@@ -8,30 +8,22 @@ import {
     StepLabel,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import SearchIcon from '@mui/icons-material/Search';
-import Select, { components } from 'react-select';
 import Body from "./Body";
 import SelectSenior from "./SelectSenior";
+import SelectSymptoms from "./Symptoms";
 import {useForm, FormProvider ,Controller, useFormContext} from 'react-hook-form'
-import {Symptoms} from './Symptoms'
+
+
 const useStyles = makeStyles((theme) => ({
     button: {
         marginRight: theme.spacing(1),
+        marginTop:theme.spacing(0),
+       
     },
 }));
 
 
-const CaretDownIcon = () => {
-    return <SearchIcon />;
-};
 
-const DropdownIndicator = props => {
-    return (
-        <components.DropdownIndicator {...props}>
-            <CaretDownIcon />
-        </components.DropdownIndicator>
-    );
-};
 
 function getSteps() {
     return [
@@ -104,7 +96,7 @@ const PersonalInformation =()=>{
     );
 }
 const SymptomsInformation =()=>{
-    const {control} = useFormContext();
+   
     return(
         <>
 
@@ -113,20 +105,7 @@ const SymptomsInformation =()=>{
             <div className="searchSymptom">
                 <h2 className="ui-heading ui-heading--h2 ui-question__title">Add your symptoms</h2>
                 <p className="ui-text evidence-search-body-widget__hint">Add as many symptoms as you can for the most accurate results.</p>
-                <Controller control={control} 
-        name="symptoms"
-        render={({field})=>(
-                <Select
-                    maxMenuHeight={100}
-                    options={Symptoms}
-                    isClearable
-                    components={{ DropdownIndicator }}
-                    placeholder="Search, e.g. headache"
-                    {...field}
-
-                />
-        )}
-        />
+                <SelectSymptoms/>
             </div>
             <div className="bodySymptom">
 
@@ -188,7 +167,7 @@ function getStepContent(step) {
         case 1:
             return <PersonalInformation/>
         case 2:
-            return <SymptomsInformation/>
+            return <SymptomsInformation />
         case 3:
             return <MoreInformation/>
         default:
@@ -196,11 +175,12 @@ function getStepContent(step) {
     }
 }
 
-const LinaerStepper = () => {
+const   LinaerStepper = () => {
     const classes = useStyles();
     
     const [activeStep, setActiveStep] = useState(0);
     const [skippedSteps, setSkippedSteps] = useState([]);
+    const [symptomsFinal, setSymptomsFinal] = useState([]);
     const steps = getSteps();
     const methods = useForm({
         defaultValues:{
@@ -211,13 +191,9 @@ const LinaerStepper = () => {
         }
     });
 
-    const isStepOptional = (step) => {
-        return step === 1 || step === 2;
-    };
-
-    const isStepSkipped = (step) => {
-        return skippedSteps.includes(step);
-    };
+    
+    
+  
 
     const handleNext = () => {
         setActiveStep(activeStep + 1);
@@ -228,15 +204,12 @@ const LinaerStepper = () => {
         setActiveStep(activeStep - 1);
     };
 
-    const handleSkip = () => {
-        if (!isStepSkipped(activeStep)) {
-            setSkippedSteps([...skippedSteps, activeStep]);
-        }
-        setActiveStep(activeStep + 1);
-    };
+   
 
     const onSubmit =(data )=>{
-        console.log(data);
+        
+        console.log(data.symptomss);
+
     }
 
 

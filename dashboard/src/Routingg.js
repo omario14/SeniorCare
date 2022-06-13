@@ -12,7 +12,7 @@ import {
     Routes,
     Outlet,
     Route,
-    Navigate
+    
   } from "react-router-dom";
 import Profile from "./pages/Profile/Profile";
 import AddSenior from "./pages/Seniors/AddSenior/AddSenior";

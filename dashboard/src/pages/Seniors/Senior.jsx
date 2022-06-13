@@ -27,8 +27,8 @@ class Senior extends Component {
             name: "",
             lastName: "",
             telephone: "",
-            sexOption: "",
-            birthDate: "",
+            sexOption: "male",
+            birthDate: null,
             interests: "",
             cin: "",
 
@@ -92,6 +92,8 @@ class Senior extends Component {
             lastName: this.myRef.current.lastname,
             cin: this.myRef.current.cin,
             telephone: this.myRef.current.telephone,
+            birthDate:this.myRef.current.dateOfBirth,
+            sexOption:this.myRef.current.sex,
         })
 
 
@@ -104,6 +106,8 @@ class Senior extends Component {
             lastname: this.state.lastName,
             telephone: this.state.telephone,
             cin: this.state.cin,
+            dateOfBirth:this.state.birthDate,
+            sex:this.state.sexOption,
 
         };
         seniorService.update(id, senior);
@@ -113,8 +117,7 @@ class Senior extends Component {
 
     onChangeName = (e) => {
         this.setState({
-            name: e.target.value
-            ,
+            name: e.target.value,
         })
     }
     onChangelastname = (e) => {
@@ -301,9 +304,7 @@ class Senior extends Component {
                                 <Form.Control
                                     type="text"
                                     placeholder="Cin"
-
                                     name="cin"
-
                                     value={this.state.cin}
                                     onChange={this.onChangeCin}
                                 />
@@ -317,6 +318,39 @@ class Senior extends Component {
                                     onChange={this.onChangeTelephone}
                                 />
                             </Form.Group>
+                            <Form.Group style={{padding:"12px 12px 10px"}}>
+                                <Form.Control
+                                    type="date"
+                                    placeholder="BirthDate"
+                                    name="birthday"
+                                    value={this.state.birthDate}
+                                    onChange={this.onChangeBirthDate}
+                                    format="{0:yyyy-MM-dd}"
+                                    
+                                />
+                               
+                            </Form.Group>
+                            <Form.Group style={{padding:"12px 12px 10px"}}>
+                            <div className="p-t-10">
+													<label className="radio-container m-r-45">Male
+														<input checked={this.state.sexOption === "male"}
+															onChange={this.onChangeSex}
+															type="radio"
+															value="male" />
+														<span className="checkmark"></span>
+													</label>
+													<label className="radio-container">Female
+														<input
+															checked={this.state.sexOption === "female"}
+															onChange={this.onChangeSex}
+															type="radio"
+															value="female" />
+														<span className="checkmark"></span>
+													</label>
+												</div>
+                               
+                            </Form.Group>
+                            
                             
                             <Button variant="success" type="submit" block className="btn  btn-rounded"
               style={{

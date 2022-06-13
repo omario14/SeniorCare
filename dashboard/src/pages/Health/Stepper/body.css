@@ -11,7 +11,7 @@
   cursor: pointer;
 }
 
-.human-body svg:hover path {
+.human-body div:hover path {
   fill: #ff7d16;
 }
 
