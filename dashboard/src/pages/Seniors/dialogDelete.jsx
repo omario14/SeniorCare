@@ -3,6 +3,7 @@ function Dialog({ message, onDialog }) {
       <div
         style={{
           position: "fixed",
+          zIndex:9999,
           top: "0",
           left: "0",
           right: "0",
@@ -12,7 +13,7 @@ function Dialog({ message, onDialog }) {
         }}
         onClick={() => onDialog(false)}
       >
-        <div className="dialog"
+        <div className="dialogg"
           onClick={(e) => e.stopPropagation()}
          
         >

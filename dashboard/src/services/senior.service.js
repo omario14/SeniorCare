@@ -13,7 +13,6 @@ class SeniorService {
     return http.get(`/findSeniorById/${id}`, { headers: authHeader()});
   }
   create(data) {
-   
     return http.post("/addSenior", data,{ headers: authHeader()});
   }
   update(id, data) {
@@ -36,7 +35,10 @@ class SeniorService {
     return http.post("/upload", file, { headers: authHeader()});
   }
   getFiles() {
-    return http.get("/files");
+    return http.get("/files", { headers: authHeader()});
+  }
+  getFileById(id){
+    return http.get(`/files/${id}`,{headers: authHeader()})
   }
 }
 export default new  SeniorService();

@@ -15,7 +15,7 @@ class Senior extends Component {
 
         this.handleDialog = this.handleDialog.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
-
+        this.retrieveSeniors = this.retrieveSeniors.bind(this)
         this.myRef = React.createRef();
         this.state = {
 
@@ -31,6 +31,7 @@ class Senior extends Component {
             birthDate: null,
             interests: "",
             cin: "",
+            fileInfo:[],
 
 
         };
@@ -38,14 +39,26 @@ class Senior extends Component {
 
 
     componentDidMount() {
-        seniorService.getAll()
-            .then(res => {
-                const seniors = res.data;
-                this.setState({ seniors });
-            })
+       this.retrieveSeniors();
     }
-    
-      
+
+   
+    retrieveSeniors(){
+        seniorService.getFiles().then(response=>{
+           
+            this.setState({
+                fileInfo:response.data,
+            })
+              console.log("file infos : ",JSON.stringify(response.data))
+        })
+        seniorService.getAll()
+        .then(res => {
+            const seniors = res.data;
+            this.setState({ seniors:seniors });
+        })
+    }
+
+
     handleDialog = (message, isLoading) => {
         this.setState({
             message: message,
@@ -54,11 +67,13 @@ class Senior extends Component {
 
         });
     };
-    handleClose = ()=>{
+    handleClose = () => {
+        this.retrieveSeniors();
         this.setState({
             editDialog: false,
-           
+
         })
+
     }
 
     deleteSenior(id) {
@@ -84,7 +99,7 @@ class Senior extends Component {
         }
     };
 
-    handleShow = (senior,editDialog) => {
+    handleShow = (senior, editDialog) => {
         this.myRef.current = senior;
         this.setState({
             editDialog: editDialog,
@@ -92,8 +107,8 @@ class Senior extends Component {
             lastName: this.myRef.current.lastname,
             cin: this.myRef.current.cin,
             telephone: this.myRef.current.telephone,
-            birthDate:this.myRef.current.dateOfBirth,
-            sexOption:this.myRef.current.sex,
+            birthDate: this.myRef.current.dateOfBirth,
+            sexOption: this.myRef.current.sex,
         })
 
 
@@ -101,17 +116,25 @@ class Senior extends Component {
     handleUpdate = (e) => {
         e.preventDefault();
         const id = this.myRef.current.id;
+        
         let senior = {
             name: this.state.name,
             lastname: this.state.lastName,
             telephone: this.state.telephone,
             cin: this.state.cin,
-            dateOfBirth:this.state.birthDate,
-            sex:this.state.sexOption,
+            dateOfBirth: this.state.birthDate,
+            sex: this.state.sexOption,
 
         };
+        
         seniorService.update(id, senior);
         this.handleClose();
+       
+            
+         
+      
+        
+        
 
     }
 
@@ -157,8 +180,8 @@ class Senior extends Component {
         TabTitle('Senior');
         const { user: currentUser } = this.props;
         if (!currentUser || !currentUser.roles.includes("ROLE_ACCOMPAGNANT")) {
-            return <Navigate to="/notFound"/>;
-            
+            return <Navigate to="/notFound" />;
+
         }
 
 
@@ -174,7 +197,7 @@ class Senior extends Component {
                                         <div><h6>Senior table</h6></div>
                                         <div>
                                             <NavLink class="btn btn-primary btn-lg btn-floating" style={{ backgroundColor: "rgba(173, 57, 123,0.4)" }} to="/newSenior" role="button">
-                                                <i class="fa fa-plus" style={{ fontSize: "36px", paddingTop: "8px" }}></i>
+                                                <i className="fa fa-plus" style={{ fontSize: "36px", paddingTop: "8px" }}></i>
                                             </NavLink>
 
                                         </div>
@@ -206,13 +229,15 @@ class Senior extends Component {
                                                                 <tr key={i}>
                                                                     <td>
                                                                         <div className="d-flex px-2 py-1">
-                                                                            <div>
+                                                                      
+                                                                            <div >
                                                                                 <img
-                                                                                    src="../assets/img/team-2.jpg"
+                                                                                    src={`http://localhost:8080/files/${senior.file}`}
                                                                                     className="avatar avatar-sm me-3"
                                                                                     alt="user1"
                                                                                 />
                                                                             </div>
+                                                          
                                                                             <div className="d-flex flex-column justify-content-center">
                                                                                 <h6 className="mb-0 text-sm">{senior.name}</h6>
                                                                                 <p className="text-xs text-secondary mb-0">
@@ -222,8 +247,8 @@ class Senior extends Component {
                                                                         </div>
                                                                     </td>
                                                                     <td>
-                                                                        <p className="text-xs font-weight-bold mb-0"><i class="fa fa-id-card" aria-hidden="true"></i> {senior.cin} </p>
-                                                                        <p className="text-xs text-secondary mb-0"><i class="fa fa-phone" aria-hidden="true"></i> {senior.telephone} </p>
+                                                                        <p className="text-xs font-weight-bold mb-0"><i className="fa fa-id-card" aria-hidden="true"></i> {senior.cin} </p>
+                                                                        <p className="text-xs text-secondary mb-0"><i className="fa fa-phone" aria-hidden="true"></i> {senior.telephone} </p>
                                                                     </td>
                                                                     <td className="align-middle text-center text-sm">
                                                                         <span className="badge badge-sm bg-gradient-info">
@@ -241,7 +266,7 @@ class Senior extends Component {
                                                                             className="text-secondary font-weight-bold text-xs"
                                                                             data-toggle="tooltip"
                                                                             data-original-title="Edit user"
-                                                                            onClick={(e) => this.handleShow(senior,true)}
+                                                                            onClick={(e) => this.handleShow(senior, true)}
                                                                         >
                                                                             Edit
                                                                         </a>
@@ -270,7 +295,7 @@ class Senior extends Component {
                         </div>
                     </div>
                 </main>
-                
+
                 <Modal show={this.state.editDialog} onHide={this.handleClose} >
                     <Modal.Header closeButton>
                         <Modal.Title>
@@ -279,7 +304,7 @@ class Senior extends Component {
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={this.handleUpdate}>
-                            <Form.Group style={{padding:"12px 12px 0"}}>
+                            <Form.Group style={{ padding: "12px 12px 0" }}>
                                 <Form.Control
                                     type="text"
                                     placeholder="Name *"
@@ -290,7 +315,7 @@ class Senior extends Component {
                                     required
                                 />
                             </Form.Group>
-                            <Form.Group style={{padding:"12px 12px 0"}}>
+                            <Form.Group style={{ padding: "12px 12px 0" }}>
                                 <Form.Control
                                     type="text"
                                     placeholder="Last Name *"
@@ -300,7 +325,7 @@ class Senior extends Component {
                                     required
                                 />
                             </Form.Group>
-                            <Form.Group style={{padding:"12px 12px 0"}}>
+                            <Form.Group style={{ padding: "12px 12px 0" }}>
                                 <Form.Control
                                     type="text"
                                     placeholder="Cin"
@@ -309,7 +334,7 @@ class Senior extends Component {
                                     onChange={this.onChangeCin}
                                 />
                             </Form.Group>
-                            <Form.Group style={{padding:"12px 12px 10px"}}>
+                            <Form.Group style={{ padding: "12px 12px 0" }}>
                                 <Form.Control
                                     type="text"
                                     placeholder="Phone"
@@ -318,67 +343,74 @@ class Senior extends Component {
                                     onChange={this.onChangeTelephone}
                                 />
                             </Form.Group>
-                            <Form.Group style={{padding:"12px 12px 10px"}}>
+                            <div className="rowoo rowoo-space">
+                           
+                            <Form.Group style={{ padding: "12px 12px 0" }}>
                                 <Form.Control
                                     type="date"
+                                    style={{width: "40%"}}
                                     placeholder="BirthDate"
                                     name="birthday"
                                     value={this.state.birthDate}
                                     onChange={this.onChangeBirthDate}
                                     format="{0:yyyy-MM-dd}"
-                                    
+
                                 />
-                               
+
                             </Form.Group>
-                            <Form.Group style={{padding:"12px 12px 10px"}}>
-                            <div className="p-t-10">
-													<label className="radio-container m-r-45">Male
-														<input checked={this.state.sexOption === "male"}
-															onChange={this.onChangeSex}
-															type="radio"
-															value="male" />
-														<span className="checkmark"></span>
-													</label>
-													<label className="radio-container">Female
-														<input
-															checked={this.state.sexOption === "female"}
-															onChange={this.onChangeSex}
-															type="radio"
-															value="female" />
-														<span className="checkmark"></span>
-													</label>
-												</div>
-                               
+                           
+                            
+                            <Form.Group style={{ padding: "12px 18px 10px" }}>
+
+                                <div className="p-t-10">
+                                    <label className="radio-container m-r-45">Male
+                                        <Form.Control checked={this.state.sexOption === "male"}
+                                            onChange={this.onChangeSex}
+                                            type="radio"
+                                            value="male" />
+                                        <span className="checkmark"></span>
+                                    </label>
+                                    <label className="radio-container">Female
+                                        <Form.Control
+                                            checked={this.state.sexOption === "female"}
+                                            onChange={this.onChangeSex}
+                                            type="radio"
+                                            value="female" />
+                                        <span className="checkmark"></span>
+                                    </label>
+                                </div>
+
                             </Form.Group>
                             
-                            
-                            <Button variant="success" type="submit" block className="btn  btn-rounded"
-              style={{
-                border: "2px solid ",
-                alignItems: "center",
-                marginLeft: "100px",
-               backgroundColor:"#D24548",
-                cursor: "pointer",
-                
-              }}> 
+                            </div>
+
+                            <Button variant="success" type="submit" className="btn  btn-rounded"
+                                style={{
+                                    border: "2px solid ",
+                                    alignItems: "center",
+                                    margin: "10% 0 0 27%",
+                                    backgroundColor: "#D24548",
+                                    cursor: "pointer",
+
+                                }}>
                                 Edit Senior
                             </Button>
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" className="btn  btn-rounded" style={{
-                border: "2px solid ",
-                alignItems: "center",
-                marginRight: "175px",
-              
-                cursor: "pointer",
-                left: "50%",
-              }} onClick={this.handleClose}>
+                            border: "2px solid ",
+                            alignItems: "center",
+                            margin: "0 31% 0 0",
+
+                            cursor: "pointer",
+                            left: "50%",
+                        }} onClick={this.handleClose}>
                             Cancel
                         </Button>
                     </Modal.Footer>
                 </Modal>
-                
+
                 {this.state.isLoading && (
                     <Dialog
                         onDialog={this.areUSureDelete}
