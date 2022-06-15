@@ -128,6 +128,7 @@ class AddSenior extends Component {
 			this.setState({ published: true, });
 
 			seniorService.create(senior);
+			
 
 		})
 
@@ -153,10 +154,12 @@ class AddSenior extends Component {
 			{ value: 'listening', label: '📻 Listening' }
 		]
 
+
+
 		return (
 			<div className='addSenior'>
 
-				<TopBar title={'Form'} />
+			
 				<div className="wrapper">
 					<div className="wrapper wrapper--w680">
 						<div className="cardd cardd-4">

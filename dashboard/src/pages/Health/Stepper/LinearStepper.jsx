@@ -180,7 +180,6 @@ const   LinaerStepper = () => {
     
     const [activeStep, setActiveStep] = useState(0);
     const [skippedSteps, setSkippedSteps] = useState([]);
-    const [symptomsFinal, setSymptomsFinal] = useState([]);
     const steps = getSteps();
     const methods = useForm({
         defaultValues:{

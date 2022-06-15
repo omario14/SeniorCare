@@ -7,6 +7,7 @@ import seniorService from "../../services/senior.service";
 import { TabTitle } from "../../utils/GeneralFunctions";
 import { Modal, Button, Form } from 'react-bootstrap';
 import Dialog from "./dialogDelete";
+import AddSenior from "./AddSenior/AddSenior"
 import "./Senior.css";
 
 class Senior extends Component {
@@ -22,6 +23,7 @@ class Senior extends Component {
             seniors: [""],
             message: "",
             isLoading: false,
+            addSeniorPage: true,
             editDialog: false,
             senior: null,
             name: "",
@@ -58,6 +60,11 @@ class Senior extends Component {
         })
     }
 
+    handleAddSenior=()=>{
+        this.setState({
+            addSeniorPage:false,
+        })
+    }
 
     handleDialog = (message, isLoading) => {
         this.setState({
@@ -127,15 +134,9 @@ class Senior extends Component {
 
         };
         
-        seniorService.update(id, senior);
-        this.handleClose();
-       
-            
-         
-      
-        
-        
-
+        seniorService.update(id, senior).then(()=>{
+            this.handleClose();
+        })
     }
 
     onChangeName = (e) => {
@@ -189,6 +190,8 @@ class Senior extends Component {
             <div className="seniorList">
                 <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
                     <TopBar title={'Senior'} />
+                    {
+          this.state.addSeniorPage ?
                     <div className="container-fluid py-4">
                         <div className="row">
                             <div className="col-12">
@@ -196,7 +199,7 @@ class Senior extends Component {
                                     <div className="card-header pb-0" style={{ display: "flex", justifyContent: "space-between" }}>
                                         <div><h6>Senior table</h6></div>
                                         <div>
-                                            <NavLink class="btn btn-primary btn-lg btn-floating" style={{ backgroundColor: "rgba(173, 57, 123,0.4)" }} to="/newSenior" role="button">
+                                            <NavLink class="btn btn-primary btn-lg btn-floating" style={{ backgroundColor: "rgba(173, 57, 123,0.4)" }} to="#" onClick={this.handleAddSenior} role="button">
                                                 <i className="fa fa-plus" style={{ fontSize: "36px", paddingTop: "8px" }}></i>
                                             </NavLink>
 
@@ -294,6 +297,11 @@ class Senior extends Component {
                             </div>
                         </div>
                     </div>
+                    :
+                    <>
+                    <AddSenior addSeniorPage={this.handleAddSenior}/>
+                    </>
+    }
                 </main>
 
                 <Modal show={this.state.editDialog} onHide={this.handleClose} >
