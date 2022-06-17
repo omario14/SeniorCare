@@ -17,7 +17,8 @@ import {
 import Profile from "./pages/Profile/Profile";
 import AddSenior from "./pages/Seniors/AddSenior/AddSenior";
 import { useSelector } from "react-redux";
-import NotFound from "./pages/AlertPages/NotFound";
+import NotFound from "./pages/OtherComponents/NotFound";
+import Staff from "./pages/Admin/Staff";
 
 export default function Routingg() {
     const [title,setTitle]= useState('Home');
@@ -50,15 +51,7 @@ const SidebarLayout = () => (
 );
   return (
     <div>
-   {
-     loading ?
-     <div className="ringBody">
-     <div className="ring ring1"></div>
-     <div className="ring ring2"></div>
-     <div className="ring ring3"></div>
-     <div className="ring ring4"></div>
-     </div>
-     :
+  
    
       <div>
       <div className="container g-sidenav-show  bg-gray-100 " id='containerr'>
@@ -72,6 +65,7 @@ const SidebarLayout = () => (
             <Route title={title}  setTitle={setTitle} path='/calendar' element={<Calendar/>}/>
             <Route title={title}  setTitle={setTitle} path='/profile' element={<Profile/>}/>
             <Route title={title}  setTitle={setTitle} path='/newSenior' element={<AddSenior/>}/>
+            <Route title={title}  setTitle={setTitle} path='/staff' element={<Staff/>}/>
             
             
           </Route>
@@ -86,7 +80,7 @@ const SidebarLayout = () => (
       </Routes>
     
       </div>
-    }
+    
     </div>
   )
 }

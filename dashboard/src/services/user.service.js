@@ -1,4 +1,5 @@
 import axios from "axios";
+import httpCommon from "../http-common";
 import authHeader from "./auth-header";
 
 const API_URL = "http://localhost:8080/api/test/";
@@ -18,6 +19,10 @@ class UserService {
 
   getAdminBoard() {
     return axios.get(API_URL + "admin", { headers: authHeader() });
+  }
+
+  getAllUsers(){
+    return httpCommon.get('/retrieves-all-users', { headers: authHeader() })
   }
 }
 

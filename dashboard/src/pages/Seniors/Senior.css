@@ -28,4 +28,8 @@
             border-radius: 10px;
 }
 
+.tableIcons:hover {
+  transform: scale(1.1);
+}
+
 

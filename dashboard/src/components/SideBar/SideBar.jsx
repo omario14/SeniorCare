@@ -286,7 +286,7 @@ function toggleSidenav() {
             <li className="nav-item">
             
               
-              <NavLink to="/senior"  onClick={()=>onButtonClick('Senior')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+              <NavLink to="/staff"  onClick={()=>onButtonClick('Senior')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 
                 <div><RiUser2Fill className="color-backgroundIcon" size="1.5em" /></div>

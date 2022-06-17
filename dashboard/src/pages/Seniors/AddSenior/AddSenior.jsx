@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 import Select from 'react-select';
-import TopBar from '../../../components/TopBar/TopBar'
-
 import './AddSenior.css'
 import { createSenior } from '../../../actions/senior';
 import { connect } from 'react-redux';
-
 import seniorService from '../../../services/senior.service';
+
 class AddSenior extends Component {
 	constructor(props) {
 		super(props);
@@ -30,8 +28,7 @@ class AddSenior extends Component {
 			cin: "",
 			residance: "",
 			famSituation: "",
-			fileId: "",
-
+			fileId: "74a0cde9-482b-43cc-851c-f0b34cc36464",
 			seniorImg: "../../../../assets/img/images/avartar.png",
 			selectedFile: null,
 			published: false,
@@ -97,19 +94,23 @@ class AddSenior extends Component {
 	};
 	saveSenior = (e) => {
 		e.preventDefault();
-
+		const { addSeniorPage } = this.props;
 		// Create an object of formData
 		const formData = new FormData();
-
 		// Update the formData object
 		formData.append(
 			"file",
 			this.state.selectedFile,
-		);
+		);	
+		
+		
+		if (this.state.selectedFile){
 		seniorService.upload(formData).then(res => {
+			
 			this.setState({
 				fileId: res.data.id,
 			})
+	
 
 		}).then(() => {
 			let senior = {
@@ -127,13 +128,38 @@ class AddSenior extends Component {
 			console.log('Senior = > ' + JSON.stringify(senior));
 			this.setState({ published: true, });
 
-			seniorService.create(senior);
+			seniorService.create(senior).then(()=>{
+				addSeniorPage()
+			})
 			
-
+			console.warn(addSeniorPage)
+			
+		
 		})
+		
+	}else{
+		let senior = {
+			name: this.state.name,
+			lastname: this.state.lastname,
+			dateOfBirth: this.state.birthDate,
+			sex: this.state.sexOption,
+			cin: this.state.cin,
+			telephone: this.state.telephone,
+			residance: this.state.residance,
+			famillySituation: this.state.famSituation,
+			centerOfInterest: this.state.interests.value,
+			file: this.state.fileId,
+		};
+		this.setState({ published: true, });
+
+		seniorService.create(senior).finally(()=>{
+			addSeniorPage()
+		})
+		
+		
 
 
-
+	}
 
 	}
 	newSenior() {
@@ -153,13 +179,12 @@ class AddSenior extends Component {
 			{ value: 'playing', label: '♟️ Playing' },
 			{ value: 'listening', label: '📻 Listening' }
 		]
+		
 
-
+		
 
 		return (
 			<div className='addSenior'>
-
-			
 				<div className="wrapper">
 					<div className="wrapper wrapper--w680">
 						<div className="cardd cardd-4">

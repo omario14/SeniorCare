@@ -2,27 +2,32 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Navigate, NavLink } from "react-router-dom";
+import { FcEmptyTrash, FcPlus } from "react-icons/fc";
 import TopBar from "../../components/TopBar/TopBar";
 import seniorService from "../../services/senior.service";
 import { TabTitle } from "../../utils/GeneralFunctions";
 import { Modal, Button, Form } from 'react-bootstrap';
 import Dialog from "./dialogDelete";
 import AddSenior from "./AddSenior/AddSenior"
-import "./Senior.css";
 
+import "./Senior.css";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 class Senior extends Component {
     constructor(props) {
         super(props);
 
         this.handleDialog = this.handleDialog.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
-        this.retrieveSeniors = this.retrieveSeniors.bind(this)
+        this.retrieveSeniors = this.retrieveSeniors.bind(this);
+        this.deleteSeniorsByIds = this.deleteSeniorsByIds.bind(this);
         this.myRef = React.createRef();
         this.state = {
 
             seniors: [""],
             message: "",
             isLoading: false,
+            isSkeleton: false,
             addSeniorPage: true,
             editDialog: false,
             senior: null,
@@ -33,36 +38,52 @@ class Senior extends Component {
             birthDate: null,
             interests: "",
             cin: "",
-            fileInfo:[],
+            fileInfo: [],
 
 
         };
     }
 
 
+
     componentDidMount() {
-       this.retrieveSeniors();
+        this.retrieveSeniors();
     }
 
-   
-    retrieveSeniors(){
-        seniorService.getFiles().then(response=>{
-           
+
+
+    retrieveSeniors = () => {
+        this.setState({
+            isSkeleton: true,
+
+        })
+
+        seniorService.getFiles().then(response => {
+
             this.setState({
-                fileInfo:response.data,
+                fileInfo: response.data,
             })
-              console.log("file infos : ",JSON.stringify(response.data))
+            console.log("file infos : ", JSON.stringify(response.data))
         })
         seniorService.getAll()
-        .then(res => {
-            const seniors = res.data;
-            this.setState({ seniors:seniors });
-        })
+            .then((res) => {
+
+                this.setState({
+                    seniors: res.data,
+
+                });
+                console.log("Seniors => : ", this.state.seniors, " | ")
+                this.setState({
+                    isSkeleton: false,
+                })
+            })
+
     }
 
-    handleAddSenior=()=>{
+    handleAddSenior = () => {
+
         this.setState({
-            addSeniorPage:false,
+            addSeniorPage: true,
         })
     }
 
@@ -106,6 +127,20 @@ class Senior extends Component {
         }
     };
 
+    /*******Delete many Seniors *********/
+
+    deleteSeniorsByIds = () => {
+
+        let arrayIds = [];
+        this.state.seniors.forEach(d => {
+            if (d.select) {
+                arrayIds.push(d.id);
+            }
+
+        })
+
+    }
+
     handleShow = (senior, editDialog) => {
         this.myRef.current = senior;
         this.setState({
@@ -123,7 +158,7 @@ class Senior extends Component {
     handleUpdate = (e) => {
         e.preventDefault();
         const id = this.myRef.current.id;
-        
+
         let senior = {
             name: this.state.name,
             lastname: this.state.lastName,
@@ -133,8 +168,8 @@ class Senior extends Component {
             sex: this.state.sexOption,
 
         };
-        
-        seniorService.update(id, senior).then(()=>{
+
+        seniorService.update(id, senior).then(() => {
             this.handleClose();
         })
     }
@@ -191,117 +226,155 @@ class Senior extends Component {
                 <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
                     <TopBar title={'Senior'} />
                     {
-          this.state.addSeniorPage ?
-                    <div className="container-fluid py-4">
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="card mb-4">
-                                    <div className="card-header pb-0" style={{ display: "flex", justifyContent: "space-between" }}>
-                                        <div><h6>Senior table</h6></div>
-                                        <div>
-                                            <NavLink class="btn btn-primary btn-lg btn-floating" style={{ backgroundColor: "rgba(173, 57, 123,0.4)" }} to="#" onClick={this.handleAddSenior} role="button">
-                                                <i className="fa fa-plus" style={{ fontSize: "36px", paddingTop: "8px" }}></i>
-                                            </NavLink>
+                        this.state.addSeniorPage ?
+                            <div className="container-fluid py-4">
+                                <div className="row">
+                                    <div className="col-12">
+                                        <div className="card mb-4">
+                                            <div className="card-header pb-0" style={{ display: "flex", justifyContent: "space-between" }}>
+                                                <div><h6>Senior table</h6></div>
 
-                                        </div>
-                                    </div>
-                                    <div className="card-body px-0 pt-0 pb-2">
-                                        <div className="table-responsive p-0">
-                                            <table className="table align-items-center mb-0">
-                                                <thead key="thead">
-                                                    <tr key={"thead"}>
-                                                        <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                            Senior
-                                                        </th>
-                                                        <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                            CIN
-                                                        </th>
-                                                        <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                            Sex
-                                                        </th>
-                                                        <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                            Birth Date
-                                                        </th>
-                                                        <th className="text-secondary opacity-7"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody key="tbody">
-                                                    {
-                                                        this.state.seniors
-                                                            .map((senior, i) =>
-                                                                <tr key={i}>
-                                                                    <td>
-                                                                        <div className="d-flex px-2 py-1">
-                                                                      
-                                                                            <div >
-                                                                                <img
-                                                                                    src={`http://localhost:8080/files/${senior.file}`}
-                                                                                    className="avatar avatar-sm me-3"
-                                                                                    alt="user1"
-                                                                                />
-                                                                            </div>
-                                                          
-                                                                            <div className="d-flex flex-column justify-content-center">
-                                                                                <h6 className="mb-0 text-sm">{senior.name}</h6>
-                                                                                <p className="text-xs text-secondary mb-0">
-                                                                                    {senior.lastname}
-                                                                                </p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>
-                                                                        <p className="text-xs font-weight-bold mb-0"><i className="fa fa-id-card" aria-hidden="true"></i> {senior.cin} </p>
-                                                                        <p className="text-xs text-secondary mb-0"><i className="fa fa-phone" aria-hidden="true"></i> {senior.telephone} </p>
-                                                                    </td>
-                                                                    <td className="align-middle text-center text-sm">
-                                                                        <span className="badge badge-sm bg-gradient-info">
-                                                                            {senior.sex}
-                                                                        </span>
-                                                                    </td>
-                                                                    <td className="align-middle text-center">
-                                                                        <span className="text-secondary text-xs font-weight-bold">
-                                                                            {senior.dateOfBirth}
-                                                                        </span>
-                                                                    </td>
-                                                                    <td className="align-middle">
-                                                                        <a
-                                                                            href="#"
-                                                                            className="text-secondary font-weight-bold text-xs"
-                                                                            data-toggle="tooltip"
-                                                                            data-original-title="Edit user"
-                                                                            onClick={(e) => this.handleShow(senior, true)}
-                                                                        >
-                                                                            Edit
-                                                                        </a>
+                                                <div style={{ display: "flex" }}>
+                                                    <div className="tableIcons" >
+                                                        <NavLink class="btn btn-primary btn-lg" style={{ backgroundColor: "rgba(173, 57, 123,0.4)" }} to="#" onClick={() => { this.setState({ addSeniorPage: false }) }} role="button">
+                                                            <FcPlus className="FcPlus" style={{ fontSize: "36px", paddingTop: "8px" }} />
+                                                        </NavLink>
+                                                    </div>
+                                                    <div className="tableIcons" style={{ paddingLeft: "20px" }}>
+                                                        <NavLink class="btn btn-primary btn-lg btn-floating" style={{ backgroundColor: "rgba(173, 57, 123,0.4)" }} to="#" onClick={() => { this.deleteSeniorsByIds() }} role="button">
+                                                            <FcEmptyTrash className="iconss" style={{ fontSize: "36px", paddingTop: "8px" }} />
+
+
+                                                        </NavLink>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                            <div className="card-body px-0 pt-0 pb-2">
+                                                <div className="table-responsive p-0">
+
+                                                    <table className="table align-items-center mb-0" id="table-to-xls">
+                                                        <thead key="thead">
+                                                            <tr key={"thead"}>
+                                                                <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 " >
+                                                                    Select
+
+                                                                </th>
+                                                                <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                                    Senior
+                                                                </th>
+                                                                <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                    CIN
+                                                                </th>
+                                                                <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                                    Sex
+                                                                </th>
+                                                                <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                                    Birth Date
+                                                                </th>
+                                                                <th className="text-secondary opacity-7"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody key="tbody">
+                                                            {this.state.isSkeleton ? (
+                                                                <tr>
+                                                                    <td colSpan="10">
+                                                                        <Skeleton count={5} />
 
                                                                     </td>
-                                                                    <td className="align-middle">
-                                                                        <a
-                                                                            href="#"
-                                                                            className="text-secondary font-weight-bold text-xs"
-                                                                            data-toggle="tooltip"
-                                                                            data-original-title="Edit user"
-                                                                            onClick={(e) => this.deleteSenior(senior.id, e)}
-                                                                        >
-                                                                            Delete
-                                                                        </a>
+                                                                </tr>
+                                                            ) : (
+                                                                <>
+                                                                    {this.state.seniors
+                                                                        .map((senior, i) =>
+                                                                            <tr key={i}>
+                                                                                <td style={{paddingLeft:"40px",width:"12px" }}>
 
-                                                                    </td>
-                                                                </tr>)
-                                                    }
-                                                </tbody>
-                                            </table>
+                                                                                    <div class="form-check">
+                                                                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+
+                                                                                    </div>
+
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div className="d-flex px-2 py-1">
+
+
+                                                                                        <div >
+
+
+                                                                                            <img
+                                                                                                src={`http://localhost:8080/files/${senior.file}`}
+                                                                                                className="avatar avatar-sm me-3"
+                                                                                                alt="user1"
+                                                                                            />
+
+                                                                                        </div>
+                                                                                        <div className="d-flex flex-column justify-content-center">
+                                                                                            <h6 className="mb-0 text-sm">{senior.name}</h6>
+                                                                                            <p className="text-xs text-secondary mb-0">
+                                                                                                {senior.lastname}
+                                                                                            </p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <p className="text-xs font-weight-bold mb-0"><i className="fa fa-id-card" aria-hidden="true"></i> {senior.cin} </p>
+                                                                                    <p className="text-xs text-secondary mb-0"><i className="fa fa-phone" aria-hidden="true"></i> {senior.telephone} </p>
+                                                                                </td>
+                                                                                <td className="align-middle text-center text-sm">
+                                                                                    <span className="badge badge-sm bg-gradient-info">
+                                                                                        {senior.sex}
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td className="align-middle text-center">
+                                                                                    <span className="text-secondary text-xs font-weight-bold">
+                                                                                        {senior.dateOfBirth}
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td className="align-middle">
+                                                                                    <a
+                                                                                        href="#"
+                                                                                        className="text-secondary font-weight-bold text-xs"
+                                                                                        data-toggle="tooltip"
+                                                                                        data-original-title="Edit user"
+                                                                                        onClick={(e) => this.handleShow(senior, true)}
+                                                                                    >
+                                                                                        Edit
+                                                                                    </a>
+
+                                                                                </td>
+                                                                                <td className="align-middle">
+                                                                                    <a
+                                                                                        href="#"
+                                                                                        className="text-secondary font-weight-bold text-xs"
+                                                                                        data-toggle="tooltip"
+                                                                                        data-original-title="Edit user"
+                                                                                        onClick={(e) => this.deleteSenior(senior.id, e)}
+                                                                                    >
+                                                                                        Delete
+                                                                                    </a>
+
+                                                                                </td>
+                                                                            </tr>)
+                                                                    }
+                                                                </>
+                                                            )}
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    :
-                    <>
-                    <AddSenior addSeniorPage={this.handleAddSenior}/>
-                    </>
-    }
+                            :
+                            <>
+                                <AddSenior addSeniorPage={this.handleAddSenior} />
+                            </>
+                    }
                 </main>
 
                 <Modal show={this.state.editDialog} onHide={this.handleClose} >
@@ -352,44 +425,44 @@ class Senior extends Component {
                                 />
                             </Form.Group>
                             <div className="rowoo rowoo-space">
-                           
-                            <Form.Group style={{ padding: "12px 12px 0" }}>
-                                <Form.Control
-                                    type="date"
-                                    style={{width: "40%"}}
-                                    placeholder="BirthDate"
-                                    name="birthday"
-                                    value={this.state.birthDate}
-                                    onChange={this.onChangeBirthDate}
-                                    format="{0:yyyy-MM-dd}"
 
-                                />
+                                <Form.Group style={{ padding: "12px 12px 0" }}>
+                                    <Form.Control
+                                        type="date"
+                                        style={{ width: "40%" }}
+                                        placeholder="BirthDate"
+                                        name="birthday"
+                                        value={this.state.birthDate}
+                                        onChange={this.onChangeBirthDate}
+                                        format="{0:yyyy-MM-dd}"
 
-                            </Form.Group>
-                           
-                            
-                            <Form.Group style={{ padding: "12px 18px 10px" }}>
+                                    />
 
-                                <div className="p-t-10">
-                                    <label className="radio-container m-r-45">Male
-                                        <Form.Control checked={this.state.sexOption === "male"}
-                                            onChange={this.onChangeSex}
-                                            type="radio"
-                                            value="male" />
-                                        <span className="checkmark"></span>
-                                    </label>
-                                    <label className="radio-container">Female
-                                        <Form.Control
-                                            checked={this.state.sexOption === "female"}
-                                            onChange={this.onChangeSex}
-                                            type="radio"
-                                            value="female" />
-                                        <span className="checkmark"></span>
-                                    </label>
-                                </div>
+                                </Form.Group>
 
-                            </Form.Group>
-                            
+
+                                <Form.Group style={{ padding: "12px 18px 10px" }}>
+
+                                    <div className="p-t-10">
+                                        <label className="radio-container m-r-45">Male
+                                            <Form.Control checked={this.state.sexOption === "male"}
+                                                onChange={this.onChangeSex}
+                                                type="radio"
+                                                value="male" />
+                                            <span className="checkmark"></span>
+                                        </label>
+                                        <label className="radio-container">Female
+                                            <Form.Control
+                                                checked={this.state.sexOption === "female"}
+                                                onChange={this.onChangeSex}
+                                                type="radio"
+                                                value="female" />
+                                            <span className="checkmark"></span>
+                                        </label>
+                                    </div>
+
+                                </Form.Group>
+
                             </div>
 
                             <Button variant="success" type="submit" className="btn  btn-rounded"
