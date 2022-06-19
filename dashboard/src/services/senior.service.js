@@ -22,7 +22,10 @@ class SeniorService {
     return http.delete(`/removeSenior/${id}`, { headers: authHeader()});
   }
   deleteAll() {
-    return http.delete(`/tutorials`);
+    return http.delete(`/removeAllSeniors`, { headers: authHeader()});
+  }
+  deleteByIds(ids) {
+    return http.delete(`/deleteSeniorsByIds/${ids}`, { headers: authHeader()});
   }
   findByTitle(title) {
     return http.get(`/tutorials?title=${title}`);
@@ -39,6 +42,9 @@ class SeniorService {
   }
   getFileById(id){
     return http.get(`/files/${id}`,{headers: authHeader()})
+  }
+  removeFileById(id){
+    return http.delete(`/deletefile/${id}`,{headers: authHeader()})
   }
 }
 export default new  SeniorService();

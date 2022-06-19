@@ -20,13 +20,14 @@ class Senior extends Component {
         this.handleDialog = this.handleDialog.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
         this.retrieveSeniors = this.retrieveSeniors.bind(this);
-        this.deleteSeniorsByIds = this.deleteSeniorsByIds.bind(this);
+        this.handleCheck = this.handleCheck.bind(this);
         this.myRef = React.createRef();
         this.state = {
 
             seniors: [""],
             message: "",
             isLoading: false,
+            isLoadingDeleteCheckbox: false,
             isSkeleton: false,
             addSeniorPage: true,
             editDialog: false,
@@ -38,6 +39,8 @@ class Senior extends Component {
             birthDate: null,
             interests: "",
             cin: "",
+            selected: null,
+            select: [],
             fileInfo: [],
 
 
@@ -63,7 +66,6 @@ class Senior extends Component {
             this.setState({
                 fileInfo: response.data,
             })
-            console.log("file infos : ", JSON.stringify(response.data))
         })
         seniorService.getAll()
             .then((res) => {
@@ -72,7 +74,7 @@ class Senior extends Component {
                     seniors: res.data,
 
                 });
-                console.log("Seniors => : ", this.state.seniors, " | ")
+
                 this.setState({
                     isSkeleton: false,
                 })
@@ -95,6 +97,14 @@ class Senior extends Component {
 
         });
     };
+    handleDialogDeleteCheckbox = (message, isLoadingDeleteCheckbox) => {
+        this.setState({
+            message: message,
+            isLoadingDeleteCheckbox: isLoadingDeleteCheckbox,
+            //Update
+
+        });
+    };
     handleClose = () => {
         this.retrieveSeniors();
         this.setState({
@@ -111,16 +121,22 @@ class Senior extends Component {
 
     areUSureDelete = (choose) => {
         if (choose) {
-            const seniors = this.state.seniors.filter(item => item.id !== this.myRef.current);
-            seniorService.delete(this.myRef.current)
+            const seniors = this.state.seniors.filter(item => item.id !== this.myRef.current.id);
+            seniorService.delete(this.myRef.current.id)
                 .then(res => {
                     console.log(res);
                     console.log(res.data);
+                    if (this.myRef.current.file){
+                    seniorService.removeFileById(this.myRef.current.file);
+
+                    console.log("this is file delete",this.myRef.current.file)
+                    }
                     this.setState({
                         seniors
                     })
 
                 });
+                console.log(seniors);
             this.handleDialog("", false);
         } else {
             this.handleDialog("", false);
@@ -128,18 +144,61 @@ class Senior extends Component {
     };
 
     /*******Delete many Seniors *********/
+    deleteSeniorsByIds = (choose) => {
 
-    deleteSeniorsByIds = () => {
+        if (choose) {
+            console.log(this.state.selected);
+            if (this.state.selected === true) {
+                seniorService.deleteAll()
+                    .then(() => {
+                        this.setState({
+                            selected: null,
+                        })
+                        this.retrieveSeniors();
+                    })
+            } else {
+                seniorService.deleteByIds(this.state.select)
+                    .then(res => {
+                        this.retrieveSeniors();
+                        console.log(res);
+                        console.log(res.data);
 
-        let arrayIds = [];
-        this.state.seniors.forEach(d => {
-            if (d.select) {
-                arrayIds.push(d.id);
+                    })
             }
 
-        })
+            this.handleDialogDeleteCheckbox("", false);
+        } else {
+            this.handleDialogDeleteCheckbox("", false);
+        }
+
 
     }
+    handleCheck = (e) => {
+        let arrayIds = [...this.state.select];
+        if (e.target.checked) {
+            arrayIds = [...this.state.select, e.target.value];
+        } else {
+            arrayIds.splice(this.state.select.indexOf(e.target.value), 1);
+        }
+        this.setState({
+            select: arrayIds,
+        })
+        console.log("this is array list : ", arrayIds)
+
+    }
+
+    handleAllCheck = (e) => {
+        if (e.target.checked) {
+            this.setState({
+                selected: true,
+            })
+        } else {
+            this.setState({
+                selected: null,
+            })
+        }
+    }
+
 
     handleShow = (senior, editDialog) => {
         this.myRef.current = senior;
@@ -224,24 +283,24 @@ class Senior extends Component {
         return (
             <div className="seniorList">
                 <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
-                    <TopBar title={'Senior'} />
+                    <TopBar title={'senior'} />
                     {
                         this.state.addSeniorPage ?
                             <div className="container-fluid py-4">
                                 <div className="row">
                                     <div className="col-12">
                                         <div className="card mb-4">
-                                            <div className="card-header pb-0" style={{ display: "flex", justifyContent: "space-between" }}>
-                                                <div><h6>Senior table</h6></div>
+                                            <div className="card-header pb-0 tableBG" >
+                                                <div className="text-uppercase " ><h6 className="text-light ">Senior table</h6></div>
 
-                                                <div style={{ display: "flex" }}>
+                                                <div style={{ display: "flex" ,paddingBottom:"10px" }}>
                                                     <div className="tableIcons" >
-                                                        <NavLink class="btn btn-primary btn-lg" style={{ backgroundColor: "rgba(173, 57, 123,0.4)" }} to="#" onClick={() => { this.setState({ addSeniorPage: false }) }} role="button">
+                                                        <NavLink class="btn btn-primary btn-lg" style={{ backgroundColor: "rgba(222, 222, 222,0.3)" }} to="#" onClick={() => { this.setState({ addSeniorPage: false }) }} role="button">
                                                             <FcPlus className="FcPlus" style={{ fontSize: "36px", paddingTop: "8px" }} />
                                                         </NavLink>
                                                     </div>
                                                     <div className="tableIcons" style={{ paddingLeft: "20px" }}>
-                                                        <NavLink class="btn btn-primary btn-lg btn-floating" style={{ backgroundColor: "rgba(173, 57, 123,0.4)" }} to="#" onClick={() => { this.deleteSeniorsByIds() }} role="button">
+                                                        <NavLink class="btn btn-primary btn-lg btn-floating" style={{ backgroundColor: "rgba(222, 222, 222,0.3)" }} to="#" onClick={() => { this.handleDialogDeleteCheckbox("Are you sure you want to delete selected seniors ?", true); }} role="button">
                                                             <FcEmptyTrash className="iconss" style={{ fontSize: "36px", paddingTop: "8px" }} />
 
 
@@ -257,8 +316,23 @@ class Senior extends Component {
                                                     <table className="table align-items-center mb-0" id="table-to-xls">
                                                         <thead key="thead">
                                                             <tr key={"thead"}>
-                                                                <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 " >
-                                                                    Select
+                                                                <th style={{ paddingLeft: "40px", width: "12px" }}>
+                                                                    <div class="form-check">
+                                                                        {this.state.seniors.length === 0 ?
+                                                                            <>
+
+                                                                                <input class="form-check-input" type="checkbox" onChange={this.handleAllCheck}  disabled />
+                                                                                <label class="form-check-label" for="flexCheckDisabled" >
+
+                                                                                    Disabled 
+                                                                                </label></>
+                                                                            :
+                                                                            <>
+
+                                                                            <input class="form-check-input" type="checkbox" onChange={this.handleAllCheck}  />
+                                                                            </>
+                                                                        }
+                                                                    </div>
 
                                                                 </th>
                                                                 <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -289,10 +363,10 @@ class Senior extends Component {
                                                                     {this.state.seniors
                                                                         .map((senior, i) =>
                                                                             <tr key={i}>
-                                                                                <td style={{paddingLeft:"40px",width:"12px" }}>
+                                                                                <td style={{ paddingLeft: "40px", width: "12px" }}>
 
                                                                                     <div class="form-check">
-                                                                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                                                                                        <input class="form-check-input" value={senior.id} type="checkbox" checked={this.state.selected} onChange={this.handleCheck} />
 
                                                                                     </div>
 
@@ -302,14 +376,34 @@ class Senior extends Component {
 
 
                                                                                         <div >
-
-
-                                                                                            <img
-                                                                                                src={`http://localhost:8080/files/${senior.file}`}
+                                                                                            {senior.file === null ?
+                                                                                                <>
+                                                                                                {senior.sex==="male"?
+                                                                                                <img
+                                                                                                src="..\..\..\assets\img\images\avatarNoimage.jpg"
                                                                                                 className="avatar avatar-sm me-3"
                                                                                                 alt="user1"
                                                                                             />
+                                                                                            :
+                                                                                            <img
+                                                                                                        src="..\..\..\assets\img\images\avatarW.jpg"
+                                                                                                        className="avatar avatar-sm me-3"
+                                                                                                        alt="user1"
+                                                                                                    />
+                                                                                            
+                                                                                            }
+                                                                                                    
+                                                                                                </>
+                                                                                                :
+                                                                                                <>
+                                                                                                    <img
+                                                                                                        src={`http://localhost:8080/files/${senior.file}`}
+                                                                                                        className="avatar avatar-sm me-3"
+                                                                                                        alt="user1"
+                                                                                                    />
+                                                                                                </>
 
+                                                                                            }
                                                                                         </div>
                                                                                         <div className="d-flex flex-column justify-content-center">
                                                                                             <h6 className="mb-0 text-sm">{senior.name}</h6>
@@ -324,9 +418,16 @@ class Senior extends Component {
                                                                                     <p className="text-xs text-secondary mb-0"><i className="fa fa-phone" aria-hidden="true"></i> {senior.telephone} </p>
                                                                                 </td>
                                                                                 <td className="align-middle text-center text-sm">
-                                                                                    <span className="badge badge-sm bg-gradient-info">
-                                                                                        {senior.sex}
-                                                                                    </span>
+                                                                                   {senior.sex==="male"?
+                                                                                   
+                                                                                   <span className="badge badge-sm bg-gradient-info">
+                                                                                   {senior.sex}
+                                                                               </span>
+                                                                               :
+                                                                               <span className="badge badge-sm bg-gradient-danger">
+                                                                               {senior.sex}
+                                                                           </span>
+                                                                                }
                                                                                 </td>
                                                                                 <td className="align-middle text-center">
                                                                                     <span className="text-secondary text-xs font-weight-bold">
@@ -351,7 +452,7 @@ class Senior extends Component {
                                                                                         className="text-secondary font-weight-bold text-xs"
                                                                                         data-toggle="tooltip"
                                                                                         data-original-title="Edit user"
-                                                                                        onClick={(e) => this.deleteSenior(senior.id, e)}
+                                                                                        onClick={(e) => this.deleteSenior(senior, e)}
                                                                                     >
                                                                                         Delete
                                                                                     </a>
@@ -495,6 +596,14 @@ class Senior extends Component {
                 {this.state.isLoading && (
                     <Dialog
                         onDialog={this.areUSureDelete}
+                        message={this.state.message}
+
+                    />
+                )}
+
+                {this.state.isLoadingDeleteCheckbox && (
+                    <Dialog
+                        onDialog={this.deleteSeniorsByIds}
                         message={this.state.message}
 
                     />

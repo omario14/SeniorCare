@@ -14,7 +14,7 @@ class Profile extends Component {
     return (
       <div className="profile ">
         <main className="main-content  position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
-          <TopBar title={"profile"} />
+          <TopBar title={"Profile"} />
           <div className="container-fluid py-4">
             <div
               className="page-header min-height-300 border-radius-xl mt-4"
@@ -28,11 +28,26 @@ class Profile extends Component {
               <div className="row gx-4">
                 <div className="col-auto">
                   <div className="avatar avatar-xl position-relative">
-                    <img
-                       src={`http://localhost:8080/files/${currentUser.fileId}`}
-                      alt="profile_image"
-                      className="w-100 border-radius-lg shadow-sm"
+                    {currentUser.fileId === null ?
+                        <>
+                      
+                        <img
+                        src="..\..\..\assets\img\images\avatarNoimage.jpg"
+                        alt="profile_image"
+                        className="w-100 border-radius-lg shadow-sm"
                     />
+                   
+                            
+                        </>
+                      :
+                      <img
+                        src={`http://localhost:8080/files/${currentUser.fileId}`}
+                        alt="profile_image"
+                        className="w-100 border-radius-lg shadow-sm"
+                      />
+
+                    }
+
                   </div>
                 </div>
                 <div className="col-auto my-auto">
@@ -67,7 +82,7 @@ class Profile extends Component {
                           >
                             <g
                               stroke="none"
-                               strokeWidth="1"
+                              strokeWidth="1"
                               fill="none"
                               fillRule="evenodd"
                             >
@@ -119,7 +134,7 @@ class Profile extends Component {
                             <title>document</title>
                             <g
                               stroke="none"
-                               strokeWidth="1"
+                              strokeWidth="1"
                               fill="none"
                               fillRule="evenodd"
                             >
@@ -166,7 +181,7 @@ class Profile extends Component {
                             <title>settings</title>
                             <g
                               stroke="none"
-                               strokeWidth="1"
+                              strokeWidth="1"
                               fill="none"
                               fillRule="evenodd"
                             >
@@ -223,7 +238,7 @@ class Profile extends Component {
                             className="form-check-input ms-auto"
                             type="checkbox"
                             id="flexSwitchCheckDefault"
-                             
+
                           />
                           <label
                             className="form-check-label text-body ms-3 text-truncate w-80 mb-0"
@@ -254,7 +269,7 @@ class Profile extends Component {
                             className="form-check-input ms-auto"
                             type="checkbox"
                             id="flexSwitchCheckDefault2"
-                            
+
                           />
                           <label
                             className="form-check-label text-body ms-3 text-truncate w-80 mb-0"
@@ -290,7 +305,7 @@ class Profile extends Component {
                             className="form-check-input ms-auto"
                             type="checkbox"
                             id="flexSwitchCheckDefault4"
-                             
+
                           />
                           <label
                             className="form-check-label text-body ms-3 text-truncate w-80 mb-0"
@@ -837,7 +852,7 @@ class Profile extends Component {
               </div>
             </footer>
           </div>
-         
+
         </main>
       </div>
     );

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Component } from 'react'
+import { FcEmptyTrash, FcPlus } from "react-icons/fc";
 import Skeleton from 'react-loading-skeleton'
 import { connect } from 'react-redux'
 import { Navigate, NavLink } from 'react-router-dom'
@@ -65,14 +66,24 @@ class Staff extends Component {
                             <div className="row">
                                 <div className="col-12">
                                     <div className="card mb-4">
-                                        <div className="card-header pb-0" style={{ display: "flex", justifyContent: "space-between" }}>
-                                            <div><h6>Staff</h6></div>
-                                            <div>
-                                                <NavLink class="btn btn-primary btn-lg btn-floating" style={{ backgroundColor: "rgba(173, 57, 123,0.4)" }} to="#" onClick={() => { this.setState({ isAddStaff: false }) }} role="button">
-                                                    <i className="fa fa-plus" style={{ fontSize: "36px", paddingTop: "8px" }}></i>
-                                                </NavLink>
+                                        <div className="card-header pb-0 tableBG" >
+                                        <div className="text-uppercase " ><h6 className="text-light ">Staff</h6></div>
+                                        <div style={{ display: "flex" ,paddingBottom:"10px" }}>
+                                                    <div className="tableIcons" >
+                                                        <NavLink class="btn btn-primary btn-lg" style={{ backgroundColor: "rgba(222, 222, 222,0.3)" }} to="#" onClick={() => {  this.setState({ isAddStaff: false }) }} role="button">
+                                                            <FcPlus className="FcPlus" style={{ fontSize: "36px", paddingTop: "8px" }} />
+                                                        </NavLink>
+                                                    </div>
+                                                    <div className="tableIcons" style={{ paddingLeft: "20px" }}>
+                                                        <NavLink class="btn btn-primary btn-lg btn-floating" style={{ backgroundColor: "rgba(222, 222, 222,0.3)" }} to="#" onClick={() => { this.handleDialogDeleteCheckbox("Are you sure you want to delete selected seniors ?", true); }} role="button">
+                                                            <FcEmptyTrash className="iconss" style={{ fontSize: "36px", paddingTop: "8px" }} />
 
-                                            </div>
+
+                                                        </NavLink>
+                                                    </div>
+
+
+                                                </div>
                                         </div>
                                         <div className="card-body px-0 pt-0 pb-2">
                                             <div className="table-responsive p-0">

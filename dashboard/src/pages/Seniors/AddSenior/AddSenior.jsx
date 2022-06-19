@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Select from 'react-select';
 import './AddSenior.css'
-import { createSenior } from '../../../actions/senior';
+import { createSenior, retrieveSeniors } from '../../../actions/senior';
 import { connect } from 'react-redux';
 import seniorService from '../../../services/senior.service';
 
@@ -28,7 +28,7 @@ class AddSenior extends Component {
 			cin: "",
 			residance: "",
 			famSituation: "",
-			fileId: "74a0cde9-482b-43cc-851c-f0b34cc36464",
+			fileId: null,
 			seniorImg: "../../../../assets/img/images/avartar.png",
 			selectedFile: null,
 			published: false,
@@ -126,12 +126,13 @@ class AddSenior extends Component {
 				file: this.state.fileId,
 			};
 			console.log('Senior = > ' + JSON.stringify(senior));
-			this.setState({ published: true, });
+			
 
 			seniorService.create(senior).then(()=>{
 				addSeniorPage()
+				this.setState({ published: true, });
+				
 			})
-			
 			console.warn(addSeniorPage)
 			
 		
