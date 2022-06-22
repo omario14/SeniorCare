@@ -1,4 +1,5 @@
 import Axios from "axios";
+import authHeader from "./auth-header";
 
 
 const API_URL = "http://localhost:8080/";
@@ -22,14 +23,17 @@ class AuthService {
     localStorage.removeItem("user");
   }
 
-  register(username,roles, email, password) {
+  register(name,lastName,username, email,fileId, password,role) {
     return Axios.post(API_URL + "signup", {
+      name,
+      lastName,
       username,
       email,
-      roles,
       password,
+      fileId,
+      role,
      
-    });
+    }, { headers: authHeader()});
   }
 }
 

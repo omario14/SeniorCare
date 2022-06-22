@@ -201,6 +201,7 @@ class Senior extends Component {
 
 
     handleShow = (senior, editDialog) => {
+        console.log(senior)
         this.myRef.current = senior;
         this.setState({
             editDialog: editDialog,

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Select from 'react-select';
 import './AddSenior.css'
-import { createSenior, retrieveSeniors } from '../../../actions/senior';
+import { createSenior } from '../../../actions/senior';
 import { connect } from 'react-redux';
 import seniorService from '../../../services/senior.service';
 
@@ -86,12 +86,7 @@ class AddSenior extends Component {
 			cin: e.target.value,
 		});
 	}
-	onFileChange = event => {
-
-		// Update the state
-		this.setState({ seniorImg: event.target.files[0] });
-
-	};
+	
 	saveSenior = (e) => {
 		e.preventDefault();
 		const { addSeniorPage } = this.props;
@@ -198,7 +193,7 @@ class AddSenior extends Component {
 												<img src={this.state.seniorImg} alt="seniorpic" />
 											</div>
 											<div className="avartar-picker">
-												<input type="file" name="file-1[]" id="file-1" className="inputfile" data-multiple-caption="{count} files selected" multiple onChange={this.imageHandler} />
+												<input type="file" name="file-1[]" id="file-1" className="inputfile" data-multiple-caption="{count} files selected"  onChange={this.imageHandler} />
 												<label htmlFor="file-1">
 													<i className="zmdi zmdi-camera"></i>
 													<span>Choose Picture</span>

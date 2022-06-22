@@ -1,5 +1,5 @@
 import axios from "axios";
-import httpCommon from "../http-common";
+import http from "../http-common";
 import authHeader from "./auth-header";
 
 const API_URL = "http://localhost:8080/api/test/";
@@ -13,16 +13,16 @@ class UserService {
     return axios.get(API_URL + "user", { headers: authHeader() });
   }
 
-  getModeratorBoard() {
-    return axios.get(API_URL + "livreur", { headers: authHeader() });
+  updateUser(user) {
+    return http.put(`/update-user`,user, { headers: authHeader() });
   }
 
-  getAdminBoard() {
-    return axios.get(API_URL + "admin", { headers: authHeader() });
+  delete(id) {
+    return http.delete(`/delete-user/${id}`, { headers: authHeader() });
   }
 
   getAllUsers(){
-    return httpCommon.get('/retrieves-all-users', { headers: authHeader() })
+    return http.get('/retrieves-all-users', { headers: authHeader() })
   }
 }
 
