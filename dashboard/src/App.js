@@ -26,6 +26,7 @@ class App extends Component {
     this.state = {
       showModeratorBoard: false,
       showAdminBoard: false,
+      showChefBoard:false,
       currentUser: undefined,
     };
 
@@ -39,12 +40,13 @@ class App extends Component {
     this.setState({
       showModeratorBoard: false,
       showAdminBoard: false,
+      showChefBoard:false,
       currentUser: undefined,
     });
   }
 
   render() {
-    const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+    const { currentUser, showModeratorBoard, showAdminBoard ,showChefBoard} = this.state;
 
   
   return (

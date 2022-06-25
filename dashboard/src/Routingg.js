@@ -19,12 +19,15 @@ import AddSenior from "./pages/Seniors/AddSenior/AddSenior";
 import { useSelector } from "react-redux";
 import NotFound from "./pages/OtherComponents/NotFound";
 import Staff from "./pages/Admin/Staff";
+import Ingredients from "./pages/Chef/Ingredients";
+import Meal from "./pages/Chef/Meal";
 
 export default function Routingg() {
     const [title,setTitle]= useState('Home');
     const [loading,setLoading]=useState(false);
     const [showAccompagnantBoard, setShowAccompagnantBoard] = useState(false);
     const [showAdminBoard, setShowAdminBoard] = useState(false);
+    const [showChefBoard, setShowChefBoard] = useState(false);
     const { user: currentUser } = useSelector((state) => state.auth);
   
   
@@ -32,6 +35,7 @@ export default function Routingg() {
       if (currentUser) {
         setShowAccompagnantBoard(currentUser.roles.includes("ROLE_ACCOMPAGNANT"));
         setShowAdminBoard(currentUser.roles.includes("ROLE_ADMIN"));
+        setShowChefBoard(currentUser.roles.includes("ROLE_CHEF"));
       }
     }, [currentUser]);
 
@@ -66,6 +70,8 @@ const SidebarLayout = () => (
             <Route title={title}  setTitle={setTitle} path='/profile' element={<Profile/>}/>
             <Route title={title}  setTitle={setTitle} path='/newSenior' element={<AddSenior/>}/>
             <Route title={title}  setTitle={setTitle} path='/staff' element={<Staff/>}/>
+            <Route title={title}  setTitle={setTitle} path='/meal' element={<Meal/>}/>
+            <Route title={title}  setTitle={setTitle} path='/ingredients' element={<Ingredients/>}/>
             
             
           </Route>

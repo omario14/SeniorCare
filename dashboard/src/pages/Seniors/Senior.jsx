@@ -58,7 +58,6 @@ class Senior extends Component {
     retrieveSeniors = () => {
         this.setState({
             isSkeleton: true,
-
         })
 
         seniorService.getFiles().then(response => {
