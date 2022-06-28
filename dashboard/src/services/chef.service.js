@@ -8,7 +8,17 @@ class ChefService {
       }
 
     addNewIngredient(data){
-      return http.post("/add-ingredient",data, { headers: authHeader()})
+      return http.post("/add-ingredient",data, { headers: authHeader()});
+    }
+    getAllIngredients(keyword){
+      return http.get(`/get-all-ingredient/${keyword}`,{ headers: authHeader()});
+    }
+    getIngredientsByCat(category){
+      return http.get(`/get-ingredientbyCategory/${category}`,{ headers: authHeader()});
+    }
+
+    removeIngredient(id){
+      return http.delete(`/delete-ingredient/${id}`,{ headers: authHeader()});
     }
 
 }
