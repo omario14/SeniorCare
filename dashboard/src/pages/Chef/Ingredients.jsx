@@ -44,7 +44,7 @@ class Ingredients extends Component {
             description: "",
             fileInfo: [],
             fileId: null,
-            category: null,
+            category: "s",
             addIngredients: true,
             categoryIngredients: false,
             message: "",
@@ -166,8 +166,7 @@ class Ingredients extends Component {
                     this.setState({
                         label: "",
                         description: "",
-                        category: null,
-                        file: null,
+                        fileId: null,
                         addIngredients: true,
                     })
                 })
@@ -258,7 +257,7 @@ class Ingredients extends Component {
                                     <>
                                         <section>
                                             <div className="rowIng">
-                                                <h1 className='text-uppercase'>Ingredients</h1>
+                                                <h1 className='text-uppercase'><span className='text-warning'>{this.state.category.label}</span> <br/> Ingredients</h1>
                                                 <ButtonGroup variant="text" aria-label="text button group">
                                                     <Button onClick={() => this.setState({ categoryIngredients: false })}>
                                                         <GiReturnArrow /> &nbsp;&nbsp; Return
@@ -358,7 +357,7 @@ class Ingredients extends Component {
 
 
 
-                                                    <div onClick={(e) => this.CatIngredients(category, e)} key={i} className="columnIng">
+                                                    <div key={i} onClick={(e) => this.CatIngredients(category, e)}  className="columnIng">
                                                         <div className="cardIng">
                                                             <img src={`http://localhost:8080/files/${category.ingCategoryImage.id}`} />
                                                             <div className="img-container">

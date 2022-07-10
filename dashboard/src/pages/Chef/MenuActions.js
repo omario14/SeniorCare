@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 
-import { SnackbarProvider, useSnackbar } from 'notistack';
-
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import EditIcon from '@mui/icons-material/Edit';

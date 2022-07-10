@@ -2,6 +2,7 @@
   flex:20;
   width: 2000px;
   background-color: rgb(247, 247, 247);
+  margin-bottom: 7rem;
   
 }
 
@@ -109,7 +110,7 @@
   background-color: #ffffff;
   width: 70%;
   min-width: 420px;
-  max-height: 1200px;
+  max-height: 1800px;
   padding: 35px 50px;
   transform: translate(-50%,-40%);
   position: relative;
@@ -149,7 +150,7 @@
   
 }
 .addIng textarea,
-.addIng input{
+.addIng #name{
   width: 100%;
   font-weight: 400;
   padding: 8px 10px ;
@@ -157,6 +158,7 @@
   border: 1.2px solid #c4cae0;
   margin: 5px 0 20px;
 }
+
 .addIng textarea{
   resize: none;
 }
@@ -185,16 +187,6 @@
   margin-top: 800px;
 }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -242,6 +234,85 @@ input[type="file"]{
   border-radius: 5px;
   margin: auto;
   cursor: pointer;
+}
+
+/*********************** Meal *************************/
+
+
+
+
+.cardMeal-block {
+  font-size: 1em;
+  position: relative;
+  margin: 0;
+  padding: 1em;
+  border: none;
+  border-top: 1px solid rgba(34, 36, 38, .1);
+  box-shadow: none;
+   
+}
+.cardMeal-block p{
+  font-size: 0.8rem;
+}
+.cardMeal {
+  font-size: 1em;
+  overflow: hidden;
+  padding: 5;
+  border: none;
+  border-radius: .28571429rem;
+  box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+  margin-top:20px;
+}
+.d-block{
+  width: 100%;
+  height: 37.5vh;
+  object-fit: cover;
+}
+
+
+
+.filter-container button{
+  margin-right:2rem;
+  min-width:5rem;
+  padding:0.5rem 1rem;
+  border:none;
+  background:white;
+  color:rgb(65,98,168);
+  border-radius:1rem;
+  border:2px solid rgb(65,98,168);
+  font-weight:bold;
+  cursor:pointer;
+}
+.filter-container button.active{
+  background:rgb(65,98,168);
+  color:white;
+ }
+
+
+
+
+
+
+
+#search-container {
+  margin: 1em 0;
+}
+#search-container input {
+  background-color: transparent;
+  width: 40%;
+  border-bottom: 2px solid #110f29;
+  padding: 1em 0.3em;
+}
+#search-container input:focus {
+  border-bottom-color: #6759ff;
+}
+#search-container button {
+  padding: 1em 2em;
+  margin-left: 1em;
+  background-color: #6759ff;
+  color: #ffffff;
+  border-radius: 5px;
+  margin-top: 0.5em;
 }
 
 
