@@ -57,30 +57,40 @@ class Ingredients extends Component {
     }
 
     componentDidMount = () => {
-        seniorService.getFiles().then(response => {
+        this.getIngredients();
+        console.log("ingredients component get mounted")
+    }
 
-            this.setState({
-                fileInfo: response.data,
-            })
-        })
 
-        chefService.getAllIngCategory()
-            .then(res => {
+    getIngredients = () => {
+        try {
+            seniorService.getFiles().then(response => {
 
                 this.setState({
-                    ingCategory: res.data,
-
-                });
-
-                console.log(this.state.ingCategory)
+                    fileInfo: response.data,
+                })
             })
 
+            chefService.getAllIngCategory()
+                .then(res => {
+
+                    this.setState({
+                        ingCategory: res.data,
+
+                    });
+
+
+                })
+
+        } catch (error) {
+            console.log(error);
+        }
     }
 
 
     handleClick = () => {
         this.setState({
-            toast:true
+            toast: true
         });
     };
 
@@ -90,7 +100,7 @@ class Ingredients extends Component {
         }
 
         this.setState({
-            toast:false
+            toast: false
         })
     };
 
@@ -229,7 +239,7 @@ class Ingredients extends Component {
 
                 });
             console.log(ingredients);
-            
+
             this.handleDialog("", false);
         } else {
             this.handleDialog("", false);
@@ -257,7 +267,7 @@ class Ingredients extends Component {
                                     <>
                                         <section>
                                             <div className="rowIng">
-                                                <h1 className='text-uppercase'><span className='text-warning'>{this.state.category.label}</span> <br/> Ingredients</h1>
+                                                <h1 className='text-uppercase'><span className='text-warning'>{this.state.category.label}</span> <br /> Ingredients</h1>
                                                 <ButtonGroup variant="text" aria-label="text button group">
                                                     <Button onClick={() => this.setState({ categoryIngredients: false })}>
                                                         <GiReturnArrow /> &nbsp;&nbsp; Return
@@ -281,65 +291,65 @@ class Ingredients extends Component {
                                         >
                                             {this.state.ingredients
                                                 .map((ingredient, i) =>
-                                                <>
-                                                    <Card key={i} sx={{ flex: "1 0 15%", maxWidth: 300 }}>
+                                                    <>
+                                                        <Card key={i} sx={{ flex: "1 0 15%", maxWidth: 300 }}>
 
-                                                        <CardActionArea>
-                                                            <CardHeader
+                                                            <CardActionArea>
+                                                                <CardHeader
 
-                                                                action={
+                                                                    action={
 
-                                                                    <CustomizedMenus
-                                                                        deleteIngredient={this.deleteIngredient}
-                                                                        ingredient={ingredient} />
+                                                                        <CustomizedMenus
+                                                                            deleteIngredient={this.deleteIngredient}
+                                                                            ingredient={ingredient} />
 
-                                                                }
+                                                                    }
 
-                                                            />
-                                                            {ingredient.file === null ?
-                                                                <CardMedia
-                                                                    component="img"
-                                                                    height="140"
-                                                                    image={this.state.ingredientImg}
-                                                                    alt="ingredient image"
                                                                 />
-                                                                : <CardMedia
-                                                                    component="img"
-                                                                    height="140"
-                                                                    image={`http://localhost:8080/files/${ingredient.file.id}`}
-                                                                    alt="ingredient image"
-                                                                />}
+                                                                {ingredient.file === null ?
+                                                                    <CardMedia
+                                                                        component="img"
+                                                                        height="140"
+                                                                        image={this.state.ingredientImg}
+                                                                        alt="ingredient image"
+                                                                    />
+                                                                    : <CardMedia
+                                                                        component="img"
+                                                                        height="140"
+                                                                        image={`http://localhost:8080/files/${ingredient.file.id}`}
+                                                                        alt="ingredient image"
+                                                                    />}
 
-                                                            <CardContent>
-                                                                <Typography gutterBottom variant="h5" component="div">
-                                                                    {ingredient.label}
-                                                                </Typography>
-                                                                <Typography variant="body2" color="text.secondary">
-                                                                    {ingredient.description}
-                                                                </Typography>
-                                                            </CardContent>
-                                                        </CardActionArea>
-                                                        <CardActions>
-                                                            <Button size="small" color="primary">
-                                                                Share
-                                                            </Button>
-                                                        </CardActions>
-                                                    </Card>
+                                                                <CardContent>
+                                                                    <Typography gutterBottom variant="h5" component="div">
+                                                                        {ingredient.label}
+                                                                    </Typography>
+                                                                    <Typography variant="body2" color="text.secondary">
+                                                                        {ingredient.description}
+                                                                    </Typography>
+                                                                </CardContent>
+                                                            </CardActionArea>
+                                                            <CardActions>
+                                                                <Button size="small" color="primary">
+                                                                    Share
+                                                                </Button>
+                                                            </CardActions>
+                                                        </Card>
 
-                                                  
-</>
+
+                                                    </>
                                                 )}
                                         </Box>
 
                                         {this.state.isLoading && (
                                             <Dialog
-                                                onDialog={this.areUSureDelete}  
+                                                onDialog={this.areUSureDelete}
                                                 message={this.state.message}
 
                                             />
                                         )}
 
-                                         <Snackbar open={this.state.toast} autoHideDuration={6000} onClose={this.handleClose}>
+                                        <Snackbar open={this.state.toast} autoHideDuration={6000} onClose={this.handleClose}>
                                             <Alert onClose={this.handleClose} severity="warning" sx={{ width: '100%' }}>
                                                 Ingredient is deleted successfully
                                             </Alert>
@@ -357,7 +367,7 @@ class Ingredients extends Component {
 
 
 
-                                                    <div key={i} onClick={(e) => this.CatIngredients(category, e)}  className="columnIng">
+                                                    <div key={i} onClick={(e) => this.CatIngredients(category, e)} className="columnIng">
                                                         <div className="cardIng">
                                                             <img src={`http://localhost:8080/files/${category.ingCategoryImage.id}`} />
                                                             <div className="img-container">
@@ -395,7 +405,23 @@ class Ingredients extends Component {
 
                             <>
 
-                                <div className="addIng">
+                                <div className="addIng" style={{ top: "48%", marginBottom: "80px" }}>
+                                    <div style={{
+                                        position: "absolute",
+                                        top: "4px",
+                                        left: "4px"
+                                    }}>
+
+
+                                        <ButtonGroup variant="text" aria-label="text button group">
+                                            <Button onClick={() => this.setState({ addIngredients: true })}>
+                                                <GiReturnArrow /> &nbsp;&nbsp; Return
+                                            </Button>
+
+                                        </ButtonGroup>
+
+
+                                    </div>
                                     <div style={{ marginBottom: "80px" }}>
 
                                         <h1 className='text-uppercase'>INGREDIENTS</h1>
@@ -446,7 +472,7 @@ class Ingredients extends Component {
                                             </div>
                                         </div>
 
-                                        <button type='submit'>Submit</button>
+                                        <button className="btnMeal" type='submit'>Submit</button>
                                     </form>
                                 </div>
                             </>

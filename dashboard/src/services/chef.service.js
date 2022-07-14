@@ -10,13 +10,15 @@ class ChefService {
   addNewIngredient(data) {
     return http.post("/add-ingredient", data, { headers: authHeader() });
   }
-  getAllIngredients(keyword) {
-    return http.get(`/get-all-ingredient/${keyword}`, { headers: authHeader() });
+  getAllIngredients() {
+    return http.get(`/get-all-ingredient`, { headers: authHeader() });
   }
   getIngredientsByCat(category) {
     return http.get(`/get-ingredientbyCategory/${category}`, { headers: authHeader() });
   }
-
+  updateIngredient(id,data) {
+    return http.put(`/update-ingredient/${id}`,data, { headers: authHeader() });
+  }
   removeIngredient(id) {
     return http.delete(`/delete-ingredient/${id}`, { headers: authHeader() });
   }
