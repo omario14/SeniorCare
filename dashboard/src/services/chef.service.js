@@ -33,5 +33,18 @@ class ChefService {
     return http.get(`/get-all-Meal`, { headers: authHeader() });
   }
 
+
+  
+  /********************************** MENU *********************************/
+
+  addNewMenu(data) {
+    return http.post("/add-Menu", data, { headers: authHeader() });
+  }
+
+  getAllMenus(){
+    return http.get(`/get-all-Menus`, { headers: authHeader() });
+  }
+
+
 }
 export default new ChefService();

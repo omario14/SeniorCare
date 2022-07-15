@@ -21,6 +21,7 @@ import "./chef.scss";
 
 import MealCard from "./MealCard";
 import { Button, ButtonGroup } from "@mui/material";
+import MenuFood from "./Menu/MenuFood";
 
 class Meal extends Component {
   constructor(props) {
@@ -37,9 +38,8 @@ class Meal extends Component {
       mealType: "DINNER",
       fileId: null,
       selectedFile: null,
-      mealImg:
-        "../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif",
-      addMeal: false,
+      mealImg:"../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif",
+      addMeal: "mealCard",
       keyword: "a",
     };
   }
@@ -94,9 +94,10 @@ class Meal extends Component {
     reader.readAsDataURL(e.target.files[0]);
   };
 
-  onPageChange = () => {
-    this.setState({ addMeal: true });
+  onPageChange = (x) => {
+    this.setState({ addMeal: x });
   };
+
   onChangeCategory = (value) => {
     this.setState({
       category: value.label,
@@ -156,7 +157,7 @@ class Meal extends Component {
               description: "",
               mealType: "",
               fileId: null,
-              addMeal: false,
+              addMeal: "mealCard",
               mealImg:
                 "../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif",
             });
@@ -228,7 +229,7 @@ class Meal extends Component {
       <div className="ingredients">
         <TopBar title={"Meal"} />
 
-        {this.state.addMeal ? (
+        {this.state.addMeal==="addMeal" ? (
           <>
 
             
@@ -241,7 +242,7 @@ class Meal extends Component {
 
 
               <ButtonGroup variant="text" aria-label="text button group">
-                <Button onClick={() => this.setState({ addMeal: false })}>
+                <Button onClick={() => this.setState({ addMeal: "mealCard" })}>
                   <GiReturnArrow /> &nbsp;&nbsp; Return
                 </Button>
 
@@ -397,11 +398,20 @@ class Meal extends Component {
               </form>
             </div>
           </>
-        ) : (
+        ) : this.state.addMeal==="mealCard" ? (
           <>
             <MealCard addMeal={this.onPageChange} />
           </>
-        )}
+        ): (
+          <>
+          <MenuFood addMeal={this.onPageChange}/>
+          </>
+        )
+        }
+      
+
+       
+        
       </div>
     );
   }

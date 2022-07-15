@@ -59,7 +59,7 @@ function MealCard(props) {
                         placeholder="Search for Meal here.."
                         onChange={(event) => {
                             setSearchTerm(event.target.value);
-                            if (event.target.value!=""){
+                            if (event.target.value!==""){
                             event.preventDefault();
                             setCurrentPage(1);
                             setMealsPerPage(50);
@@ -72,10 +72,10 @@ function MealCard(props) {
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <ButtonGroup variant="text" aria-label="text button group">
-                        <Button>
+                        <Button onClick={()=> props.addMeal("menu")}> 
                             <SiJusteat />&nbsp; Menu
                         </Button>
-                        <Button onClick={() => props.addMeal()}>
+                        <Button onClick={() => props.addMeal("addMeal")}>
                             <GiHealthNormal /> &nbsp;&nbsp; <div>add New Meal</div>
                         </Button>
 
