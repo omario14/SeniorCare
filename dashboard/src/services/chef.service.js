@@ -33,6 +33,11 @@ class ChefService {
     return http.get(`/get-all-Meal`, { headers: authHeader() });
   }
 
+  updateMeal(id,data) {
+    return http.put(`/update-Meal/${id}`,data, { headers: authHeader() });
+  }
+  
+
 
   
   /********************************** MENU *********************************/
@@ -43,6 +48,14 @@ class ChefService {
 
   getAllMenus(){
     return http.get(`/get-all-Menus`, { headers: authHeader() });
+  }
+
+  removeMenu(id) {
+    return http.delete(`/remove-Menu/${id}`, { headers: authHeader() });
+  }
+
+  updateMenu(id,data) {
+    return http.put(`/update-Menu/${id}`,data, { headers: authHeader() });
   }
 
 

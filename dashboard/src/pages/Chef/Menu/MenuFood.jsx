@@ -1,37 +1,101 @@
 import React, { useState } from 'react';
 import { Button, ButtonGroup } from "@mui/material";
-import { GiReturnArrow } from 'react-icons/gi';
+import { GiHealthPotion, GiHotMeal, GiReturnArrow } from 'react-icons/gi';
 import './MenuFood.css';
 import { useEffect } from 'react';
 import chefService from '../../../services/chef.service';
+import { format } from 'date-fns'
+import { MdDinnerDining, MdFreeBreakfast } from 'react-icons/md';
+import CustomizedMenus from '../MenuActions';
+import AddMealstoMenu from './AddMealstoMenu';
+
 
 export default function MenuFood(props) {
 
     const [loading, setLoading] = useState(false);
-    const [menu, setMenu] = useState([]);
+    const [menus, setMenus] = useState([]);
+    const [breakFastMenu, setBreakFastMenu] = useState([]);
+    const [lunchtMenu, setLunchMenu] = useState([]);
+    const [dinnerMenu, setDinnerMenu] = useState([]);
+    const [meal, setMeals] = useState([]);
+    const [mealSelect, setMealSelect] = useState("");
 
-    const retrieveMeals = () => {
+
+    const retrieveMenus = () => {
         try {
 
             chefService.getAllMenus().then((result) => {
-                console.log("menus", result);
-                setMenu(result.data);
+
+                setMenus(result.data);
             });
 
             setLoading(true);
-            console.log("menudata", menu);
+
         } catch (e) {
             console.log(e);
         }
     };
 
+    const retrieveMeals = () => {
+        chefService.getAllMeals()
+            .then((res) => {
+                setMeals(res.data.map((d) => {
+
+                    return {
+                        select: d.checked,
+                        id: d.id,
+                        label: d.label,
+                        description: d.description,
+                        type: d.type,
+                    };
+
+                }))
+
+            });
+
+    }
+
     useEffect(() => {
+        retrieveMenus();
         retrieveMeals();
+
         return () => {
-            console.log("aaaafedfdf", menu);
-            setMenu([]);
+            setMeals([])
+            setMenus([]);
         };
     }, []);
+
+
+
+    const newMeal = (e) => {
+        e.preventDefault();
+        let menu = {
+            date: new Date(),
+        }
+        chefService.addNewMenu(menu).then(() => {
+            retrieveMenus();
+        }
+
+        )
+
+    }
+
+    const removeMenu = (menu) => {
+
+        const m = menus.filter(item => item.id !== menu.id);
+        chefService.removeMenu(menu.id)
+            .then(() => {
+
+                setMenus(m);
+            }
+
+            )
+
+    }
+
+
+
+
 
 
 
@@ -52,6 +116,9 @@ export default function MenuFood(props) {
                         <Button onClick={() => props.addMeal("mealCard")}>
                             <GiReturnArrow /> &nbsp;&nbsp; Return
                         </Button>
+                        <Button onClick={newMeal}>
+                            <GiHealthPotion /> &nbsp;&nbsp; Add New Menu Plan
+                        </Button>
 
                     </ButtonGroup>
 
@@ -71,58 +138,119 @@ export default function MenuFood(props) {
                     <div className="col-12">
                         <div className="apland-timeline-area">
 
-                            {menu.length !== 0 ?
+                            {menus.length !== 0 ?
                                 <>
-                                    {menu.map((menu, i)=>(
+                                    {menus.map((menu, i) => (
 
 
-                                    <div key={i} className="single-timeline-area">
-                                        <div className="timeline-date wow fadeInLeft" data-wow-delay="0.1s" style={{ visibility: "visible", animationDelay: "0.1s", animationName: "fadeInLeft" }}>
-                                            <p>{menu.date.getDay()}</p>
+                                        <div key={i} className="single-timeline-area">
+                                            <div className="timeline-date wow fadeInLeft" data-wow-delay="0.1s" style={{ visibility: "visible", animationDelay: "0.1s", animationName: "fadeInLeft" }}>
+                                                <p>{format(new Date(menu.date), `eeee, PP`
+                                                )} </p>
+                                                <div id="app-cover">
+                                                    <input onClick={(e) => removeMenu(menu, e)} className="binCheckbox" type="checkbox" id="checkbox" />
+                                                    <div id="bin-icon">
+                                                        <div id="lid"></div>
+                                                        <div id="box">
+                                                            <div id="box-inner">
+                                                                <div id="bin-lines"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="layer"></div>
+                                                </div>
+
+                                            </div>
+                                            <div className="row">
+
+                                                <div className="col-12 col-md-6 col-lg-4">
+                                                    <div className="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.3s" style={{ visibility: "visible", animationDelay: "0.3s", animationName: "fadeInLeft" }}>
+                                                        <div className="timeline-icon"><i className='fa' aria-hidden="true"><MdFreeBreakfast /></i></div>
+                                                        <div className="timeline-text">
+                                                            <h6 className='mb-4'>BREAKFAST</h6>
+                                                            {menu.breakfastMenu.map((breakfast, index) => (
+                                                                <>
+                                                                    <div key={index} className="d-flex justify-content-start mb-5" >
+                                                                        <div className="img_cont_msg" >
+                                                                            <img src={`http://localhost:8080/files/${breakfast.image.id}`} alt="imageMeal" className=" user_img_msg" />
+                                                                        </div>
+                                                                        <div className="msg_cotainer">
+                                                                            {breakfast.label}
+
+                                                                        </div>
+                                                                    </div>
+                                                                    {mealSelect === "BREAKFAST" &&
+                                                                        <AddMealstoMenu value={menu.id} selectedList={breakFastMenu} setSelectedList={setBreakFastMenu} meals={meal} setMealSelect={setMealSelect} />
+
+                                                                    }
+                                                                </>
+                                                            ))}
+                                                        </div>
+                                                        <div style={{ position: "absolute", right: "5PX", top: "5PX" }}>
+                                                            <CustomizedMenus  mealSelect={"BREAKFAST"} setMealSelect={setMealSelect} />
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-12 col-md-6 col-lg-4">
+                                                    <div className="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.3s" style={{ visibility: "visible", animationDelay: "0.3s", animationName: "fadeInLeft" }}>
+                                                        <div className="timeline-icon"><i className="fa " aria-hidden="true"><GiHotMeal /></i></div>
+                                                        <div className="timeline-text">
+
+                                                            <h6 className='mb-4'>LUNCH</h6>
+                                                            {menu.lunchMenu.map((lunch, index) => (
+                                                                <>
+
+
+
+                                                                </>
+                                                            ))}
+
+
+                                                        </div>
+                                                        <div style={{ position: "absolute", right: "5PX", top: "5PX" }}>
+                                                            <CustomizedMenus mealSelect={"LUNCH"} setMealSelect={setMealSelect} />
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-12 col-md-6 col-lg-4">
+                                                    <div className="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.3s" style={{ visibility: "visible", animationDelay: "0.3s", animationName: "fadeInLeft" }}>
+                                                        <div className="timeline-icon"><i className="fa " aria-hidden="true"><MdDinnerDining /></i></div>
+                                                        <div className="timeline-text">
+
+                                                            <h6 className='mb-4'>DINNER</h6>
+                                                            {menu.dinnerMenu.map((dinner, index) => (
+                                                                <>
+
+
+                                                                    <div key={index} className="d-flex justify-content-start mb-5" >
+                                                                        <div className="img_cont_msg" >
+                                                                            <img src={`http://localhost:8080/files/${dinner.image.id}`} alt="imageMeal" className=" user_img_msg" />
+                                                                        </div>
+                                                                        <div className="msg_cotainer">
+                                                                            {dinner.label}
+
+                                                                        </div>
+                                                                    </div>
+                                                                </>
+                                                            ))}
+                                                            <div className='mt-5' style={{ position: "absolute", alignItems: "center", bottom: "5PX" }}>
+
+                                                            </div>
+                                                        </div>
+                                                        <div style={{ position: "absolute", right: "5PX", top: "5PX" }}>
+                                                            <CustomizedMenus mealSelect={"DINNER"} setMealSelect={setMealSelect} />
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
                                         </div>
-                                        <div className="row">
-                                       
-                                            <div className="col-12 col-md-6 col-lg-4">
-                                                <div className="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.3s" style={{ visibility: "visible", animationDelay: "0.3s", animationName: "fadeInLeft" }}>
-                                                    <div className="timeline-icon"><i className="fa fa-address-card" aria-hidden="true"></i></div>
-                                                    <div className="timeline-text">
-                                                        
-                                                        <h6>BREAKFAST</h6>
-                                                        {menu.breakfastMenu.map((breakfast, index)=>( 
-                                                      <p key={index}>{breakfast.label}</p>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="col-12 col-md-6 col-lg-4">
-                                                <div className="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.3s" style={{ visibility: "visible", animationDelay: "0.3s", animationName: "fadeInLeft" }}>
-                                                    <div className="timeline-icon"><i className="fa fa-address-card" aria-hidden="true"></i></div>
-                                                    <div className="timeline-text">
-                                                        
-                                                        <h6>BREAKFAST</h6>
-                                                        {menu.lunchMenu.map((lunch, index)=>( 
-                                                        <p key={index}>{lunch.label}</p>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="col-12 col-md-6 col-lg-4">
-                                                <div className="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.3s" style={{ visibility: "visible", animationDelay: "0.3s", animationName: "fadeInLeft" }}>
-                                                    <div className="timeline-icon"><i className="fa fa-address-card" aria-hidden="true"></i></div>
-                                                    <div className="timeline-text">
-                                                        
-                                                        <h6>BREAKFAST</h6>
-                                                        {menu.dinnerMenu.map((dinner, index)=>( 
-                                                       <p key={index}>{dinner.label}</p>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                       
-                                        </div>
-                                    </div>
                                     ))}
                                 </>
                                 :
@@ -130,7 +258,7 @@ export default function MenuFood(props) {
 
                                 <div className="single-timeline-area">
                                     <div className="timeline-date wow fadeInLeft" data-wow-delay="0.1s" style={{ visibility: "visible", animationDelay: "0.1s", animationName: "fadeInLeft" }}>
-                                        <p>Near Future</p>
+                                        <p>New Plan</p>
                                     </div>
                                     <div className="row">
                                         <div className="col-12 col-md-6 col-lg-4">
@@ -167,7 +295,18 @@ export default function MenuFood(props) {
                         </div>
                     </div>
                 </div>
+
             </div>
+
+
+            {mealSelect === "LUNCH" &&
+                <AddMealstoMenu selectedList={lunchtMenu} setSelectedList={setLunchMenu} meals={meal} setMealSelect={setMealSelect} />
+
+            }
+            {mealSelect === "DINNER" &&
+                <AddMealstoMenu selectedList={"dinner"} meals={meal} setMealSelect={setMealSelect} />
+
+            }
         </section>
 
     )

@@ -20,12 +20,12 @@ function MealCard(props) {
         try {
             setLoading(false);
             chefService.getAllMeals().then((result) => {
-                console.log("aaaaaaa", result);
+                
                 setMeals(result.data);
             });
 
             setLoading(true);
-            console.log("data", meals);
+           
         } catch (e) {
             console.log(e);
         }
@@ -34,7 +34,7 @@ function MealCard(props) {
     useEffect(() => {
         retrieveMeals();
         return () => {
-            console.log("aaaafedfdf", meals);
+           
             setMeals([]);
         };
     }, []);
@@ -227,66 +227,66 @@ function MealCard(props) {
                             )
                                 : (
                                     <div className="mt-5">
-                                        <ul class="o-vertical-spacing o-vertical-spacing--l">
-                                            <li class="blog-post o-media">
-                                                <div class="o-media__figure">
-                                                    <span class="skeleton-box" style={{ width: "100px", height: "80px" }}></span>
+                                        <ul className="o-vertical-spacing o-vertical-spacing--l">
+                                            <li className="blog-post o-media">
+                                                <div className="o-media__figure">
+                                                    <span className="skeleton-box" style={{ width: "100px", height: "80px" }}></span>
                                                 </div>
-                                                <div class="o-media__body">
-                                                    <div class="o-vertical-spacing">
-                                                        <h3 class="blog-post__headline">
-                                                            <span class="skeleton-box" style={{ width: "55%" }}></span>
+                                                <div className="o-media__body">
+                                                    <div className="o-vertical-spacing">
+                                                        <h3 className="blog-post__headline">
+                                                            <span className="skeleton-box" style={{ width: "55%" }}></span>
                                                         </h3>
                                                         <p>
-                                                            <span class="skeleton-box" style={{ width: "80%" }}></span>
-                                                            <span class="skeleton-box" style={{ width: "90%" }}></span>
-                                                            <span class="skeleton-box" style={{ width: "83%" }}></span>
-                                                            <span class="skeleton-box" style={{ width: "80%" }}></span>
+                                                            <span className="skeleton-box" style={{ width: "80%" }}></span>
+                                                            <span className="skeleton-box" style={{ width: "90%" }}></span>
+                                                            <span className="skeleton-box" style={{ width: "83%" }}></span>
+                                                            <span className="skeleton-box" style={{ width: "80%" }}></span>
                                                         </p>
-                                                        <div class="blog-post__meta">
-                                                            <span class="skeleton-box" style={{ width: "70px" }}></span>
+                                                        <div className="blog-post__meta">
+                                                            <span className="skeleton-box" style={{ width: "70px" }}></span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </li>
-                                            <li class="blog-post o-media">
-                                                <div class="o-media__figure">
-                                                    <span class="skeleton-box" style={{ width: "100px", height: "80px" }}></span>
+                                            <li className="blog-post o-media">
+                                                <div className="o-media__figure">
+                                                    <span className="skeleton-box" style={{ width: "100px", height: "80px" }}></span>
                                                 </div>
-                                                <div class="o-media__body">
-                                                    <div class="o-vertical-spacing">
-                                                        <h3 class="blog-post__headline">
-                                                            <span class="skeleton-box" style={{ width: "55%" }}></span>
+                                                <div className="o-media__body">
+                                                    <div className="o-vertical-spacing">
+                                                        <h3 className="blog-post__headline">
+                                                            <span className="skeleton-box" style={{ width: "55%" }}></span>
                                                         </h3>
                                                         <p>
-                                                            <span class="skeleton-box" style={{ width: "80%" }}></span>
-                                                            <span class="skeleton-box" style={{ width: "90%" }}></span>
-                                                            <span class="skeleton-box" style={{ width: "83%" }}></span>
-                                                            <span class="skeleton-box" style={{ width: "80%" }}></span>
+                                                            <span className="skeleton-box" style={{ width: "80%" }}></span>
+                                                            <span className="skeleton-box" style={{ width: "90%" }}></span>
+                                                            <span className="skeleton-box" style={{ width: "83%" }}></span>
+                                                            <span className="skeleton-box" style={{ width: "80%" }}></span>
                                                         </p>
-                                                        <div class="blog-post__meta">
-                                                            <span class="skeleton-box" style={{ width: "70px" }}></span>
+                                                        <div className="blog-post__meta">
+                                                            <span className="skeleton-box" style={{ width: "70px" }}></span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </li>
-                                            <li class="blog-post o-media">
-                                                <div class="o-media__figure">
-                                                    <span class="skeleton-box" style={{ width: "100px", height: "80px" }}></span>
+                                            <li className="blog-post o-media">
+                                                <div className="o-media__figure">
+                                                    <span className="skeleton-box" style={{ width: "100px", height: "80px" }}></span>
                                                 </div>
-                                                <div class="o-media__body">
-                                                    <div class="o-vertical-spacing">
-                                                        <h3 class="blog-post__headline">
-                                                            <span class="skeleton-box" style={{ width: "55%" }}></span>
+                                                <div className="o-media__body">
+                                                    <div className="o-vertical-spacing">
+                                                        <h3 className="blog-post__headline">
+                                                            <span className="skeleton-box" style={{ width: "55%" }}></span>
                                                         </h3>
                                                         <p>
-                                                            <span class="skeleton-box" style={{ width: "80%" }}></span>
-                                                            <span class="skeleton-box" style={{ width: "90%" }}></span>
-                                                            <span class="skeleton-box" style={{ width: "83%" }}></span>
-                                                            <span class="skeleton-box" style={{ width: "80%" }}></span>
+                                                            <span className="skeleton-box" style={{ width: "80%" }}></span>
+                                                            <span className="skeleton-box" style={{ width: "90%" }}></span>
+                                                            <span className="skeleton-box" style={{ width: "83%" }}></span>
+                                                            <span className="skeleton-box" style={{ width: "80%" }}></span>
                                                         </p>
-                                                        <div class="blog-post__meta">
-                                                            <span class="skeleton-box" style={{ width: "70px" }}></span>
+                                                        <div className="blog-post__meta">
+                                                            <span className="skeleton-box" style={{ width: "70px" }}></span>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -55,7 +55,7 @@ const StyledMenu = styled((props) => (
 
 
 
-export default function CustomizedMenus({ingredient,deleteIngredient}) {
+export default function CustomizedMenus({ingredient,deleteIngredient,setMealSelect,mealSelect}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -70,6 +70,7 @@ export default function CustomizedMenus({ingredient,deleteIngredient}) {
         handleClose();
     })
   }
+ 
 
   return (
     <div>
@@ -97,7 +98,7 @@ export default function CustomizedMenus({ingredient,deleteIngredient}) {
           <EditIcon />
           Edit
         </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
+        <MenuItem onClick={(e)=>{e.preventDefault();setMealSelect(mealSelect)}} disableRipple>
           <FileCopyIcon />
           Duplicate
         </MenuItem>
