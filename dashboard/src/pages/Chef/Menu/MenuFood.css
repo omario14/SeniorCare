@@ -375,3 +375,112 @@
 
   /*********************meals list ***************************/
   
+
+  
+.container-fluidd {
+    margin-top: 80px;
+    margin-bottom: 100px;
+    
+
+}
+
+.cardMenu {
+    
+    min-width: 800px;
+    min-height: 550px;
+    margin:15px 0 ;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+   
+    
+    border-radius: 10px;
+}
+
+
+.text-greyyy {
+    color: #9E9E9E
+}
+
+.fadd {
+    font-size: 25px;
+    cursor: pointer
+}
+
+.inputMenu,
+.inputSelectt {
+    padding: 2px 6px;
+    border: none;
+    border-bottom: 1px solid #fff;
+    border-radius: none;
+    box-sizing: border-box;
+    color: #fff;
+    background-color: transparent;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-align: center !important
+}
+
+.inputMenu:focus,
+.inputSelectt:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid #00C853;
+    outline-width: 0
+}
+
+.inputSelectt option {
+    background-color: #616161
+}
+
+.inputSelectt option:focus {
+    background-color: #00C853 !important
+}
+
+::placeholder {
+    color: #fff;
+    opacity: 1
+}
+
+:-ms-input-placeholder {
+    color: #fff
+}
+
+::-ms-input-placeholder {
+    color: #fff
+}
+
+.exit:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    outline-width: 0
+}
+
+
+.exit {
+    border: 1px solid #9E9E9E;
+    color: #9E9E9E;
+    background-color: transparent
+}
+
+.exit:hover {
+    border: 1px solid #9E9E9E;
+    color: #000 !important;
+    background-color: #9E9E9E
+}
+
+@media screen and (max-width: 768px) {
+    .mob {
+        width: 70%
+    }
+
+    .inputSelect.mob {
+        width: 50%
+    }
+}

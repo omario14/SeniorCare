@@ -54,7 +54,7 @@ class ChefService {
     return http.delete(`/remove-Menu/${id}`, { headers: authHeader() });
   }
 
-  updateMenu(id,data) {
+  updateMenu(data,id) {
     return http.put(`/update-Menu/${id}`,data, { headers: authHeader() });
   }
 
