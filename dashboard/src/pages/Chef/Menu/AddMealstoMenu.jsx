@@ -1,20 +1,57 @@
-import React, { useState } from 'react'
-import { GiHotMeal } from 'react-icons/gi';
-import { MdDinnerDining, MdFreeBreakfast } from 'react-icons/md';
-import Select from 'react-select'
-import chefService from '../../../services/chef.service';
+import { Button, ButtonGroup } from "@mui/material";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { GiHealthPotion, GiHotMeal, GiReturnArrow } from "react-icons/gi";
+import { MdDinnerDining, MdFreeBreakfast } from "react-icons/md";
+import Select from "react-select";
+import chefService from "../../../services/chef.service";
 
 export default function AddMealstoMenu(props) {
+    const [date,setDate]=useState("")
     const [breakFastMenu, setBreakFastMenu] = useState([]);
-    const [val, setVal] = useState([]);
+    const [lunchMenu, setLunchMenu] = useState([]);
+    const [dinnerMenu, setDinnerMenu] = useState([]);
+    const [selectListBF, setSelectListBF] = useState([]);
+    const [selectListLUN, setSelectListLUN] = useState([]);
+    const [selectListDIN, setSelectListDIN] = useState([]);
+    const [mealCategory, setMealCategory] = useState("  ");
 
-    const handleAdd = () => {
-        const abc = [...val, []]
-        setVal(abc);
-    }
+    useEffect(() => {
+        setBreakFastMenu(props.meals);
+        setLunchMenu(props.meals);
+        setDinnerMenu(props.meals);
+        return () => {
+            setBreakFastMenu([]);
+            setLunchMenu([]);
+            setDinnerMenu([]);
+        };
+    }, []);
+
     const onChangeSelectedMeal = (value) => {
-        setBreakFastMenu(value)
-        console.log(value)
+        setMealCategory(value.value);
+        console.log("arrayId List breakfast : ", selectListBF);
+        console.log("arrayId List lunch : ", selectListLUN);
+        console.log("arrayId List dinner : ", selectListDIN);
+    };
+    
+    
+
+    const handleSave = (e)=>{
+        e.preventDefault();
+
+        let menu ={
+            date:date,
+            breakfastMenu:selectListBF,
+            lunchMenu:selectListLUN,
+            dinnerMenu:selectListDIN,
+        }
+        chefService.addNewMenu(menu)
+        .then((data)=>{
+            
+       
+            props.setMenu(data.data)
+            props.setMealSelect(true);
+        })
 
     }
 
@@ -44,92 +81,357 @@ export default function AddMealstoMenu(props) {
                 </span>
             ),
         },
-
-
     ];
     return (
-        
-      
-                <div class="container-fluidd px-1 px-sm-4 py-5 mx-auto">
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-md-10 col-lg-9 col-xl-8">
-                            <div className="cardd cardMenu cardd-4">
-                                <div className="cardd-body">
-                                    <h2 className="title" style={{ lettreSpacing: '10px', textTransform: "uppercase" }}>Menu :</h2>
-                                    <form >
+        <section className="timeline_area section_padding_130">
+            <div
+                style={{
+                    position: "absolute",
+                    top: "4px",
+                    left: "15px",
+                }}
+            >
+                <ButtonGroup variant="text" aria-label="text button group">
+                    <Button onClick={() => props.setMealSelect(true)}>
+                        <GiReturnArrow /> &nbsp;&nbsp; Return
+                    </Button>
+                    <Button onClick={() => props.setMealSelect(false)}>
+                        <GiHealthPotion /> &nbsp;&nbsp; Add New Menu Plan
+                    </Button>
+                </ButtonGroup>
+            </div>
 
+            <div className="card mt-6 card-4">
+                <div className="card-body">
+                    <h2
+                        className="title"
+                        style={{ lettreSpacing: "10px", textTransform: "uppercase" }}
+                    >
+                        Menu :
+                    </h2>
+                    <form onSubmit={handleSave}>
+                        <div className="input-groupp mb-7">
+                            <label className="label">Date</label>
+                            <div className="input-groupp-icon">
+                                <input
+                                    onChange={(e)=>setDate(e.target.value)}
+                                    className="input--style-4"
+                                    type="date"
+                                    name="Date"
+                                    format="{0:yyyy-MM-dd}"
+                                />
+                            </div>
+                        </div>
 
+                        <div className="input-groupp" style={{ marginTop: "40px" }}>
+                            <label className="label">Meals</label>
+                        </div>
+                        <div className="rs-select2 js-select-simple select--no-search">
+                            <Select
+                                onChange={onChangeSelectedMeal}
+                                options={options}
 
+                                placeholder="Select Meals Category "
+                            />
+                        </div>
+                        <div className=" mb-4 pt-2" style={{ minHeight: "80px" }}>
+                            <div class="card shadow border-0 mb-5">
+                                <div class="card-body p-5">
+                                    {!mealCategory ?
+                                        <>
+                                            <h2 class="h4 mb-1">{mealCategory}</h2>
+                                            <p class="small text-muted font-italic mb-4">
+                                                Choose your main dish.
+                                            </p>
+                                        </>
+                                        :
+                                        <>
+                                            <h2 class="h4 mb-1">PLEASE CHOOSE MENU TYPE</h2>
 
-                                        <div className="input-groupp mb-7">
-                                            <label className="label">Date</label>
-                                            <div className="input-groupp-icon">
-                                                <input className="input--style-4" type="date"
+                                        </>
+                                    }
 
+                                    <ul class="list-group">
+                                        {mealCategory === "BREAKFAST" ? (
+                                            <>
+                                                {breakFastMenu.map((meal, i) => (
+                                                    <li class="list-group-item rounded-0 d-flex align-items-center justify-content-between">
+                                                        <div class="form-check custom-checkbox">
+                                                            <input
+                                                                class="form-check-input"
+                                                                id={meal.id}
+                                                                checked={meal.checkedBreakFast}
+                                                                value={meal.id}
+                                                                type="checkbox"
+                                                                name="customCheckbox"
+                                                                onChange={(e) => {
 
-                                                    name="Date"
-                                                    format="{0:yyyy-MM-dd}" />
+                                                                    setBreakFastMenu(breakFastMenu.map((data) => {
+                                                                        if (data.id === meal.id) {
+                                                                            data.checkedBreakFast = e.target.checked;
+                                                                        }
+                                                                        return data;
+                                                                    }),
+                                                                    )
 
-                                            </div>
-                                        </div>
+                                                                    let arrayIds = [...selectListBF];
+                                                                    if (e.target.checked) {
+                                                                        let mealtr = {
+                                                                            label: meal.label,
+                                                                            description: meal.description,
+                                                                            type: meal.type,
+                                                                            image: meal.image,
+                                                                            checkedBreakFast: 1,
+                                                                            checkedLunch: meal.checkedLunch,
+                                                                            checkedDinner: meal.checkedDinner,
+                                                                        };
 
+                                                                        chefService.updateMeal(
+                                                                            e.target.value,
+                                                                            mealtr
+                                                                        );
+                                                                        arrayIds = [
+                                                                            ...selectListBF,
+                                                                            e.target.value,
+                                                                        ];
+                                                                        
+                                                                    } else {
+                                                                        let mealtr = {
+                                                                            label: meal.label,
+                                                                            description: meal.description,
+                                                                            type: meal.type,
+                                                                            image: meal.image,
+                                                                            checkedBreakFast: 0,
+                                                                            checkedLunch: meal.checkedLunch,
+                                                                            checkedDinner: meal.checkedDinner,
+                                                                        };
 
+                                                                        chefService.updateMeal(
+                                                                            e.target.value,
+                                                                            mealtr
+                                                                        );
+                                                                        arrayIds.splice(
+                                                                            selectListBF.indexOf(e.target.value),
+                                                                            1
+                                                                        );
+                                                                    }
+                                                                    setSelectListBF(arrayIds);
 
+                                                                }}
 
+                                                            />
+                                                            <label class="form-check-label" for={meal.id}>
+                                                                <p class="mb-0">{meal.label}</p>
+                                                                <span class="small font-italic text-muted">
+                                                                {meal.description}
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                        <label for={meal.id}>
+                                                            <img
+                                                                src={`http://localhost:8080/files/${meal.image.id}`}
+                                                                alt=""
+                                                                width="60"
+                                                            />
+                                                        </label>
+                                                    </li>
+                                                ))}
+                                            </>
+                                        ) : mealCategory === "LUNCH" ? (
+                                            <>
+                                                {lunchMenu.map((meal, i) => (
+                                                    <li key={i} class="list-group-item rounded-0 d-flex align-items-center justify-content-between">
+                                                        <div class="form-check custom-checkbox">
+                                                            <input
+                                                                class="form-check-input"
+                                                                id={meal.id}
+                                                                checked={meal.checkedLunch}
+                                                                value={meal.id}
+                                                                type="checkbox"
+                                                                name="customCheckbox"
+                                                                onChange={(e) => {
 
-                                        <div className="input-groupp" style={{ marginTop: "40px" }}>
-                                            <label className="label">Meals</label>
+                                                                    setLunchMenu(lunchMenu.map((data) => {
+                                                                        if (data.id === meal.id) {
+                                                                            data.checkedLunch = e.target.checked;
+                                                                        }
+                                                                        return data;
+                                                                    }),
+                                                                    )
+                                                                   
 
+                                                                    let arrayIds = [...selectListLUN];
+                                                                    if (e.target.checked) {
+                                                                        let mealtr = {
+                                                                            label: meal.label,
+                                                                            description: meal.description,
+                                                                            type: meal.type,
+                                                                            image: meal.image,
+                                                                            checkedBreakFast: meal.checkedBreakFast,
+                                                                            checkedLunch: 1,
+                                                                            checkedDinner: meal.checkedDinner,
+                                                                        };
 
+                                                                        chefService.updateMeal(
+                                                                            e.target.value,
+                                                                            mealtr
+                                                                        );
+                                                                        arrayIds = [
+                                                                            ...selectListLUN,
+                                                                            e.target.value,
+                                                                        ];
+                                                                        
+                                                                    } else {
+                                                                        let mealtr = {
+                                                                            label: meal.label,
+                                                                            description: meal.description,
+                                                                            type: meal.type,
+                                                                            image: meal.image,
+                                                                            checkedBreakFast: meal.checkedBreakFast,
+                                                                            checkedLunch: 0,
+                                                                            checkedDinner: meal.checkedDinner,
+                                                                        };
 
+                                                                        chefService.updateMeal(
+                                                                            e.target.value,
+                                                                            mealtr
+                                                                        );
+                                                                        arrayIds.splice(
+                                                                            selectListLUN.indexOf(e.target.value),
+                                                                            1
+                                                                        );
+                                                                    }
+                                                                    setSelectListLUN(arrayIds);
 
-                                        </div>
-                                        <div className="rs-select2 js-select-simple select--no-search" style={{ display: "flex", justifyContent: "space-evenly", marginTop: "22px" }} >
-                                            <Select
+                                                                }}
 
-                                                options={options}
-                                                isClearable={true}
-                                                placeholder="Select Ingredients Category "
-                                            />
-                                            <div class="mt-1 cancel fa fa-times text-danger fadd"></div>
-                                        </div>
-                                        <div className=" mb-4 pt-2" style={{ minHeight: "80px" }}>
-
-                                            <div class="card shadow border-0 mb-5">
-                                                <div class="card-body p-5">
-                                                    <h2 class="h4 mb-1">Choose your main dish</h2>
-                                                    <p class="small text-muted font-italic mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                                                    <ul class="list-group">
-                                                        {props.meals.map((meal, i) => (
-                                                            <li class="list-group-item rounded-0 d-flex align-items-center justify-content-between">
-                                                                <div class="custom-control custom-radio">
-                                                                    <input class="custom-control-input" id="customRadio1" type="checkbox" name="customRadio" />
-                                                                    <label class="custom-control-label" for="customRadio1">
-                                                                        <p class="mb-0">{meal.label}</p><span class="small font-italic text-muted">Classic marinara sauce, authentic old-world pepperoni</span>
-                                                                    </label>
-                                                                </div>
-                                                                <label for="customRadio1"><img
-                                                                    src={`http://localhost:8080/files/${meal.image.id}`} alt="" width="60" /></label>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-
-
-                                        <div className="p-t-15">
-                                            <p className="btn btn--radius-2 btn--blue" onClick={() => handleAdd()} ><i class="fa fa-plus-circle fadd " style={{ position: "relative", left: "-15px", bottom: "-2px" }} />ADD</p>
-                                        </div>
-                                    </form>
+                                                            />
+                                                            <label class="form-check-label" for={meal.id}>
+                                                                <p class="mb-0">{meal.label}</p>
+                                                                <span class="small font-italic text-muted">
+                                                                {meal.description}
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                        <label for={meal.id}>
+                                                            <img
+                                                                src={`http://localhost:8080/files/${meal.image.id}`}
+                                                                alt=""
+                                                                width="60"
+                                                            />
+                                                        </label>
+                                                    </li>
+                                                ))}
+                                            </>
+                                        ) : mealCategory === "DINNER" ? (
+                                            <>
+                                                {dinnerMenu.map((meal, i) => (
+                                                     <li key={i} class="list-group-item rounded-0 d-flex align-items-center justify-content-between">
+                                                     <div class="form-check custom-checkbox">
+                                                       <input
+                                                         class="form-check-input"
+                                                         id={meal.id}
+                                                         checked={meal.checkedDinner}
+                                                         value={meal.id}
+                                                         type="checkbox"
+                                                         name="customCheckbox"
+                                                         onChange={(e) => {
+                                                             
+                                                               setDinnerMenu(dinnerMenu.map((data) => {
+                                                                 if (data.id === meal.id) {
+                                                                   data.checkedDinner = e.target.checked;
+                                                                 }
+                                                                 return data;
+                                                               }),
+                                                            )
+                                   
+                                                             let arrayIds = [...selectListDIN];
+                                                             if (e.target.checked) {
+                                                               let mealtr = {
+                                                                 label: meal.label,
+                                                                 description: meal.description,
+                                                                 type: meal.type,
+                                                                 image:meal.image,
+                                                                 checkedBreakFast: meal.checkedBreakFast,
+                                                                 checkedLunch:meal.checkedLunch,
+                                                                 checkedDinner:1,
+                                                               };
+                                   
+                                                               chefService.updateMeal(
+                                                                 e.target.value,
+                                                                 mealtr
+                                                               );
+                                                               arrayIds = [
+                                                                 ...selectListDIN,
+                                                                 e.target.value,
+                                                               ];
+                                                             } else {
+                                                               let mealtr = {
+                                                                 label: meal.label,
+                                                                 description: meal.description,
+                                                                 type: meal.type,
+                                                                 image:meal.image,
+                                                                 checkedBreakFast: meal.checkedBreakFast,
+                                                                 checkedLunch:meal.checkedLunch,
+                                                                 checkedDinner:0,
+                                                               };
+                                   
+                                                               chefService.updateMeal(
+                                                                 e.target.value,
+                                                                 mealtr
+                                                               );
+                                                               arrayIds.splice(
+                                                                 selectListDIN.indexOf(e.target.value),
+                                                                 1
+                                                               );
+                                                             }
+                                                             setSelectListDIN(arrayIds);
+                                                            
+                                                           }}
+                         
+                                                       />
+                                                       <label class="form-check-label" for={meal.id}>
+                                                         <p class="mb-0">{meal.label}</p>
+                                                         <span class="small font-italic text-muted">
+                                                           {meal.description}
+                                                         </span>
+                                                       </label>
+                                                     </div>
+                                                     <label for={meal.id}>
+                                                       <img
+                                                         src={`http://localhost:8080/files/${meal.image.id}`}
+                                                         alt=""
+                                                         width="60"
+                                                       />
+                                                     </label>
+                                                   </li>
+                                                ))}
+                                            </>
+                                        ) : mealCategory === null && (
+                                            <h1></h1>
+                                        )
+                                        }
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-                    </div>
+
+                        <div className="p-t-15">
+                            <button className="btn btn--radius-2 btn--blue" type="submit">
+                                <i
+                                    class="fa fa-plus-circle fadd "
+                                    style={{
+                                        position: "relative",
+                                        left: "-15px",
+                                        bottom: "-2px",
+                                    }}
+                                />
+                                ADD
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            
-        
-    )
+            </div>
+        </section>
+    );
 }

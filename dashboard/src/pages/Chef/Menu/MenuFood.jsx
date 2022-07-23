@@ -14,9 +14,6 @@ export default function MenuFood(props) {
 
     const [loading, setLoading] = useState(false);
     const [menus, setMenus] = useState([]);
-    const [breakFastMenu, setBreakFastMenu] = useState([]);
-    const [lunchtMenu, setLunchMenu] = useState([]);
-    const [dinnerMenu, setDinnerMenu] = useState([]);
     const [meal, setMeals] = useState([]);
     const [mealSelect, setMealSelect] = useState(true);
 
@@ -42,7 +39,9 @@ export default function MenuFood(props) {
                 setMeals(res.data.map((d) => {
 
                     return {
-                        select: d.checked,
+                        checkedBreakfast: d.checkedBreakfast,
+                        checkedLunch: d.checkedLunch,
+                        checkedDinner: d.checkedDinner,
                         id: d.id,
                         label: d.label,
                         description: d.description,
@@ -92,13 +91,15 @@ export default function MenuFood(props) {
     return (
 
 <>
-        <section className="timeline_area section_padding_130">
+
             { mealSelect ? 
-            <div className="container">
+            
+            <section className="timeline_area section_padding_130">
+            
             <div style={{
                 position: "absolute",
                 top: "4px",
-                left: "4px"
+                left: "15px"
             }}>
 
 
@@ -291,18 +292,18 @@ export default function MenuFood(props) {
                 </div>
             </div>
 
-        </div>
-        :
-
-        <AddMealstoMenu selectedList={breakFastMenu} setSelectedList={setBreakFastMenu} meals={meal} setMealSelect={setMealSelect} />
-        }
+            </section>
             
-
-
-          
-
-        </section>
+        :
+       
         
+            <AddMealstoMenu setMenu={setMenus} menus={menus}  meals={meal} setMealSelect={setMealSelect} />
+   
+        
+        
+    
+    }
+   
       </>
 
     )
