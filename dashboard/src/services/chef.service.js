@@ -36,6 +36,10 @@ class ChefService {
   updateMeal(id,data) {
     return http.put(`/update-Meal/${id}`,data, { headers: authHeader() });
   }
+
+  updateCheckedMeal() {
+    return http.put(`/update-Checked-Meal`, { headers: authHeader() });
+  }
   
 
 

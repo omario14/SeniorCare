@@ -7,7 +7,7 @@ import Select from "react-select";
 import chefService from "../../../services/chef.service";
 
 export default function AddMealstoMenu(props) {
-    const [date,setDate]=useState("")
+    const [date,setDate]=useState(new Date().toISOString().split("T")[0])
     const [breakFastMenu, setBreakFastMenu] = useState([]);
     const [lunchMenu, setLunchMenu] = useState([]);
     const [dinnerMenu, setDinnerMenu] = useState([]);
@@ -20,6 +20,7 @@ export default function AddMealstoMenu(props) {
         setBreakFastMenu(props.meals);
         setLunchMenu(props.meals);
         setDinnerMenu(props.meals);
+        console.log(date)
         return () => {
             setBreakFastMenu([]);
             setLunchMenu([]);
@@ -48,9 +49,10 @@ export default function AddMealstoMenu(props) {
         chefService.addNewMenu(menu)
         .then((data)=>{
             
-       
-            props.setMenu(data.data)
+            props.setMenu(data.data);
             props.setMealSelect(true);
+            
+           
         })
 
     }
@@ -118,7 +120,8 @@ export default function AddMealstoMenu(props) {
                                     className="input--style-4"
                                     type="date"
                                     name="Date"
-                                    format="{0:yyyy-MM-dd}"
+                                    format="{yyyy-MM-dd}"
+                                    min={date}
                                 />
                             </div>
                         </div>
@@ -137,7 +140,7 @@ export default function AddMealstoMenu(props) {
                         <div className=" mb-4 pt-2" style={{ minHeight: "80px" }}>
                             <div class="card shadow border-0 mb-5">
                                 <div class="card-body p-5">
-                                    {!mealCategory ?
+                                    {mealCategory!==null ?
                                         <>
                                             <h2 class="h4 mb-1">{mealCategory}</h2>
                                             <p class="small text-muted font-italic mb-4">
@@ -160,7 +163,7 @@ export default function AddMealstoMenu(props) {
                                                             <input
                                                                 class="form-check-input"
                                                                 id={meal.id}
-                                                                checked={meal.checkedBreakFast}
+                                                                checked={meal.checkedBreakfast}
                                                                 value={meal.id}
                                                                 type="checkbox"
                                                                 name="customCheckbox"
@@ -168,7 +171,7 @@ export default function AddMealstoMenu(props) {
 
                                                                     setBreakFastMenu(breakFastMenu.map((data) => {
                                                                         if (data.id === meal.id) {
-                                                                            data.checkedBreakFast = e.target.checked;
+                                                                            data.checkedBreakfast = e.target.checked;
                                                                         }
                                                                         return data;
                                                                     }),
@@ -181,7 +184,7 @@ export default function AddMealstoMenu(props) {
                                                                             description: meal.description,
                                                                             type: meal.type,
                                                                             image: meal.image,
-                                                                            checkedBreakFast: 1,
+                                                                            checkedBreakfast: 1,
                                                                             checkedLunch: meal.checkedLunch,
                                                                             checkedDinner: meal.checkedDinner,
                                                                         };
@@ -201,7 +204,7 @@ export default function AddMealstoMenu(props) {
                                                                             description: meal.description,
                                                                             type: meal.type,
                                                                             image: meal.image,
-                                                                            checkedBreakFast: 0,
+                                                                            checkedBreakfast: 0,
                                                                             checkedLunch: meal.checkedLunch,
                                                                             checkedDinner: meal.checkedDinner,
                                                                         };
@@ -267,7 +270,7 @@ export default function AddMealstoMenu(props) {
                                                                             description: meal.description,
                                                                             type: meal.type,
                                                                             image: meal.image,
-                                                                            checkedBreakFast: meal.checkedBreakFast,
+                                                                            checkedBreakfast: meal.checkedBreakfast,
                                                                             checkedLunch: 1,
                                                                             checkedDinner: meal.checkedDinner,
                                                                         };
@@ -287,7 +290,7 @@ export default function AddMealstoMenu(props) {
                                                                             description: meal.description,
                                                                             type: meal.type,
                                                                             image: meal.image,
-                                                                            checkedBreakFast: meal.checkedBreakFast,
+                                                                            checkedBreakfast: meal.checkedBreakfast,
                                                                             checkedLunch: 0,
                                                                             checkedDinner: meal.checkedDinner,
                                                                         };
@@ -352,7 +355,7 @@ export default function AddMealstoMenu(props) {
                                                                  description: meal.description,
                                                                  type: meal.type,
                                                                  image:meal.image,
-                                                                 checkedBreakFast: meal.checkedBreakFast,
+                                                                 checkedBreakfast: meal.checkedBreakfast,
                                                                  checkedLunch:meal.checkedLunch,
                                                                  checkedDinner:1,
                                                                };
@@ -371,7 +374,7 @@ export default function AddMealstoMenu(props) {
                                                                  description: meal.description,
                                                                  type: meal.type,
                                                                  image:meal.image,
-                                                                 checkedBreakFast: meal.checkedBreakFast,
+                                                                 checkedBreakfast: meal.checkedBreakfast,
                                                                  checkedLunch:meal.checkedLunch,
                                                                  checkedDinner:0,
                                                                };

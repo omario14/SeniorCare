@@ -5,7 +5,9 @@
 .single-timeline-area {
     position: relative;
     z-index: 1;
+    margin-left:12px;
     padding-left: 180px;
+   
 }
 @media only screen and (max-width: 575px) {
     .single-timeline-area {
@@ -51,7 +53,7 @@
     width: 11px;
     height: 11px;
     border-radius: 50%;
-    background-color: #f1c40f;
+    background-image: linear-gradient(310deg, #fa8686 0%, rgb(81, 202, 202) 100%);
     content: "";
     top: 50%;
     right: 26px;
@@ -72,7 +74,8 @@
     border-radius: 6px;
     margin-bottom: 15px;
     margin-top: 15px;
-    min-height: 180px;
+   
+    
     -webkit-box-shadow: 0 0.25rem 1rem 0 rgba(47, 91, 234, 0.125);
     box-shadow: 0 0.25rem 1rem 0 rgba(47, 91, 234, 0.125);
     border: 1px solid #ebebeb;
@@ -88,7 +91,7 @@
     transition-duration: 500ms;
     width: 30px;
     height: 30px;
-    background-color: #f1c40f;
+    background-image: linear-gradient(310deg, #fa86df 0%, rgb(81, 202, 202) 100%);
     -webkit-box-flex: 0;
     -ms-flex: 0 0 30px;
     flex: 0 0 30px;
@@ -111,7 +114,7 @@
 }
 .single-timeline-area .single-timeline-content:hover .timeline-icon,
 .single-timeline-area .single-timeline-content:focus .timeline-icon {
-    background-color: #020710;
+    background-image: linear-gradient(310deg, #0a0a0a 0%, rgb(119, 119, 119) 100%);
 }
 .single-timeline-area .single-timeline-content:hover .timeline-text h6,
 .single-timeline-area .single-timeline-content:focus .timeline-text h6 {
@@ -123,8 +126,7 @@
 
 .user_img_msg{
     height: 40px;
-    width: 40px;
-    border-radius: 50% 20% / 10% 40%;
+    width: 40px;border-radius: 100% 100% 100% 100%;
 
 }
 .img_cont{
@@ -153,9 +155,8 @@
 
 /**trash delete btn****/
 .binCheckbox {
-    cursor: url(http://k003.kiwi6.com/hotlink/vp054ir5gt/c1.png) 32 32, auto;
-    cursor: -webkit-image-set(url(http://k003.kiwi6.com/hotlink/vp054ir5gt/c1.png) 1x,url(http://k003.kiwi6.com/hotlink/z6fy599487/c2.png) 2x) 32 32, auto;
-  }
+    cursor:pointer;
+}
   
   
   
@@ -167,9 +168,9 @@
     width: 96px;
     height: 96px;
     margin: -98px auto 0 auto;
-    background-color: #fff;
+    background-color: rgb(255, 255, 255);
     border-radius: 50%;
-    box-shadow: 0 0 0 8px #feeeed;
+    box-shadow: 0 0 0 8px #ffffff;
     overflow: hidden;
     transform: scale(0.41);
   }
@@ -282,7 +283,7 @@
   #bin-lines,
   #bin-lines:before,
   #bin-lines:after {
-    background-color: #f44336;
+    background-color: #1d94c4d5;
     transition: 0.2s ease background-color;
   }
   
@@ -375,72 +376,4 @@
 
   /*********************meals list ***************************/
   
-
   
-.container-fluidd {
-    margin-top: 80px;
-    margin-bottom: 100px;
-    
-
-}
-
-.cardMenu {
-    
-    min-width: 800px;
-    min-height: 550px;
-    margin:15px 0 ;
-    top:10%;
-    left:20%;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    
-   
-    
-    border-radius: 10px;
-}
-
-
-.text-greyyy {
-    color: #9E9E9E
-}
-
-.fadd {
-    font-size: 25px;
-    cursor: pointer
-}
-
-
-
-
-
-.exit:focus {
-    -moz-box-shadow: none !important;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-    outline-width: 0
-}
-
-
-.exit {
-    border: 1px solid #9E9E9E;
-    color: #9E9E9E;
-    background-color: transparent
-}
-
-.exit:hover {
-    border: 1px solid #9E9E9E;
-    color: #000 !important;
-    background-color: #9E9E9E
-}
-
-@media screen and (max-width: 768px) {
-    .mob {
-        width: 70%
-    }
-
-    .inputSelect.mob {
-        width: 50%
-    }
-}

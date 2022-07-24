@@ -150,8 +150,8 @@ class Login extends Component {
                       </div>
                       <div className="card-footer text-center pt-0 px-lg-2 px-1">
                         <p className="mb-4 text-sm mx-auto">
-                          Don't have an account?
-                          <Link to="/register" className="text-info text-gradient font-weight-bold">Sign up</Link>
+                          Forget Password or Username ?
+                          <Link to="/register" className="text-info text-gradient font-weight-bold">Forget</Link>
                         </p>
                       </div>
                     </div>
