@@ -280,36 +280,12 @@ export default function MenuFood(props) {
 
                                     <div className="single-timeline-area">
                                         <div className="timeline-date wow fadeInLeft" data-wow-delay="0.1s" style={{ visibility: "visible", animationDelay: "0.1s", animationName: "fadeInLeft" }}>
-                                            <p>New Plan</p>
+                                            <p>Loading...</p>
                                         </div>
                                         <div className="row">
-                                            <div className="col-12 col-md-6 col-lg-4">
-                                                <div className="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.3s" style={{ visibility: "visible", animationDelay: "0.3s", animationName: "fadeInLeft" }}>
-                                                    <div className="timeline-icon"><i className="fa fa-address-card" aria-hidden="true"></i></div>
-                                                    <div className="timeline-text">
-                                                        <h6>Updated 5.0</h6>
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                                        <div class="spinner-box">
+                                                        <div class="three-quarter-spinner"></div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div className="col-12 col-md-6 col-lg-4">
-                                                <div className="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.5s" style={{ visibility: "visible", animationDelay: "0.5s", animationName: "fadeInLeft" }}>
-                                                    <div className="timeline-icon"><i className="fa fa-archive" aria-hidden="true"></i></div>
-                                                    <div className="timeline-text">
-                                                        <h6>Fixed bug</h6>
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="col-12 col-md-6 col-lg-4">
-                                                <div className="single-timeline-content d-flex wow fadeInLeft" data-wow-delay="0.7s" style={{ visibility: "visible", animationDelay: "0.7s", animationName: "fadeInLeft" }}>
-                                                    <div className="timeline-icon"><i className="fa fa-address-book" aria-hidden="true"></i></div>
-                                                    <div className="timeline-text">
-                                                        <h6>Reach 1k Users</h6>
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 }

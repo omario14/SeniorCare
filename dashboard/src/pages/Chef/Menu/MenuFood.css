@@ -376,4 +376,6 @@
 
   /*********************meals list ***************************/
   
-  
+  .activeListItem{
+    background-color: #838a8d1c;
+  }

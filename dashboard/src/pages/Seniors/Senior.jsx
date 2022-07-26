@@ -13,6 +13,7 @@ import AddSenior from "./AddSenior/AddSenior"
 import "./Senior.css";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { MdOutlineExpandLess, MdOutlineExpandMore } from "react-icons/md";
 class Senior extends Component {
     constructor(props) {
         super(props);
@@ -24,13 +25,14 @@ class Senior extends Component {
         this.myRef = React.createRef();
         this.state = {
 
-            seniors: [""],
+            seniors: [],
             message: "",
             isLoading: false,
             isLoadingDeleteCheckbox: false,
             isSkeleton: false,
             addSeniorPage: true,
             editDialog: false,
+            expand: false,
             senior: null,
             name: "",
             lastName: "",
@@ -42,6 +44,9 @@ class Senior extends Component {
             selected: null,
             select: [],
             fileInfo: [],
+            selectListDIN: [],
+            dinnerMenu: [],
+
 
 
         };
@@ -51,6 +56,7 @@ class Senior extends Component {
 
     componentDidMount() {
         this.retrieveSeniors();
+        
     }
 
 
@@ -68,16 +74,30 @@ class Senior extends Component {
         })
         seniorService.getAll()
             .then((res) => {
-
                 this.setState({
-                    seniors: res.data,
-
+                    seniors: res.data.map((d) => {
+                        return { 
+                            name: d.name,
+                            lastname: d.lastName,
+                            dateOfBirth: d.birthDate,
+                            sex: d.sexOption,
+                            cin: d.cin,
+                            telephone: d.telephone,
+                            file: d.file,
+                            checkedBreakfast: d.checkedBreakfast,
+                            checkedLunch: d.checkedLunch,
+                            checkedDinner: d.checkedDinner,
+                        };
+                    }),
                 });
+
+               
 
                 this.setState({
                     isSkeleton: false,
                 })
             })
+            console.log("this is seniorsssss : ", this.state.seniors)
 
     }
 
@@ -86,6 +106,18 @@ class Senior extends Component {
         this.setState({
             addSeniorPage: true,
         })
+    }
+
+    handleToggle = (i) => {
+        const item = i;
+        if (this.state.expand === item) {
+            return this.setState({ expand: null })
+        }
+
+
+        return this.setState({ expand: item })
+
+
     }
 
     handleDialog = (message, isLoading) => {
@@ -125,17 +157,17 @@ class Senior extends Component {
                 .then(res => {
                     console.log(res);
                     console.log(res.data);
-                    if (this.myRef.current.file){
-                    seniorService.removeFileById(this.myRef.current.file);
+                    if (this.myRef.current.file) {
+                        seniorService.removeFileById(this.myRef.current.file);
 
-                    console.log("this is file delete",this.myRef.current.file)
+                        console.log("this is file delete", this.myRef.current.file)
                     }
                     this.setState({
                         seniors
                     })
 
                 });
-                console.log(seniors);
+            console.log(seniors);
             this.handleDialog("", false);
         } else {
             this.handleDialog("", false);
@@ -293,7 +325,7 @@ class Senior extends Component {
                                             <div className="card-header pb-0 tableBG" >
                                                 <div className="text-uppercase " ><h6 className="text-light ">Senior table</h6></div>
 
-                                                <div style={{ display: "flex" ,paddingBottom:"10px" }}>
+                                                <div style={{ display: "flex", paddingBottom: "10px" }}>
                                                     <div className="tableIcons" >
                                                         <NavLink class="btn btn-primary btn-lg" style={{ backgroundColor: "rgba(222, 222, 222,0.3)" }} to="#" onClick={() => { this.setState({ addSeniorPage: false }) }} role="button">
                                                             <FcPlus className="FcPlus" style={{ fontSize: "36px", paddingTop: "8px" }} />
@@ -321,15 +353,15 @@ class Senior extends Component {
                                                                         {this.state.seniors.length === 0 ?
                                                                             <>
 
-                                                                                <input class="form-check-input" type="checkbox" onChange={this.handleAllCheck}  disabled />
+                                                                                <input class="form-check-input" type="checkbox" onChange={this.handleAllCheck} disabled />
                                                                                 <label class="form-check-label" for="flexCheckDisabled" >
 
-                                                                                    Disabled 
+                                                                                    Disabled
                                                                                 </label></>
                                                                             :
                                                                             <>
 
-                                                                            <input class="form-check-input" type="checkbox" onChange={this.handleAllCheck}  />
+                                                                                <input class="form-check-input" type="checkbox" onChange={this.handleAllCheck} />
                                                                             </>
                                                                         }
                                                                     </div>
@@ -338,7 +370,7 @@ class Senior extends Component {
                                                                 <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                                     Senior
                                                                 </th>
-                                                                <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                                <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">
                                                                     CIN
                                                                 </th>
                                                                 <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -347,7 +379,10 @@ class Senior extends Component {
                                                                 <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                                     Birth Date
                                                                 </th>
-                                                                <th className="text-secondary opacity-7"></th>
+                                                                <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"> Actions</th>
+                                                                <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"> </th>
+
+                                                                <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"> </th>
                                                             </tr>
                                                         </thead>
                                                         <tbody key="tbody">
@@ -362,103 +397,197 @@ class Senior extends Component {
                                                                 <>
                                                                     {this.state.seniors
                                                                         .map((senior, i) =>
-                                                                            <tr key={i}>
-                                                                                <td style={{ paddingLeft: "40px", width: "12px" }}>
+                                                                            <>
+                                                                                <tr key={i}>
+                                                                                    <td style={{ paddingLeft: "40px", width: "12px" }}>
 
-                                                                                    <div class="form-check">
-                                                                                        <input class="form-check-input" value={senior.id} type="checkbox" checked={this.state.selected} onChange={this.handleCheck} />
+                                                                                        <div class="form-check">
+                                                                                            <input class="form-check-input" value={senior.id} type="checkbox" checked={this.state.selected} onChange={this.handleCheck} />
 
-                                                                                    </div>
+                                                                                        </div>
 
-                                                                                </td>
-                                                                                <td>
-                                                                                    <div className="d-flex px-2 py-1">
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div className="d-flex px-2 py-1">
 
 
-                                                                                        <div >
-                                                                                            {senior.file === null ?
-                                                                                                <>
-                                                                                                {senior.sex==="male"?
-                                                                                                <img
-                                                                                                src="..\..\..\assets\img\images\avatarNoimage.jpg"
-                                                                                                className="avatar avatar-sm me-3"
-                                                                                                alt="user1"
-                                                                                            />
+                                                                                            <div >
+                                                                                                {senior.file === null ?
+                                                                                                    <>
+                                                                                                        {senior.sex === "male" ?
+                                                                                                            <img
+                                                                                                                src="..\..\..\assets\img\images\avatarNoimage.jpg"
+                                                                                                                className="avatar avatar-sm me-3"
+                                                                                                                alt="user1"
+                                                                                                            />
+                                                                                                            :
+                                                                                                            <img
+                                                                                                                src="..\..\..\assets\img\images\avatarW.jpg"
+                                                                                                                className="avatar avatar-sm me-3"
+                                                                                                                alt="user1"
+                                                                                                            />
+
+                                                                                                        }
+
+                                                                                                    </>
+                                                                                                    :
+                                                                                                    <>
+                                                                                                        <img
+                                                                                                            src={`http://localhost:8080/files/${senior.file}`}
+                                                                                                            className="avatar avatar-sm me-3"
+                                                                                                            alt="user1"
+                                                                                                        />
+                                                                                                    </>
+
+                                                                                                }
+                                                                                            </div>
+                                                                                            <div className="d-flex flex-column justify-content-center">
+                                                                                                <h6 className="mb-0 text-sm">{senior.name}</h6>
+                                                                                                <p className="text-xs text-secondary mb-0">
+                                                                                                    {senior.lastname}
+                                                                                                </p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td >
+                                                                                        <p className="text-xs font-weight-bold mb-0"><i className="fa fa-id-card" aria-hidden="true"></i> {senior.cin} </p>
+                                                                                        <p className="text-xs text-secondary mb-0"><i className="fa fa-phone" aria-hidden="true"></i> {senior.telephone} </p>
+                                                                                    </td>
+                                                                                    <td className="align-middle text-center text-sm">
+                                                                                        {senior.sex === "male" ?
+
+                                                                                            <span className="badge badge-sm bg-gradient-info">
+                                                                                                {senior.sex}
+                                                                                            </span>
                                                                                             :
-                                                                                            <img
-                                                                                                        src="..\..\..\assets\img\images\avatarW.jpg"
-                                                                                                        className="avatar avatar-sm me-3"
-                                                                                                        alt="user1"
-                                                                                                    />
-                                                                                            
-                                                                                            }
-                                                                                                    
-                                                                                                </>
-                                                                                                :
-                                                                                                <>
-                                                                                                    <img
-                                                                                                        src={`http://localhost:8080/files/${senior.file}`}
-                                                                                                        className="avatar avatar-sm me-3"
-                                                                                                        alt="user1"
-                                                                                                    />
-                                                                                                </>
+                                                                                            <span className="badge badge-sm bg-gradient-danger">
+                                                                                                {senior.sex}
+                                                                                            </span>
+                                                                                        }
+                                                                                    </td>
+                                                                                    <td className="align-middle text-center">
+                                                                                        <span className="text-secondary text-xs font-weight-bold">
+                                                                                            {senior.dateOfBirth}
+                                                                                        </span>
+                                                                                    </td>
+                                                                                    <td className="align-middle">
+                                                                                        <a
+                                                                                            href="#"
+                                                                                            className="text-secondary font-weight-bold text-xs"
+                                                                                            data-toggle="tooltip"
+                                                                                            data-original-title="Edit user"
+                                                                                            onClick={(e) => this.handleShow(senior, true)}
+                                                                                        >
+                                                                                            Edit
+                                                                                        </a>
+
+                                                                                    </td>
+                                                                                    <td >
+                                                                                        <a
+                                                                                            href="#"
+                                                                                            className="text-secondary font-weight-bold text-xs"
+                                                                                            data-toggle="tooltip"
+                                                                                            data-original-title="Edit user"
+                                                                                            onClick={(e) => this.deleteSenior(senior, e)}
+                                                                                        >
+                                                                                            Delete
+                                                                                        </a>
+
+                                                                                    </td>
+                                                                                    <td >
+                                                                                        <div style={{ cursor: "pointer" }} class="relative-bottom" onClick={() => this.handleToggle(i)}>
+                                                                                            <h6>{this.state.expand === i ? <MdOutlineExpandLess size={30} /> : <MdOutlineExpandMore size={30} />}</h6>
+                                                                                        </div>
+
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr style={this.state.expand === i ? { padding: "0.75rem 1.5rem", width: "100%", textTransform: "capitalize", letterSpacing: "0px", borderBottom: "1px solid #e9ecef" } : { display: "none", visibility: "hidden" }}>
+
+                                                                                    <div style={{ height: "50px", paddingLeft: "70px", marginBottom: "2rem", display: "flex", whiteSpace: "nowrap", width: "150px" }} >
+                                                                                        <label className="text-uppercase text-secondary text-s font-weight-bolder opacity-7">{senior.name} ate :</label>
+                                                                                        <input
+
+
+                                                                                            onChange={(e) => {
+
+                                                                                                this.setState({
+                                                                                                    seniors: this.state.seniors.map((data) => {
+                                                                                                        if (data.id === senior.id) {
+                                                                                                            data.checkedBreakfast = e.target.checked;
+                                                                                                        }
+                                                                                                        return data;
+                                                                                                    }),
+                                                                                                });
+
+                                                                                                console.warn(arrayIds);
+                                                                                                let arrayIds = [...this.state.selectListDIN];
+                                                                                                if (e.target.checked) {
+                                                                                                    let senioret = {
+                                                                                                        name: senior.name,
+                                                                                                        lastname: senior.lastName,
+                                                                                                        dateOfBirth: senior.birthDate,
+                                                                                                        sex: senior.sexOption,
+                                                                                                        cin: senior.cin,
+                                                                                                        telephone: senior.telephone,
+                                                                                                        file: senior.file,
+                                                                                                        checkedBreakfast: 1,
+                                                                                                        checkedLunch: senior.checkedLunch,
+                                                                                                        checkedDinner: senior.checkedDinner,
+                                                                                                    };
+
+                                                                                                    seniorService.update(
+                                                                                                        e.target.value,
+                                                                                                        senioret
+                                                                                                    );
+                                                                                                    arrayIds = [
+                                                                                                        ...this.state.selectListDIN,
+                                                                                                        e.target.value,
+                                                                                                    ];
+
+                                                                                                } else {
+                                                                                                    let senioret = {
+                                                                                                        name: senior.name,
+                                                                                                        lastname: senior.lastName,
+                                                                                                        dateOfBirth: senior.birthDate,
+                                                                                                        sex: senior.sexOption,
+                                                                                                        cin: senior.cin,
+                                                                                                        telephone: senior.telephone,
+                                                                                                        file: senior.file,
+                                                                                                        checkedBreakfast: 0,
+                                                                                                        checkedLunch: senior.checkedLunch,
+                                                                                                        checkedDinner: senior.checkedDinner,
+                                                                                                    };
+
+                                                                                                    seniorService.update(
+                                                                                                        e.target.value,
+                                                                                                        senioret
+                                                                                                    );
+                                                                                                    arrayIds.splice(
+                                                                                                        this.state.selectListDIN.indexOf(e.target.value),
+                                                                                                        1
+                                                                                                    );
+                                                                                                }
+                                                                                                this.setState({
+                                                                                                    selectListDIN: arrayIds,
+                                                                                                })
 
                                                                                             }
-                                                                                        </div>
-                                                                                        <div className="d-flex flex-column justify-content-center">
-                                                                                            <h6 className="mb-0 text-sm">{senior.name}</h6>
-                                                                                            <p className="text-xs text-secondary mb-0">
-                                                                                                {senior.lastname}
-                                                                                            </p>
-                                                                                        </div>
+                                                                                            }
+                                                                                            id={senior.id}
+                                                                                            checked={senior.checkedDinner}
+                                                                                            value={senior.id}
+                                                                                            name="customCheckbox"
+                                                                                            type="checkbox"
+                                                                                            className="align-middle-input   " />
+                                                                                        <label className="align-middle-label text-secondary">BREAKFAST </label>
+                                                                                        <input type="checkbox" id={senior.id} className="align-middle-input  " />
+                                                                                        <label for={senior.id} className="align-middle-label text-secondary">LUNCH </label>
+                                                                                        <input type="checkbox" id="box-4" className="align-middle-input" />
+                                                                                        <label for="box-4" className="align-middle-label text-secondary">DINNER </label>
                                                                                     </div>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <p className="text-xs font-weight-bold mb-0"><i className="fa fa-id-card" aria-hidden="true"></i> {senior.cin} </p>
-                                                                                    <p className="text-xs text-secondary mb-0"><i className="fa fa-phone" aria-hidden="true"></i> {senior.telephone} </p>
-                                                                                </td>
-                                                                                <td className="align-middle text-center text-sm">
-                                                                                   {senior.sex==="male"?
-                                                                                   
-                                                                                   <span className="badge badge-sm bg-gradient-info">
-                                                                                   {senior.sex}
-                                                                               </span>
-                                                                               :
-                                                                               <span className="badge badge-sm bg-gradient-danger">
-                                                                               {senior.sex}
-                                                                           </span>
-                                                                                }
-                                                                                </td>
-                                                                                <td className="align-middle text-center">
-                                                                                    <span className="text-secondary text-xs font-weight-bold">
-                                                                                        {senior.dateOfBirth}
-                                                                                    </span>
-                                                                                </td>
-                                                                                <td className="align-middle">
-                                                                                    <a
-                                                                                        href="#"
-                                                                                        className="text-secondary font-weight-bold text-xs"
-                                                                                        data-toggle="tooltip"
-                                                                                        data-original-title="Edit user"
-                                                                                        onClick={(e) => this.handleShow(senior, true)}
-                                                                                    >
-                                                                                        Edit
-                                                                                    </a>
-
-                                                                                </td>
-                                                                                <td className="align-middle">
-                                                                                    <a
-                                                                                        href="#"
-                                                                                        className="text-secondary font-weight-bold text-xs"
-                                                                                        data-toggle="tooltip"
-                                                                                        data-original-title="Edit user"
-                                                                                        onClick={(e) => this.deleteSenior(senior, e)}
-                                                                                    >
-                                                                                        Delete
-                                                                                    </a>
-
-                                                                                </td>
-                                                                            </tr>)
+                                                                                </tr>
+                                                                            </>)
                                                                     }
                                                                 </>
                                                             )}

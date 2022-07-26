@@ -38,9 +38,9 @@ class Meal extends Component {
       mealType: "DINNER",
       fileId: null,
       selectedFile: null,
-      mealImg:"../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif",
+      mealImg: "../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif",
       addMeal: "mealCard",
-      keyword: "a",
+      loadingIngredients: false,
     };
   }
 
@@ -65,14 +65,19 @@ class Meal extends Component {
 
   CatIngredients = (value) => {
     console.log(value);
+    this.setState({
+      loadingIngredients: true,
+    })
     chefService.getIngredientsByCat(value).then((result) => {
       this.setState({
+        loadingIngredients: false,
         ingredients: result.data.map((d) => {
           return {
             select: d.checked,
             id: d.id,
             label: d.label,
             description: d.description,
+            image: d.image,
             category: d.category,
           };
         }),
@@ -229,28 +234,28 @@ class Meal extends Component {
       <div className="ingredients">
         <TopBar title={"Meal"} />
 
-        {this.state.addMeal==="addMeal" ? (
+        {this.state.addMeal === "addMeal" ? (
           <>
 
-            
+
             <div className="addIng ">
-            <div style={{
-              position: "absolute",
-              top: "4px",
-              left: "4px"
-            }}>
+              <div style={{
+                position: "absolute",
+                top: "4px",
+                left: "4px"
+              }}>
 
 
-              <ButtonGroup variant="text" aria-label="text button group">
-                <Button onClick={() => this.setState({ addMeal: "mealCard" })}>
-                  <GiReturnArrow /> &nbsp;&nbsp; Return
-                </Button>
+                <ButtonGroup variant="text" aria-label="text button group">
+                  <Button onClick={() => this.setState({ addMeal: "mealCard" })}>
+                    <GiReturnArrow /> &nbsp;&nbsp; Return
+                  </Button>
 
-              </ButtonGroup>
+                </ButtonGroup>
 
 
-            </div>
-              <div style={{ marginBottom: "80px" }}>
+              </div>
+              <div className="section-title" style={{ marginBottom: "80px" }}>
                 <h1 className="text-uppercase">Meal</h1>
                 <p className="text-uppercase">LET'S prepare today's Meal</p>
               </div>
@@ -319,99 +324,113 @@ class Meal extends Component {
                     <Select
                       onChange={this.onChangeCategory}
                       options={this.state.categoryIngredients}
-                      isClearable={true}
                       placeholder="Select Ingredients Category "
                     />
                   </div>
                 </div>
                 <div className=" mb-4 pt-2" style={{ minHeight: "80px" }}>
-                  {this.state.ingredients.map((ingredient, i) => (
-                    <div
-                      key={i}
-                      className="form-check form-check-inline form-switch p-0 m-5 "
-                      style={{ whiteSpace: "nowrap" }}
-                    >
-                      <input
-                        class="plus-minus"
-                        type="checkbox"
-                        id="flexSwitchCheckDefault"
-                        checked={ingredient.select}
-                        value={ingredient.id}
-                        onChange={(e) => {
-                          this.setState({
-                            ingredients: this.state.ingredients.map((data) => {
-                              if (data.id === ingredient.id) {
-                                data.select = e.target.checked;
-                              }
-                              return data;
-                            }),
-                          });
-                          console.log(this.state.ingredients);
+                  {this.state.loadingIngredients ?
+                    (
 
-                          let arrayIds = [...this.state.selectList];
-                          if (e.target.checked) {
-                            let ingredientr = {
-                              label: ingredient.label,
-                              description: ingredient.description,
-                              category: ingredient.category,
-                              checked: 1,
-                            };
+                      <div class="spinner-box">
+                        <div class="three-quarter-spinner"></div>
+                      </div>
 
-                            chefService.updateIngredient(
-                              e.target.value,
-                              ingredientr
-                            );
-                            arrayIds = [
-                              ...this.state.selectList,
-                              e.target.value,
-                            ];
-                          } else {
-                            let ingredientr = {
-                              label: ingredient.label,
-                              description: ingredient.description,
-                              category: ingredient.category,
-                              checked: 0,
-                            };
+                    )
+                    :
+                    (
+                      <>
+                        {this.state.ingredients.map((ingredient, i) => (
+                          <div
+                            key={i}
+                            className="form-check form-check-inline form-switch p-0 m-5 "
+                            style={{ whiteSpace: "nowrap" }}
+                          >
+                            <input
+                              class="plus-minus"
+                              type="checkbox"
+                              id="flexSwitchCheckDefault"
+                              checked={ingredient.select}
+                              value={ingredient.id}
+                              onChange={(e) => {
+                                this.setState({
+                                  ingredients: this.state.ingredients.map((data) => {
+                                    if (data.id === ingredient.id) {
+                                      data.select = e.target.checked;
+                                    }
+                                    return data;
+                                  }),
+                                });
+                                console.log(this.state.ingredients);
 
-                            chefService.updateIngredient(
-                              e.target.value,
-                              ingredientr
-                            );
-                            arrayIds.splice(
-                              this.state.selectList.indexOf(e.target.value),
-                              1
-                            );
-                          }
-                          this.setState({
-                            selectList: arrayIds,
-                          });
-                         
-                        }}
-                      />
-                      <label className="form-check-label text-body text-capitalize ml-2 text-truncate w-80 mb-2">
-                        {ingredient.label}
-                      </label>
-                    </div>
-                  ))}
+                                let arrayIds = [...this.state.selectList];
+                                if (e.target.checked) {
+                                  let ingredientr = {
+                                    label: ingredient.label,
+                                    description: ingredient.description,
+                                    category: ingredient.category,
+                                    checked: 1,
+                                  };
+
+                                  chefService.updateIngredient(
+                                    e.target.value,
+                                    ingredientr
+                                  );
+                                  arrayIds = [
+                                    ...this.state.selectList,
+                                    e.target.value,
+                                  ];
+                                } else {
+                                  let ingredientr = {
+                                    label: ingredient.label,
+                                    description: ingredient.description,
+                                    category: ingredient.category,
+                                    checked: 0,
+                                  };
+
+                                  chefService.updateIngredient(
+                                    e.target.value,
+                                    ingredientr
+                                  );
+                                  arrayIds.splice(
+                                    this.state.selectList.indexOf(e.target.value),
+                                    1
+                                  );
+                                }
+                                this.setState({
+                                  selectList: arrayIds,
+                                });
+
+                              }}
+                            />
+                            <label className="form-check-label text-body text-capitalize ml-2 text-truncate w-80 mb-2">
+                              {ingredient.label}
+                            </label>
+                          </div>
+                        ))}
+                      </>
+                    )
+                  }
+
                 </div>
                 <button className="btnMeal" type="submit">Submit</button>
               </form>
             </div>
           </>
-        ) : this.state.addMeal==="mealCard" ? (
+        ) : this.state.addMeal === "mealCard" ? (
           <>
             <MealCard addMeal={this.onPageChange} />
           </>
-        ): (
+        ) : (
           <>
-          <MenuFood addMeal={this.onPageChange}/>
+            <MenuFood addMeal={this.onPageChange} />
           </>
         )
         }
-      
 
-       
-        
+
+
+
       </div>
     );
   }

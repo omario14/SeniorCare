@@ -20,7 +20,6 @@ export default function AddMealstoMenu(props) {
         setBreakFastMenu(props.meals);
         setLunchMenu(props.meals);
         setDinnerMenu(props.meals);
-        console.log(date)
         return () => {
             setBreakFastMenu([]);
             setLunchMenu([]);
@@ -30,9 +29,6 @@ export default function AddMealstoMenu(props) {
 
     const onChangeSelectedMeal = (value) => {
         setMealCategory(value.value);
-        console.log("arrayId List breakfast : ", selectListBF);
-        console.log("arrayId List lunch : ", selectListLUN);
-        console.log("arrayId List dinner : ", selectListDIN);
     };
     
     
@@ -106,10 +102,10 @@ export default function AddMealstoMenu(props) {
             <div className="card mt-6 card-4">
                 <div className="card-body">
                     <h2
-                        className="title"
+                        className="class-title"
                         style={{ lettreSpacing: "10px", textTransform: "uppercase" }}
                     >
-                        Menu :
+                        Menu 
                     </h2>
                     <form onSubmit={handleSave}>
                         <div className="input-groupp mb-7">
@@ -138,30 +134,30 @@ export default function AddMealstoMenu(props) {
                             />
                         </div>
                         <div className=" mb-4 pt-2" style={{ minHeight: "80px" }}>
-                            <div class="card shadow border-0 mb-5">
-                                <div class="card-body p-5">
+                            <div className="card shadow border-0 mb-5">
+                                <div className="card-body p-5">
                                     {mealCategory!==null ?
                                         <>
-                                            <h2 class="h4 mb-1">{mealCategory}</h2>
-                                            <p class="small text-muted font-italic mb-4">
+                                            <h2 className="h4 mb-1">{mealCategory}</h2>
+                                            <p className="small text-muted font-italic mb-4">
                                                 Choose your main dish.
                                             </p>
                                         </>
                                         :
                                         <>
-                                            <h2 class="h4 mb-1">PLEASE CHOOSE MENU TYPE</h2>
+                                            <h2 className="h4 mb-1">PLEASE CHOOSE MENU TYPE</h2>
 
                                         </>
                                     }
 
-                                    <ul class="list-group">
+                                    <ul className="list-group">
                                         {mealCategory === "BREAKFAST" ? (
                                             <>
                                                 {breakFastMenu.map((meal, i) => (
-                                                    <li class="list-group-item rounded-0 d-flex align-items-center justify-content-between">
-                                                        <div class="form-check custom-checkbox">
+                                                    <li className={meal.checkedBreakfast===false ? "list-group-item rounded-0 d-flex align-items-center justify-content-between":"list-group-item rounded-0 d-flex align-items-center justify-content-between activeListItem"}>
+                                                        <div className="form-check custom-checkbox">
                                                             <input
-                                                                class="form-check-input"
+                                                                className="form-check-input"
                                                                 id={meal.id}
                                                                 checked={meal.checkedBreakfast}
                                                                 value={meal.id}
@@ -223,9 +219,9 @@ export default function AddMealstoMenu(props) {
                                                                 }}
 
                                                             />
-                                                            <label class="form-check-label" for={meal.id}>
-                                                                <p class="mb-0">{meal.label}</p>
-                                                                <span class="small font-italic text-muted">
+                                                            <label className="form-check-label" for={meal.id}>
+                                                                <p className="mb-0">{meal.label}</p>
+                                                                <span className="small font-italic text-muted">
                                                                 {meal.description}
                                                                 </span>
                                                             </label>
@@ -243,10 +239,10 @@ export default function AddMealstoMenu(props) {
                                         ) : mealCategory === "LUNCH" ? (
                                             <>
                                                 {lunchMenu.map((meal, i) => (
-                                                    <li key={i} class="list-group-item rounded-0 d-flex align-items-center justify-content-between">
-                                                        <div class="form-check custom-checkbox">
+                                                    <li key={i} className={meal.checkedLunch===false ? "list-group-item rounded-0 d-flex align-items-center justify-content-between":"list-group-item rounded-0 d-flex align-items-center justify-content-between activeListItem"}>
+                                                        <div className="form-check custom-checkbox">
                                                             <input
-                                                                class="form-check-input"
+                                                                className="form-check-input"
                                                                 id={meal.id}
                                                                 checked={meal.checkedLunch}
                                                                 value={meal.id}
@@ -309,9 +305,9 @@ export default function AddMealstoMenu(props) {
                                                                 }}
 
                                                             />
-                                                            <label class="form-check-label" for={meal.id}>
-                                                                <p class="mb-0">{meal.label}</p>
-                                                                <span class="small font-italic text-muted">
+                                                            <label className="form-check-label" for={meal.id}>
+                                                                <p className="mb-0">{meal.label}</p>
+                                                                <span className="small font-italic text-muted">
                                                                 {meal.description}
                                                                 </span>
                                                             </label>
@@ -329,10 +325,10 @@ export default function AddMealstoMenu(props) {
                                         ) : mealCategory === "DINNER" ? (
                                             <>
                                                 {dinnerMenu.map((meal, i) => (
-                                                     <li key={i} class="list-group-item rounded-0 d-flex align-items-center justify-content-between">
-                                                     <div class="form-check custom-checkbox">
+                                                     <li key={i} className={meal.checkedDinner===false ? "list-group-item rounded-0 d-flex align-items-center justify-content-between":"list-group-item rounded-0 d-flex align-items-center justify-content-between activeListItem"}>
+                                                     <div className="form-check custom-checkbox">
                                                        <input
-                                                         class="form-check-input"
+                                                         className="form-check-input"
                                                          id={meal.id}
                                                          checked={meal.checkedDinner}
                                                          value={meal.id}
@@ -393,9 +389,9 @@ export default function AddMealstoMenu(props) {
                                                            }}
                          
                                                        />
-                                                       <label class="form-check-label" for={meal.id}>
-                                                         <p class="mb-0">{meal.label}</p>
-                                                         <span class="small font-italic text-muted">
+                                                       <label className="form-check-label" for={meal.id}>
+                                                         <p className="mb-0">{meal.label}</p>
+                                                         <span className="small font-italic text-muted">
                                                            {meal.description}
                                                          </span>
                                                        </label>
@@ -422,7 +418,7 @@ export default function AddMealstoMenu(props) {
                         <div className="p-t-15">
                             <button className="btn btn--radius-2 btn--blue" type="submit">
                                 <i
-                                    class="fa fa-plus-circle fadd "
+                                    className="fa fa-plus-circle fadd "
                                     style={{
                                         position: "relative",
                                         left: "-15px",

@@ -5690,7 +5690,7 @@ fieldset:disabled .btn {
 .page-link {
   position: relative;
   display: block;
-  color: #cb0c9f;
+  color: white;
   background-color: #fff;
   border: 1px solid #dee2e6;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -5724,8 +5724,8 @@ fieldset:disabled .btn {
 .page-item.active .page-link {
   z-index: 3;
   color: #fff;
-  background-color: #cb0c9f;
-  border-color: #cb0c9f;
+  background-color:  rgb(166, 175, 255);
+  border-color:  rgb(166, 175, 255);
 }
 
 .page-item.disabled .page-link {
@@ -22896,6 +22896,7 @@ hr.horizontal.gray-light {
 
 .table thead th {
   padding: 0.75rem 1.5rem;
+  width: 100%;
   text-transform: capitalize;
   letter-spacing: 0px;
   border-bottom: 1px solid #e9ecef;

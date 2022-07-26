@@ -273,7 +273,7 @@ class Ingredients extends Component {
                                                         <GiReturnArrow /> &nbsp;&nbsp; Return
                                                     </Button>
                                                     <Button onClick={() => this.setState({ addIngredients: false })}><GiHealthNormal /> &nbsp;&nbsp; <div>add New Ingredient</div></Button>
-                                                    <Button>Three</Button>
+                                                    
                                                 </ButtonGroup>
 
                                             </div>
@@ -375,20 +375,7 @@ class Ingredients extends Component {
                                                             </div>
 
                                                             <p>{category.label}</p>
-                                                            <div className="icons">
-                                                                <a href="#">
-                                                                    <i className="fab fa-twitter"></i>
-                                                                </a>
-                                                                <a href="#">
-                                                                    <i className="fab fa-linkedin"></i>
-                                                                </a>
-                                                                <a href="#">
-                                                                    <i className="fab fa-github"></i>
-                                                                </a>
-                                                                <a href="#">
-                                                                    <i className="fas fa-envelope"></i>
-                                                                </a>
-                                                            </div>
+                                                           
                                                         </div>
                                                     </div>
 

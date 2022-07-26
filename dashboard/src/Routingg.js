@@ -21,6 +21,7 @@ import NotFound from "./pages/OtherComponents/NotFound";
 import Staff from "./pages/Admin/Staff";
 import Ingredients from "./pages/Chef/Ingredients";
 import Meal from "./pages/Chef/Meal";
+import Food from "./pages/Food/Food";
 
 export default function Routingg() {
     const [title,setTitle]= useState('Home');
@@ -66,6 +67,7 @@ const SidebarLayout = () => (
             <Route title={title}  setTitle={setTitle} index element={<Home/>} />
             <Route title={title}  setTitle={setTitle} path="/senior" element={<Senior/>} />
             <Route title={title}  setTitle={setTitle} path="/health" element={<Health/>} />
+            <Route title={title}  setTitle={setTitle} path="/food" element={<Food/>} />
             <Route title={title}  setTitle={setTitle} path='/calendar' element={<Calendar/>}/>
             <Route title={title}  setTitle={setTitle} path='/profile' element={<Profile/>}/>
             <Route title={title}  setTitle={setTitle} path='/newSenior' element={<AddSenior/>}/>
