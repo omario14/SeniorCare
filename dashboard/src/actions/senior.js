@@ -85,6 +85,19 @@ export const createSenior = (firstName, description) => async (dispatch) => {
       console.log(err);
     }
   };
+
+  export const updateMenuSenior = (id) => async (dispatch) => {
+    try {
+      const res = await SeniorService.addMenuSenior(id);
+      dispatch({
+        type: UPDATE_SENIOR,
+        payload: { id },
+      });
+      return Promise.resolve({ id });
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  };
   
 
 

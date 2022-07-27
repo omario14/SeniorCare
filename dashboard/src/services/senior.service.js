@@ -28,7 +28,13 @@ class SeniorService {
     return http.delete(`/deleteSeniorsByIds/${ids}`, { headers: authHeader()});
   }
   findByTitle(title) {
-    return http.get(`/tutorials?title=${title}`);
+    return http.get(`/tutorials?title=${title}`, { headers: authHeader()});
+
+  }
+
+  addMenuSenior(idsenior){
+    console.log(authHeader())
+    return http.put(`/addMenuSenior/${idsenior}`, { headers: authHeader()});
   }
 
   /*********************File **************************/

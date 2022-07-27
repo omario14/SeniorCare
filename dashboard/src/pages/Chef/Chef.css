@@ -351,7 +351,7 @@ input[type="file"]{
 }
 #search-container input {
   background-color: transparent;
-  width: 40%;
+  
   border-bottom: 2px solid #110f29;
   padding: 1em 0.3em;
 }

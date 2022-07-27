@@ -61,6 +61,7 @@ class ChefService {
   updateMenu(data,id) {
     return http.put(`/update-Menu/${id}`,data, { headers: authHeader() });
   }
+  
 
 
 }

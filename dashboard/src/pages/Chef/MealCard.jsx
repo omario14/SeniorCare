@@ -49,7 +49,7 @@ function MealCard(props) {
     return (
         <>
             <div className="container">
-                <div id="search-container">
+                <div id="search-container" style={{width: "40%"}}>
                     <input
                         type="search"
                         id="search-input"
