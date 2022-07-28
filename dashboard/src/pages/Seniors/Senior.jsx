@@ -15,6 +15,7 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { MdOutlineExpandLess, MdOutlineExpandMore } from "react-icons/md";
 import Pagination from "../Chef/Pagination";
+import SeniorDetails from "./SeniorDetails/SeniorDetails";
 class Senior extends Component {
     constructor(props) {
         super(props);
@@ -23,6 +24,7 @@ class Senior extends Component {
         this.handleUpdate = this.handleUpdate.bind(this);
         this.retrieveSeniors = this.retrieveSeniors.bind(this);
         this.handleCheck = this.handleCheck.bind(this);
+        this.handleDetails = this.handleDetails.bind(this);
         this.myRef = React.createRef();
         this.state = {
 
@@ -31,7 +33,7 @@ class Senior extends Component {
             isLoading: false,
             isLoadingDeleteCheckbox: false,
             isSkeleton: false,
-            addSeniorPage: true,
+            addSeniorPage: "getSenior",
             editDialog: false,
             expand: false,
             senior: null,
@@ -103,7 +105,6 @@ class Senior extends Component {
                     }),
                 });
 
-               console.log("seniors array : ",this.state.seniors)
 
                 this.setState({
                     isSkeleton: false,
@@ -115,7 +116,14 @@ class Senior extends Component {
     handleAddSenior = () => {
 
         this.setState({
-            addSeniorPage: true,
+            addSeniorPage: "getSenior",
+        })
+    }
+
+    handleDetails = (senior)=>{
+        this.myRef.current = senior;
+        this.setState({
+            addSeniorPage:"seniorDetails"
         })
     }
 
@@ -171,14 +179,13 @@ class Senior extends Component {
                     if (this.myRef.current.file) {
                         seniorService.removeFileById(this.myRef.current.file);
 
-                        console.log("this is file delete", this.myRef.current.file)
                     }
                     this.setState({
                         seniors
                     })
 
                 });
-            console.log(seniors);
+            
             this.handleDialog("", false);
         } else {
             this.handleDialog("", false);
@@ -189,7 +196,7 @@ class Senior extends Component {
     deleteSeniorsByIds = (choose) => {
 
         if (choose) {
-            console.log(this.state.selected);
+            
             if (this.state.selected === true) {
                 seniorService.deleteAll()
                     .then(() => {
@@ -225,7 +232,7 @@ class Senior extends Component {
         this.setState({
             select: arrayIds,
         })
-        console.log("this is array list : ", arrayIds)
+       
 
     }
 
@@ -243,7 +250,7 @@ class Senior extends Component {
 
 
     handleShow = (senior, editDialog) => {
-        console.log(senior)
+        
         this.myRef.current = senior;
         this.setState({
             editDialog: editDialog,
@@ -340,7 +347,8 @@ class Senior extends Component {
                 <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
                     <TopBar title={'senior'} />
                     {
-                        this.state.addSeniorPage ?
+                        this.state.addSeniorPage==="getSenior" ?
+                        (
                             <div className="container-fluid py-4">
                                 <div className="row">
                                     <div className="col-12">
@@ -350,7 +358,7 @@ class Senior extends Component {
 
                                                 <div style={{ display: "flex", paddingBottom: "10px" }}>
                                                     <div className="tableIcons" >
-                                                        <NavLink class="btn btn-primary btn-lg" style={{ backgroundColor: "rgba(222, 222, 222,0.3)" }} to="#" onClick={() => { this.setState({ addSeniorPage: false }) }} role="button">
+                                                        <NavLink class="btn btn-primary btn-lg" style={{ backgroundColor: "rgba(222, 222, 222,0.3)" }} to="#" onClick={() => { this.setState({ addSeniorPage: "addSenior" }) }} role="button">
                                                             <FcPlus className="FcPlus" style={{ fontSize: "36px", paddingTop: "8px" }} />
                                                         </NavLink>
                                                     </div>
@@ -421,12 +429,15 @@ class Senior extends Component {
                                                                     {currentSeniors
                                                                         .map((senior, i) =>
                                                                             <>
-                                                                                <tr key={i}>
+                                                                                <tr onClick={() => this.handleDetails(senior)} key={i}>
                                                                                     <td style={{ paddingLeft: "40px", width: "12px" }}>
 
                                                                                         <div class="form-check">
                                                                                             <input class="form-check-input" value={senior.id} type="checkbox" checked={this.state.selected} onChange={this.handleCheck} />
 
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            {senior.id}
                                                                                         </div>
 
                                                                                     </td>
@@ -602,7 +613,32 @@ class Senior extends Component {
                                                                                                 this.setState({
                                                                                                     selectListDIN: arrayIds,
                                                                                                 })
-                                                                                                console.log("selecList : ",this.state.selectListDIN)
+                                                                                                       let senioret = {
+                                                                                                            name: senior.name,
+                                                                                                            lastname: senior.lastname,
+                                                                                                            dateOfBirth: senior.dateOfBirth,
+                                                                                                            sex: senior.sex,
+                                                                                                            cin: senior.cin,
+                                                                                                            telephone: senior.telephone,
+                                                                                                            file: senior.file,
+                                                                                                            checkedBreakfast: senior.checkedBreakfast,
+                                                                                                            checkedLunch: senior.checkedLunch,
+                                                                                                            checkedDinner: senior.checkedDinner,
+                                                                                                            menus:senior.menus,
+                                                                                                        };
+                                                                                                        let archive ={
+                                                                                                            idArch:`arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
+                                                                                                            senior:senior,
+                                                                                                            date:new Date().toISOString().split("T")[0],
+                                                                                                            checkedBreakfast: senior.checkedBreakfast,
+                                                                                                            checkedLunch: senior.checkedLunch,
+                                                                                                            checkedDinner: senior.checkedDinner,
+
+                                                                                                        }
+
+                                                                                                        
+                                                                                                        seniorService.addToArchive(archive,archive.idArch).then(console.log("Archive"))
+                                                                                                        seniorService.update(senior.id,senioret).then(console.log("successs"))
 
                                                                                             }
                                                                                             }
@@ -681,7 +717,35 @@ class Senior extends Component {
                                                                                                 this.setState({
                                                                                                     selectListDIN: arrayIds,
                                                                                                 })
-                                                                                                console.log("selecList : ",this.state.selectListDIN)
+                                                                                                
+                                                                                                let senioret = {
+                                                                                                    name: senior.name,
+                                                                                                    lastname: senior.lastname,
+                                                                                                    dateOfBirth: senior.dateOfBirth,
+                                                                                                    sex: senior.sex,
+                                                                                                    cin: senior.cin,
+                                                                                                    telephone: senior.telephone,
+                                                                                                    file: senior.file,
+                                                                                                    checkedBreakfast: senior.checkedBreakfast,
+                                                                                                    checkedLunch: senior.checkedLunch,
+                                                                                                    checkedDinner: senior.checkedDinner,
+                                                                                                    menus:senior.menus,
+                                                                                                };
+
+                                                                                                
+                                                                                                let archive ={
+                                                                                                    idArch:`arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
+                                                                                                    senior:senior,
+                                                                                                    date:new Date().toISOString().split("T")[0],
+                                                                                                    checkedBreakfast: senior.checkedBreakfast,
+                                                                                                    checkedLunch: senior.checkedLunch,
+                                                                                                    checkedDinner: senior.checkedDinner,
+
+                                                                                                }
+
+                                                                                                
+                                                                                                seniorService.addToArchive(archive,archive.idArch).then(console.log("Archive"))
+                                                                                                seniorService.update(senior.id,senioret).then(console.log("successs"))
                                                                                             }
                                                                                             }/>
                                                                                         <label for={senior.id+"LUNCH"} className="align-middle-label text-secondary">LUNCH </label>
@@ -771,11 +835,21 @@ class Senior extends Component {
                                                                                                             checkedDinner: senior.checkedDinner,
                                                                                                             menus:senior.menus,
                                                                                                         };
-    
-                                                                                                        console.log("ae",senior.menus)
+                                                                                                        
+                                                                                                        let archive ={
+                                                                                                            idArch:`arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
+                                                                                                            senior:senior,
+                                                                                                            date:new Date().toISOString().split("T")[0],
+                                                                                                            checkedBreakfast: senior.checkedBreakfast,
+                                                                                                            checkedLunch: senior.checkedLunch,
+                                                                                                            checkedDinner: senior.checkedDinner,
+
+                                                                                                        }
+
+                                                                                                        
+                                                                                                        seniorService.addToArchive(archive,archive.idArch).then(console.log("Archive"))
                                                                                                         seniorService.update(senior.id,senioret).then(console.log("successs"))
                                                                                                 
-                                                                                                console.log("selecList : ",this.state.selectListDIN)
 
                                                                                             }
                                                                                             }/>
@@ -806,10 +880,13 @@ class Senior extends Component {
                                     </div>
                                 </div>
                             </div>
-                            :
-                            <>
+                            )
+                            :this.state.addSeniorPage==="addSenior" ?
+                            (
                                 <AddSenior addSeniorPage={this.handleAddSenior} />
-                            </>
+                           ):(
+                            <SeniorDetails senior={this.myRef.current}/>
+                           )
                     }
                 </main>
 

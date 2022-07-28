@@ -32,10 +32,11 @@ class SeniorService {
 
   }
 
-  addMenuSenior(idsenior){
-    console.log(authHeader())
-    return http.put(`/addMenuSenior/${idsenior}`, { headers: authHeader()});
+  addToArchive(data,idArchive){
+    return http.put(`/updateArchive/${idArchive}`,data, { headers: authHeader()});
   }
+
+  
 
   /*********************File **************************/
 
