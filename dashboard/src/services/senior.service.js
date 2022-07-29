@@ -53,5 +53,13 @@ class SeniorService {
   removeFileById(id){
     return http.delete(`/deletefile/${id}`,{headers: authHeader()})
   }
+
+
+
+  /*********************Archives **************************/
+  getArchiveBySenior(idSenior){
+    return http.get(`/getarchives-bysenior/${idSenior}`,{headers: authHeader()})
+  }
+
 }
 export default new  SeniorService();

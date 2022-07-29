@@ -2,6 +2,7 @@
     flex:20;
     width: 2000px;
     background-color: rgb(247, 247, 247);
+    scroll-behavior: smooth;
 }
 
 .dialogg{

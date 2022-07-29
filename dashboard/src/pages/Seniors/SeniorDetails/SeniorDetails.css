@@ -1,0 +1,103 @@
+.panel-footer {
+    background-color:#f8f7f5 ;
+    border-top: 1px solid #e7ebee;
+}
+
+.profile-info .panel-footer ul li a {
+    color: #7a7a7a;
+}
+
+.bio-graph-heading {
+    background: rgba(194, 181, 149, 0.6);
+    color: #fff;
+    text-align: center;
+    font-style: italic;
+    padding: 40px 110px;
+    border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.bio-graph-info {
+    color: #383737;
+    background:  rgba(228, 226, 226, 0.267);
+    
+    padding: 30px 50px;
+    border-radius: 12px 12px;
+    -webkit-border-radius: 12px 12px ;
+   
+}
+
+.bio-graph-info h1 {
+    font-size: 22px;
+    font-weight: 300;
+    margin: 0 0 20px;
+}
+
+.bio-row {
+    width: 50%;
+    float: left;
+    margin-bottom: 10px;
+    padding:0 15px;
+}
+
+.bio-row p span {
+    width: 100px;
+    display: inline-block;
+}
+
+/*Checkboxes styles*/
+.align-middle-inputDetails { display: none; }
+
+.align-middle-inputDetails + .align-middle-labelDetails {
+  
+  display: block;
+  position: relative;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left:20px;
+  
+  margin-bottom: 80px;
+  margin-top: 15px;
+
+  font: 14px/9px 'Open Sans', Arial, sans-serif;
+  color: #0f1b31;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.align-middle-inputDetails + .align-middle-labelDetails { margin-bottom: 12px; }
+
+.align-middle-inputDetails + .align-middle-labelDetails:before {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #d72828;
+    
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: .6;
+    -webkit-transition: all .12s, border-color .08s;
+    transition: all .12s, border-color .08s;
+  }
+  
+  .align-middle-inputDetails:checked + .align-middle-labelDetails:before {
+    width: 5px;
+    top: -5px;
+    left: 5px;
+    border-radius: 0;
+    opacity: 1;
+    border: 1px solid rgb(24, 184, 72);
+    border-top-color: transparent;
+    border-left-color: transparent;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  
+  
+  

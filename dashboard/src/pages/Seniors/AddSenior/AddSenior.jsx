@@ -4,6 +4,8 @@ import './AddSenior.css'
 import { createSenior } from '../../../actions/senior';
 import { connect } from 'react-redux';
 import seniorService from '../../../services/senior.service';
+import { Button, ButtonGroup } from '@mui/material';
+import { GiHealthPotion, GiReturnArrow } from 'react-icons/gi';
 
 class AddSenior extends Component {
 	constructor(props) {
@@ -177,14 +179,35 @@ class AddSenior extends Component {
 		]
 		
 
-		
+		const { addSeniorPage } = this.props;
 
 		return (
-			<div className='addSenior'>
+			<section className="timeline_area section_padding_130">
+      <div
+        style={{
+          position: "absolute",
+          top: "8px",
+          left: "15px",
+        }}
+      >
+        <ButtonGroup variant="text" aria-label="text button group">
+          <Button onClick={()=>addSeniorPage()}>
+            <GiReturnArrow /> &nbsp;&nbsp; Return
+          </Button>
+          <Button >
+            <GiHealthPotion /> &nbsp;&nbsp; Add New Menu Plan
+          </Button>
+        </ButtonGroup>
+      </div>
+
+			<div className='addSenior mt-6'>
+				
 				<div className="wrapper">
+					
 					<div className="wrapper wrapper--w680">
 						<div className="cardd cardd-4">
 							<div className="cardd-body">
+								
 								<h2 className="title" style={{ lettreSpacing: '10px', textTransform: "uppercase" }}>New Senior is here :</h2>
 								<form >
 									<div className="form-header">
@@ -314,6 +337,7 @@ class AddSenior extends Component {
 
 				</div>
 			</div>
+			</section>
 		)
 	}
 }
