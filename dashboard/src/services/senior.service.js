@@ -61,5 +61,10 @@ class SeniorService {
     return http.get(`/getarchives-bysenior/${idSenior}`,{headers: authHeader()})
   }
 
+  /********************Medication ************************/
+
+  addMedication(medication){
+    return http.post("/addMedication", medication, { headers: authHeader()});
+  }
 }
 export default new  SeniorService();

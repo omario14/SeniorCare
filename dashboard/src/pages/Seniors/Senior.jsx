@@ -9,7 +9,6 @@ import { TabTitle } from "../../utils/GeneralFunctions";
 import { Modal, Button, Form } from 'react-bootstrap';
 import Dialog from "./dialogDelete";
 import AddSenior from "./AddSenior/AddSenior"
-import { Link } from "react-scroll";
 import "./Senior.css";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
