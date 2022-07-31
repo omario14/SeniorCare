@@ -122,7 +122,7 @@ class AddSenior extends Component {
 				centerOfInterest: this.state.interests.value,
 				file: this.state.fileId,
 			};
-			console.log('Senior = > ' + JSON.stringify(senior));
+			
 			
 
 			seniorService.create(senior).then(()=>{

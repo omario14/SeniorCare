@@ -66,5 +66,12 @@ class SeniorService {
   addMedication(medication){
     return http.post("/addMedication", medication, { headers: authHeader()});
   }
+  getMedicationBySenior(idSenior){
+    return http.get(`/getMedicationsBySenior/${idSenior}`,{headers: authHeader()})
+  }
+  removeMedById(id){
+    return http.delete(`/deleteMedicationById/${id}`,{headers: authHeader()})
+  }
+  
 }
 export default new  SeniorService();

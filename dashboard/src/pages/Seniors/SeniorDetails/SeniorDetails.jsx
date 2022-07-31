@@ -2,11 +2,10 @@ import { Button, ButtonGroup } from '@mui/material'
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { GiHealthPotion, GiReturnArrow } from 'react-icons/gi'
-import { FcGenericSortingAsc, FcGenericSortingDesc } from "react-icons/fc";
 import seniorService from '../../../services/senior.service'
 import '../AddSenior/AddSenior.css'
 import './SeniorDetails.css'
-import { BiSort, BiSortAlt2 } from 'react-icons/bi';
+import {BiSortAlt2 } from 'react-icons/bi';
 
 export default function SeniorDetails({ senior, addSeniorPage }) {
   const [seniorArch, setSeniorArch] = useState([]);
