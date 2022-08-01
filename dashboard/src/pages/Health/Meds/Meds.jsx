@@ -6,19 +6,12 @@ import seniorService from '../../../services/senior.service';
 import Pagination from '../../Chef/Pagination';
 import Dialog from '../../Seniors/dialogDelete';
 import './Meds.css';
+import { useForm } from 'react-hook-form';
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
 
-const required = (value) => {
-    if (!value) {
-        return (
-            <div className="alert alert-danger" role="alert">
-                This field is required!
-            </div>
-        );
-    }
-};
 
-export default function Meds({onChangeStepperLoading}) {
+
+export default function Meds({ onChangeStepperLoading }) {
     const [seniorList, setSeniorList] = useState([]);
     const [senior, setSenior] = useState(null);
     const [seniorMedications, setSeniorMedications] = useState([]);
@@ -35,8 +28,10 @@ export default function Meds({onChangeStepperLoading}) {
     const [message, setMessage] = useState("");
     const [deleteModel, setDeleteModel] = useState(false);
     const [order, setOrder] = useState("DSC");
+    const [seniorError, setSeniorError] = useState(false);
 
     const { Option } = components;
+    const { register, handleSubmit, watch, formState: { errors }, clearErrors } = useForm();
 
     const section = useRef(null);
     const myRef = useRef(null);
@@ -44,6 +39,7 @@ export default function Meds({onChangeStepperLoading}) {
     let incNum = () => {
         if (num < 10) {
             setNum(Number(num) + 1);
+            clearErrors("dose");
         }
     };
     let decNum = () => {
@@ -75,12 +71,12 @@ export default function Meds({onChangeStepperLoading}) {
                 .then(res => {
                     console.log(res);
                     console.log(res.data);
-                   if( Math.ceil(seniorMedications.length / medsPerPage)!=Math.ceil(Meds.length / medsPerPage)){
-                    setCurrentPage(Math.ceil(Meds.length / medsPerPage))
-                   }
+                    if (Math.ceil(seniorMedications.length / medsPerPage) != Math.ceil(Meds.length / medsPerPage)) {
+                        setCurrentPage(Math.ceil(Meds.length / medsPerPage))
+                    }
 
                     setSeniorMedications(Meds);
-                    
+
                 });
 
             handleDialog("", false);
@@ -113,17 +109,17 @@ export default function Meds({onChangeStepperLoading}) {
                         const sorted = [...res.data].sort((a, b) =>
                             a["idmed"] > b["idmed"] ? 1 : -1
                         );
-            
+
                         setSeniorMedications(sorted);
-            
+
                     }
                     if (order === "DSC") {
                         const sorted = [...res.data].sort((a, b) =>
                             a["idmed"] < b["idmed"] ? 1 : -1
                         );
-            
+
                         setSeniorMedications(sorted);
-            
+
                     }
                 })
 
@@ -194,23 +190,73 @@ export default function Meds({onChangeStepperLoading}) {
             {props.data.name}
         </Option >;
     }
+
+    const registerOptions = {
+        medLable: { required: "Medication's name is required" },
+
+
+    };
+
+    const seniorValidation = () => {
+
+        if (!senior) {
+            setSeniorError(true);
+        }
+    }
+
+    function getDatesInRange(startDate, endDate) {
+      const date = new Date(startDate);
+    
+      const dates = [];
+    
+      while (date <= endDate) {
+        dates.push(new Date(date).toISOString().split("T")[0]);
+        date.setDate(date.getDate() + 1);
+      }
+    
+      return dates;
+    }
+
+    const archiveAdd=(meds)=>{
+      const dates = getDatesInRange(new Date(startDate),new Date(endDate));
+         console.log("datesss",dates)
+      dates.forEach(d=>{
+        let archive = {
+          idArch: `arch-${senior.id}-${d}`,
+          senior: senior,
+          date: new Date().toISOString().split("T")[0],
+          checkedBreakfast: senior.checkedBreakfast,
+          checkedLunch: senior.checkedLunch,
+          checkedDinner: senior.checkedDinner,
+          meds:meds,
+          
+  
+      }
+  
+  
+      seniorService.addToArchive(archive, archive.idArch).then(console.log("Archive"))
+      })
+      
+    }
     const saveMedication = (e) => {
-        e.preventDefault();
+       
+      
 
         let medic = {
             label: medLabel,
             dose: num,
-            doseType: dose,
+            doseType: dose.value,
             startDate: startDate,
             endDate: endDate,
             senior: senior,
 
         }
         seniorService.addMedication(medic).then(
-            (res)=>{
+            (res) => {
                 console.log(res)
-                const newMedication = [res.data,...seniorMedications];
+                const newMedication = [res.data, ...seniorMedications];
                 setSeniorMedications(newMedication);
+               
             }
         )
         /********** Clear inputs *********/
@@ -218,16 +264,16 @@ export default function Meds({onChangeStepperLoading}) {
         let date = new Date();
         date.setDate(date.getDate() + 1);
         setEndDate(new Date(date).toISOString().split("T")[0]);
-        setMedLabel("");
+        setMedLabel(null);
         setDose("");
         setNum(0);
-        if (order==="ASC"){
+        if (order === "ASC") {
             setCurrentPage(Math.ceil(seniorMedications.length / medsPerPage))
         }
-        if (order==="DSC"){
+        if (order === "DSC") {
             setCurrentPage(1)
         }
-      
+
         window.scrollTo({
             top: section.current.offsetTop,
             behavior: 'smooth',
@@ -244,6 +290,14 @@ export default function Meds({onChangeStepperLoading}) {
     // Change page
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+    const seniorStyle = {
+        control: base => ({
+            ...base,
+            borderColor: '#f31111',
+            // This line disable the blue border
+            boxShadow: ' 0 0 0 1px #f31111'
+        })
+    };
     const AscorDsc = [
         {
             value: "ASC",
@@ -289,171 +343,276 @@ export default function Meds({onChangeStepperLoading}) {
     ]
 
     return (
-        <div className='meds '>
-             <div className='timeline_area section_padding_130' >
-            <div
-                style={{
-                    position: "absolute",
-                    top: "8px",
-                    left: "26px",
+      <div className="meds ">
+        <div className="timeline_area section_padding_130">
+          <div
+            style={{
+              position: "absolute",
+              top: "8px",
+              left: "26px",
+            }}
+          >
+            <ButtonGroup variant="text" aria-label="text button group">
+              <Button onClick={() => onChangeStepperLoading("health")}>
+                <GiReturnArrow /> &nbsp;&nbsp; Return
+              </Button>
+            </ButtonGroup>
+          </div>
+
+          <div className="container-fluid py-5 ">
+            <div className="personalInfoMed">
+              <h2 className="ui-heading ui-heading--h2 ui-question__title">
+                Who is the checkup for?
+              </h2>
+              <Select
+                getOptionLabel={(e) => e.name + "  " + e.lastname}
+                getOptionValue={(e) => e.id}
+                key={(e) => e.id}
+                onChange={(value) => {
+                  setSenior(value);
+                  setCurrentPage(1);
+                  setSeniorError(false);
                 }}
-            >
-                <ButtonGroup variant="text" aria-label="text button group">
-                    <Button onClick={() => onChangeStepperLoading("health")}>
-                        <GiReturnArrow /> &nbsp;&nbsp; Return
-                    </Button>
-                    
-                </ButtonGroup>
+                options={seniorList}
+                components={{ Option: renderCustomItem }}
+              />
+              <div>
+                {seniorError && (
+                  <span className="text-sm text-danger">
+                    Please select senior first !
+                  </span>
+                )}
+              </div>
             </div>
-
-            <div className="container-fluid py-5 ">
-
-
-                <div className="personalInfoMed" >
-                    <h2 className="ui-heading ui-heading--h2 ui-question__title">Who is the checkup for?</h2>
-                    <Select
-                        getOptionLabel={e => e.name + '  ' + e.lastname}
-                        getOptionValue={e => e.id}
-                        key={e => e.id}
-                        onChange={(value) => {
-                            setSenior(value);
-                            setCurrentPage(1);
-                        }}
-                        options={seniorList}
-                        components={{ Option: renderCustomItem }} />
+            <form>
+              <div className="rowMed">
+                <div className="column">
+                  <label htmlFor="name">Meds</label>
+                  <input
+                    value={medLabel}
+                    {...register("medLabel", registerOptions.medLable)}
+                    onChange={(e) => {
+                      setMedLabel(e.target.value);
+                      clearErrors("medLabel");
+                    }}
+                    type="text"
+                    id="name"
+                    placeholder="Medication name here"
+                  />
+                  <div>
+                    {errors.medLabel && (
+                      <span className="text-sm text-danger">
+                        {errors.medLabel.message}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <form >
-                    <div className="rowMed">
-                        <div className="column">
-                            <label htmlFor="name">Meds</label>
-                            <input value={medLabel} onChange={(e) => { setMedLabel(e.target.value) }} type="text" id="name" placeholder="Medication name here" />
-                        </div>
-                        <div className="column">
 
-                            <label htmlFor="email">Dose a day</label>
-                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div className="column">
+                  <label htmlFor="email">Dose a day</label>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <input
+                      style={{ width: "35px", height: "35px" }}
+                      type="button"
+                      value="-"
+                      className="button-minus border rounded-circle  icon-shape icon-sm mx-1 "
+                      onClick={decNum}
+                      data-field="quantity"
+                    />
+                    <input
+                      style={{ width: "65px", paddingLeft: "30px" }}
+                      type="number"
+                      className="form-control"
+                      value={num}
+                      readOnly
+                      {...register("dose", {
+                        required: "Dose requierd !",
+                        pattern: /^[0-9+-]+$/,
+                        min: {
+                          value: 1,
+                          message:
+                            "Dose value must be greater than or equal to 1 !",
+                        },
+                       
+                      })}
+                      onChange={handleChange}
+                    />
+                    <input
+                      style={{ width: "35px", height: "35px" }}
+                      type="button"
+                      value="+"
+                      className="button-plus border rounded-circle icon-shape icon-sm "
+                      onClick={incNum}
+                      data-field="quantity"
+                    />
 
-
-
-
-                                <input style={{ width: "35px", height: "35px" }} type="button" value="-" className="button-minus border rounded-circle  icon-shape icon-sm mx-1 " onClick={decNum} data-field="quantity" />
-                                <input style={{ width: "65px", paddingLeft: "30px" }} type="number" className="form-control" value={num} onChange={handleChange} />
-                                <input style={{ width: "35px", height: "35px" }} type="button" value="+" className="button-plus border rounded-circle icon-shape icon-sm " onClick={incNum} data-field="quantity" />
-
-
-
-
-
-                                <div style={{ width: "40%" }}>
-                                    <Select
-                                        options={doseTypeOptions}
-                                        onChange={(value) => { setDose(value.value) }}
-                                        styles={customStyles} />
-                                </div>
-
-                            </div>
-
-
-                        </div>
+                    <div style={{ width: "40%" }}>
+                      <Select
+                        
+                        options={doseTypeOptions}
+                        onChange={(value) => {
+                          setDose(value);
+                        }}
+                        value={dose}
+                        styles={customStyles}
+                      />
                     </div>
-                    <div className="rowMed">
-                        <div className="column">
-                            <label htmlFor="subject">Treatment Start Date</label>
-                            <div className="input-groupp-icon">
-                                <input
-                                    validations={[required]}
-                                    value={startDate}
-                                    onChange={(e) => setStartDate(e.target.value)}
-                                    className="input--style-4"
-                                    type="date"
-                                    name="Date"
-                                    format="{yyyy-MM-dd}"
-                                    min={new Date().toISOString().split("T")[0]}
-                                />
-                            </div>
+                  </div>
+                  <div>
+                    {errors.dose && (
+                      <span className="text-sm text-danger">
+                        {errors.dose.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="rowMed">
+                <div className="column">
+                  <label htmlFor="subject">Treatment Start Date</label>
+                  <div className="input-groupp-icon">
+                    <input
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="input--style-4"
+                      type="date"
+                      name="Date"
+                      format="{yyyy-MM-dd}"
+                      min={new Date().toISOString().split("T")[0]}
+                    />
+                  </div>
+                </div>
+                <div className="column">
+                  <label htmlFor="contact">Treatment End Date</label>
+                  <div className="input-groupp-icon">
+                    <input
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="input--style-4"
+                      type="date"
+                      name="Date"
+                      format="{yyyy-MM-dd}"
+                      min={startDate}
+                    />
+                  </div>
+                </div>
+              </div>
 
-
-
-                        </div>
-                        <div className="column">
-                            <label htmlFor="contact">Treatment End Date</label>
-                            <div className="input-groupp-icon">
-                                <input
-                                    value={endDate}
-                                    onChange={(e) => setEndDate(e.target.value)}
-                                    className="input--style-4"
-                                    type="date"
-                                    name="Date"
-                                    format="{yyyy-MM-dd}"
-                                    min={startDate}
-                                />
-                            </div>
-                        </div>
+              <div class="col-6 text-end mt-7 " style={{ marginLeft: "7%" }}>
+                <a
+                  class="btn bg-gradient-dark mb-0"
+                  onClick={handleSubmit(saveMedication, seniorValidation)}
+                  href="javascript:;"
+                >
+                  <i class="fas fa-plus"></i>&nbsp;&nbsp;Add{" "}
+                </a>
+              </div>
+            </form>
+            <div className="row " style={{ height: "500px" }} ref={section}>
+              <div className="col-12 mt-4 mb-8">
+                <div className="card">
+                  <div className="card-header pb-0 px-3">
+                    <h6 className="mb-0">Medication Table</h6>
+                    <div
+                      style={{
+                        position: "absolute",
+                        right: "50px",
+                        top: "8px",
+                      }}
+                    >
+                      <Select
+                        menuPlacement="top"
+                        options={AscorDsc}
+                        value={{
+                          label:
+                            order === "ASC" ? (
+                              <span>
+                                <RiSortAsc /> ASC{" "}
+                              </span>
+                            ) : (
+                              <span>
+                                <RiSortDesc /> DSC
+                              </span>
+                            ),
+                          value: order,
+                        }}
+                        onChange={(value) => {
+                          setOrder(value.value);
+                        }}
+                        styles={customStylesAsc}
+                      />
                     </div>
-
-                    <div class="col-6 text-end mt-7 " style={{ marginLeft: "7%" }}>
-                        <a class="btn bg-gradient-dark mb-0" onClick={saveMedication} href="javascript:;"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add </a>
-                    </div>
-                    <Pagination
+                    <div
+                      style={{
+                        position: "absolute",
+                        right: "50%",
+                        top: "-30px",
+                      }}
+                    >
+                      <Pagination
                         currentPage={currentPage}
                         mealsperpage={medsPerPage}
                         totalmeals={seniorMedications.length}
                         paginate={paginate}
-                    />
-                </form>
-                <div className="row " style={{ height: "500px" }} ref={section}>
-                    <div className="col-12 mt-4 mb-8">
-                        <div className="card">
-                            <div className="card-header pb-0 px-3">
-                                <h6 className="mb-0">Medication Table</h6>
-                                <div style={{ position: "absolute", right: "50px", top: "8px" }}>
-                                    <Select
-                                        menuPlacement='top'
-                                        options={AscorDsc}
-                                        value={{label:(order==="ASC"?<span>
-                                        <RiSortAsc /> ASC </span>:<span>
-                    <RiSortDesc /> DSC</span>),value:order}}
-                                        onChange={(value) => { setOrder(value.value) }}
-                                        styles={customStylesAsc} />
-                                </div>
-                            </div>
-                            <div className="card-body pt-4 p-3">
-                                <ul className="list-group">
-                                    {currentMeds.sort().map((meds, index) => (
-
-
-                                        <li key={index} className="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
-                                            <div className="d-flex flex-column">
-                                                <h6 className="mb-3 text-sm">{meds.idmed}</h6>
-                                                <span className="mb-2 text-xs">Drug Name: <span className="text-dark font-weight-bold ms-sm-2">{meds.label}</span></span>
-                                                <span className="mb-2 text-xs">Drug Dose: <span className="text-dark ms-sm-2 font-weight-bold">{meds.dose} {meds.doseType}</span></span>
-                                                <span className="text-xs">Treatment Start Date: <span className="text-dark ms-sm-2 font-weight-bold">{meds.startDate}</span></span>
-                                                <span className="text-xs">Treatment End Date: <span className="text-dark ms-sm-2 font-weight-bold">{meds.endDate}</span></span>
-                                            </div>
-
-                                            <div className="ms-auto text-end">
-                                                <a className="btn btn-link text-danger text-gradient px-3 mb-0" onClick={(e) => deleteMed(meds, e)} href="javascript:;"><i className="far fa-trash-alt me-2"></i>Delete</a>
-
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
+                      />
                     </div>
+                  </div>
+                  <div className="card-body pt-4 p-3">
+                    <ul className="list-group">
+                      {currentMeds.sort().map((meds, index) => (
+                        <li
+                          key={index}
+                          className="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg"
+                        >
+                          <div className="d-flex flex-column">
+                            <h6 className="mb-3 text-sm">{meds.idmed}</h6>
+                            <span className="mb-2 text-xs">
+                              Drug Name:{" "}
+                              <span className="text-dark font-weight-bold ms-sm-2">
+                                {meds.label}
+                              </span>
+                            </span>
+                            <span className="mb-2 text-xs">
+                              Drug Dose:{" "}
+                              <span className="text-dark ms-sm-2 font-weight-bold">
+                                {meds.dose} {meds.doseType}
+                              </span>
+                            </span>
+                            <span className="text-xs">
+                              Treatment Start Date:{" "}
+                              <span className="text-dark ms-sm-2 font-weight-bold">
+                                {meds.startDate}
+                              </span>
+                            </span>
+                            <span className="text-xs">
+                              Treatment End Date:{" "}
+                              <span className="text-dark ms-sm-2 font-weight-bold">
+                                {meds.endDate}
+                              </span>
+                            </span>
+                          </div>
 
+                          <div className="ms-auto text-end">
+                            <a
+                              className="btn btn-link text-danger text-gradient px-3 mb-0"
+                              onClick={(e) => deleteMed(meds, e)}
+                              href="javascript:;"
+                            >
+                              <i className="far fa-trash-alt me-2"></i>Delete
+                            </a>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-
+              </div>
             </div>
-            </div>
-            {deleteModel && (
-                <Dialog
-                    onDialog={areUSureDelete}
-                    message={message}
-
-                />
-            )}
+          </div>
         </div>
-
-    )
+        {deleteModel && <Dialog onDialog={areUSureDelete} message={message} />}
+      </div>
+    );
 }

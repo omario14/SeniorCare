@@ -647,6 +647,7 @@ class Senior extends Component {
                                                                                                                 checkedBreakfast: senior.checkedBreakfast,
                                                                                                                 checkedLunch: senior.checkedLunch,
                                                                                                                 checkedDinner: senior.checkedDinner,
+                                                                                                                
 
                                                                                                             }
 

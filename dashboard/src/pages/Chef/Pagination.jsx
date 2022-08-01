@@ -10,8 +10,8 @@ const Pagination = ({ currentPage,mealsperpage, totalmeals, paginate }) => {
   }
 
   return (
-    <div className='mt-5' style={{marginLeft:"40%"}}>
-      <ul className='pagination'>
+    <div className='mt-5 ' style={{marginLeft:"40%"}}>
+      <ul className='pagination '>
         {pageNumbers.map(number => (
           <li key={number} className={`page-item ${currentPage === number ? "active" : ""}`} >
             <a onClick={(e) => {e.preventDefault();paginate(number)}} href='#' className="page-link">
