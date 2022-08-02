@@ -51,6 +51,7 @@ class Senior extends Component {
             fileInfo: [],
             selectListDIN: [],
             dinnerMenu: [],
+            seniorMeds:[],
             currentPage: 1,
             seniorsPerPage: 4,
 
@@ -348,6 +349,7 @@ class Senior extends Component {
             return <Navigate to="/notFound" />;
 
         }
+        
 
 
         return (
@@ -640,6 +642,10 @@ class Senior extends Component {
                                                                                                                 checkedDinner: senior.checkedDinner,
                                                                                                                 menus: senior.menus,
                                                                                                             };
+                                                                                                           
+                                                                                                            seniorService.getMedicationBySenior(senior.id).then((res)=>{
+                                                                                                                this.setState({seniorMeds:res.data}) })
+                                                                                                           
                                                                                                             let archive = {
                                                                                                                 idArch: `arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
                                                                                                                 senior: senior,
@@ -647,7 +653,7 @@ class Senior extends Component {
                                                                                                                 checkedBreakfast: senior.checkedBreakfast,
                                                                                                                 checkedLunch: senior.checkedLunch,
                                                                                                                 checkedDinner: senior.checkedDinner,
-                                                                                                                
+                                                                                                                meds:this.state.seniorMeds
 
                                                                                                             }
 
@@ -755,6 +761,7 @@ class Senior extends Component {
                                                                                                                 checkedBreakfast: senior.checkedBreakfast,
                                                                                                                 checkedLunch: senior.checkedLunch,
                                                                                                                 checkedDinner: senior.checkedDinner,
+                                                                                                                meds:this.state.seniorMeds
 
                                                                                                             }
 
@@ -858,6 +865,7 @@ class Senior extends Component {
                                                                                                                 checkedBreakfast: senior.checkedBreakfast,
                                                                                                                 checkedLunch: senior.checkedLunch,
                                                                                                                 checkedDinner: senior.checkedDinner,
+                                                                                                                meds:this.state.seniorMeds
 
                                                                                                             }
 

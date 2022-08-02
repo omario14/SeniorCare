@@ -11,6 +11,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
   const [seniorArch, setSeniorArch] = useState([]);
   const [order,setOrder]=useState("ASC");
   const [colm,setColm]=useState("idArch");
+  const [meds,setMeds]=useState([]);
 
   const retrieveArch = (senior) => {
     console.log("seniorzz", senior)
@@ -21,8 +22,12 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
 
   }
 
+
   useEffect(() => {
     retrieveArch({ senior });
+    seniorService.getMedicationBySenior(senior.id).then((res)=>{
+      setMeds(res.data);
+    })
     console.log("seniorArch", seniorArch)
 
   }, []);
@@ -158,7 +163,9 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                 </div>
               </div>
               <div className="card-body pb-0">
-
+                      {meds && meds.map((med,index)=>(
+                        <h1>{med.label}</h1>
+                      ))}
               </div>
              
             </div>

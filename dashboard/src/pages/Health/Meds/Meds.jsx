@@ -20,7 +20,7 @@ export default function Meds({ onChangeStepperLoading }) {
     let date = new Date();
     date.setDate(date.getDate() + 1);
     const [endDate, setEndDate] = useState(new Date(date).toISOString().split("T")[0]);
-    const [medLabel, setMedLabel] = useState("");
+    const [medLabel, setMedLabel] = useState(null);
     const [dose, setDose] = useState("");
     const [num, setNum] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
@@ -29,6 +29,8 @@ export default function Meds({ onChangeStepperLoading }) {
     const [deleteModel, setDeleteModel] = useState(false);
     const [order, setOrder] = useState("DSC");
     const [seniorError, setSeniorError] = useState(false);
+    const [doseTError,setDoseTError]=useState(false);
+    const [dateError,setDateError]=useState(false);
 
     const { Option } = components;
     const { register, handleSubmit, watch, formState: { errors }, clearErrors } = useForm();
@@ -191,17 +193,19 @@ export default function Meds({ onChangeStepperLoading }) {
         </Option >;
     }
 
-    const registerOptions = {
-        medLable: { required: "Medication's name is required" },
-
-
-    };
+    
 
     const seniorValidation = () => {
 
         if (!senior) {
             setSeniorError(true);
         }
+        if (!dose){
+          setDoseTError(true);
+        }
+        if (startDate>endDate){
+         setDateError(true);
+        }else{setDateError(false)}
     }
 
     function getDatesInRange(startDate, endDate) {
@@ -256,30 +260,36 @@ export default function Meds({ onChangeStepperLoading }) {
                 console.log(res)
                 const newMedication = [res.data, ...seniorMedications];
                 setSeniorMedications(newMedication);
+                archiveAdd(newMedication)
                
             }
         )
-        /********** Clear inputs *********/
-        setStartDate(new Date().toISOString().split("T")[0]);
-        let date = new Date();
-        date.setDate(date.getDate() + 1);
-        setEndDate(new Date(date).toISOString().split("T")[0]);
-        setMedLabel(null);
-        setDose("");
-        setNum(0);
-        if (order === "ASC") {
-            setCurrentPage(Math.ceil(seniorMedications.length / medsPerPage))
-        }
-        if (order === "DSC") {
-            setCurrentPage(1)
-        }
-
+        clearInput();
+        
         window.scrollTo({
             top: section.current.offsetTop,
             behavior: 'smooth',
         });
+        console.log("startDate: ",startDate," enDate : ", endDate)
 
 
+
+    }
+    const clearInput = ()=>{
+      /********** Clear inputs *********/
+      setStartDate(new Date().toISOString().split("T")[0]);
+    
+      setEndDate(new Date(date).toISOString().split("T")[0]);
+    
+      setMedLabel("");
+      setDose("");
+      setNum(0);
+      if (order === "ASC") {
+          setCurrentPage(Math.ceil(seniorMedications.length / medsPerPage))
+      }
+      if (order === "DSC") {
+          setCurrentPage(1)
+      }
 
     }
     // Get current meals
@@ -372,9 +382,14 @@ export default function Meds({ onChangeStepperLoading }) {
                   setSenior(value);
                   setCurrentPage(1);
                   setSeniorError(false);
+                  setDoseTError(false);
+                  setDateError(false);
+                  clearErrors();
+                  clearInput();
                 }}
                 options={seniorList}
                 components={{ Option: renderCustomItem }}
+                styles={seniorError&& seniorStyle}
               />
               <div>
                 {seniorError && (
@@ -390,7 +405,7 @@ export default function Meds({ onChangeStepperLoading }) {
                   <label htmlFor="name">Meds</label>
                   <input
                     value={medLabel}
-                    {...register("medLabel", registerOptions.medLable)}
+                    {...register("medLabel",  {required:"Medication's name is required! "})}
                     onChange={(e) => {
                       setMedLabel(e.target.value);
                       clearErrors("medLabel");
@@ -449,16 +464,19 @@ export default function Meds({ onChangeStepperLoading }) {
                     />
 
                     <div style={{ width: "40%" }}>
+                      
                       <Select
                         
                         options={doseTypeOptions}
                         onChange={(value) => {
                           setDose(value);
+                          setDoseTError(false);
                         }}
                         value={dose}
-                        styles={customStyles}
+                        styles={doseTError?seniorStyle:customStyles}
                       />
                     </div>
+                   
                   </div>
                   <div>
                     {errors.dose && (
@@ -466,6 +484,12 @@ export default function Meds({ onChangeStepperLoading }) {
                         {errors.dose.message}
                       </span>
                     )}
+                    <br/>
+                    {doseTError && (
+                  <span className="text-sm text-danger">
+                    Please select Dose type !
+                  </span>
+                )}
                   </div>
                 </div>
               </div>
@@ -475,29 +499,47 @@ export default function Meds({ onChangeStepperLoading }) {
                   <div className="input-groupp-icon">
                     <input
                       value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
+                      onChange={(e) => {setStartDate(e.target.value);if(e.target.value<endDate){setDateError(false)}}}
                       className="input--style-4"
                       type="date"
                       name="Date"
                       format="{yyyy-MM-dd}"
                       min={new Date().toISOString().split("T")[0]}
+                      style={{ borderColor:dateError&& '#f31111',
+                      // This line disable the blue border
+                      boxShadow: dateError&& ' 0 0 0 1px #f31111'}}
+
                     />
+                   
+                   
                   </div>
+                  <div style={{position:"absolute",bottom:"55px"}}>
+                    {dateError && (
+                  <span className="text-sm text-danger">
+                    EndDate must be greater than StartDate
+                  </span>
+                )}
+                    </div>
                 </div>
                 <div className="column">
                   <label htmlFor="contact">Treatment End Date</label>
                   <div className="input-groupp-icon">
                     <input
                       value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
+                      onChange={(e) => {setEndDate(e.target.value);setDateError(false);}}
                       className="input--style-4"
                       type="date"
                       name="Date"
                       format="{yyyy-MM-dd}"
                       min={startDate}
+                      style={{ borderColor:dateError&& '#f31111',
+                      // This line disable the blue border
+                      boxShadow: dateError&& ' 0 0 0 1px #f31111'}}
                     />
                   </div>
+                  
                 </div>
+              
               </div>
 
               <div class="col-6 text-end mt-7 " style={{ marginLeft: "7%" }}>
@@ -561,7 +603,7 @@ export default function Meds({ onChangeStepperLoading }) {
                   </div>
                   <div className="card-body pt-4 p-3">
                     <ul className="list-group">
-                      {currentMeds.sort().map((meds, index) => (
+                      {currentMeds && currentMeds.map((meds, index) => (
                         <li
                           key={index}
                           className="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg"
