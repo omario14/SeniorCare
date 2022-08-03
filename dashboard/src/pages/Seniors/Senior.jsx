@@ -547,7 +547,7 @@ class Senior extends Component {
                                                                                                     Section deux
                                                                                                     <div style={{ position: "absolute", right: "-1000px", top: "23px", cursor: "pointer" }} onClick={() => this.setState({ section: "section1" })}>
                                                                                                         <h6> <MdOutlineExpandLess size={30} /> 
-                                                                                                            Food
+                                                                                                            Medications :
                                                                                                         </h6>
                                                                                                     </div>
 

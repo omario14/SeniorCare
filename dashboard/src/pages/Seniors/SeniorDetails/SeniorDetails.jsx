@@ -14,8 +14,8 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
   const [meds,setMeds]=useState([]);
 
   const retrieveArch = (senior) => {
-    console.log("seniorzz", senior)
-    seniorService.getArchiveBySenior(12)
+    console.log("seniorzz", senior.senior)
+    seniorService.getArchiveBySenior(senior.senior.id)
       .then((res) => {
         setSeniorArch(res.data)
       });
@@ -164,7 +164,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
               </div>
               <div className="card-body pb-0">
                       {meds && meds.map((med,index)=>(
-                        <h1>{med.label}</h1>
+                        <h1 key={index}>{med.dose} {med.doseType} of {med.label}</h1>
                       ))}
               </div>
              
@@ -263,7 +263,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                         <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" onClick={()=>sorting("meals")}>
                       Meals</th>
                        
-                        <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Completion</th>
+                        <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Medications</th>
                         <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Completion</th>
                         <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Completion</th>
                       </tr>
@@ -340,7 +340,10 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                             </div>
                           </td>
                           <td className="align-middle text-center text-sm">
-                            <span className="text-xs font-weight-bold text-info">  {arch.date}</span>
+                          {arch.meds.map((med,i)=>(
+                            <span key={i} className="text-xs font-weight-bold text-info"> {med.dose} {med.doseType} of {med.label} {arch.meds.length>1 && "AND"} </span>
+                          ))}
+                            
                           </td>
 
                           

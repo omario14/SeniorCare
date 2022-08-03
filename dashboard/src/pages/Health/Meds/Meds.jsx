@@ -228,10 +228,8 @@ export default function Meds({ onChangeStepperLoading }) {
         let archive = {
           idArch: `arch-${senior.id}-${d}`,
           senior: senior,
-          date: new Date().toISOString().split("T")[0],
-          checkedBreakfast: senior.checkedBreakfast,
-          checkedLunch: senior.checkedLunch,
-          checkedDinner: senior.checkedDinner,
+          date: new Date(d).toISOString().split("T")[0],
+         
           meds:meds,
           
   
