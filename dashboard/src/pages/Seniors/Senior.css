@@ -105,3 +105,90 @@
 }
 
 
+/*******************medication elements in table**************************/
+
+
+/* Clear floats after the columns */
+.medicationRow:after {
+  content: "";
+  display: flex;
+  clear: both;
+}
+
+/* Responsive columns */
+@media screen and (max-width: 600px) {
+  .medicationRow .column {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+
+/* Style the counter cards */
+.medicationRow .card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  text-align: center;
+  background-color: #a00303;
+}
+
+
+.modal-body {
+  background-color: #5165ff;
+  border-color: #5165ff;
+}
+
+.intro-1 {
+  text-transform: capitalize;
+  font-size: 40px;
+
+  color: #fffaff;
+}
+
+.close {
+  color: #fff;
+  cursor:pointer;
+}
+
+.close:hover {
+  color: #fff
+}
+
+.intro-2 {
+  font-size: 13px
+}
+
+.btn-primary {
+ 
+  color: #5165ff;
+  background-color: #fffaff;
+  border-color: #fffaff;
+  padding: 12px;
+  font-weight: 700;
+  border-radius: 41px;
+  
+  padding-right: 20px;
+  padding-left: 20px;
+  margin: auto 12px;
+ 
+}
+
+.btn-primary:hover{
+  color: #fffaff;
+  background-color: #5165ff;
+}
+
+
+
+.medsCardBody{
+  width:90%;background-color:rgb(235, 235, 224) ; border-radius: 25px;
+ 
+}
+.medsCardBodyItem{ padding:5px 7px 0 7px;cursor:pointer;border-radius: 15px;border-width: thick;}
+.medsCardBodyItem:hover{
+  background-color:rgb(221, 221, 211);
+}
+
+.medsCardBodyItem:hover .timeline-step{background-color: #8291bf;}
+.medsCardBodyItem:hover .iconDose{color: #ffffff;}
+

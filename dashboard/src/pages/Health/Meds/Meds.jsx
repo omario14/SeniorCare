@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { GiEyedropper, GiPill, GiReturnArrow, GiSpoon } from 'react-icons/gi';
+import { GiEyedropper, GiPill, GiReturnArrow, GiSpoon, GiSyringe } from 'react-icons/gi';
 import { Button, ButtonGroup } from '@mui/material'
 import Select, { components } from 'react-select';
 import seniorService from '../../../services/senior.service';
@@ -230,13 +230,14 @@ export default function Meds({ onChangeStepperLoading }) {
           senior: senior,
           date: new Date(d).toISOString().split("T")[0],
          
-          meds:meds,
+          
           
   
       }
   
   
       seniorService.addToArchive(archive, archive.idArch).then(console.log("Archive"))
+      seniorService.affectMedToArch(archive.idArch,meds.idmed);
       })
       
     }
@@ -258,7 +259,7 @@ export default function Meds({ onChangeStepperLoading }) {
                 console.log(res)
                 const newMedication = [res.data, ...seniorMedications];
                 setSeniorMedications(newMedication);
-                archiveAdd(newMedication)
+                archiveAdd(res.data)
                
             }
         )
@@ -348,6 +349,14 @@ export default function Meds({ onChangeStepperLoading }) {
                 </span>
             ),
         },
+        {
+          value: "INJECTION",
+          label: (
+              <span>
+                  <GiSyringe /> Injection(s)
+              </span>
+          ),
+      },
     ]
 
     return (
