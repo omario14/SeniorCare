@@ -23,6 +23,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
       .then((res) => {
         setSeniorArch(res.data)
       });
+      console.log("Archive is here : ",seniorArch);
 
   }
 
@@ -203,6 +204,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
 
 
 
+                      {/** 
                         <div className="timeline-block mb-3" >
                           {
                             arch.meds.map((med) => (
@@ -243,7 +245,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                             ))}
                         </div>
 
-
+**/}
 
 
                       </div>
@@ -353,13 +355,14 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                                   <label htmlFor={arch.idArch + "DINNER"} className="align-middle-labelDetails text-secondary">DINNER </label>
                                 </div>
                               </td>
+                              {/**
                               <td className="align-middle text-center text-sm">
                                 {arch.meds.map((med, i) => (
                                   <span key={i} className="text-xs font-weight-bold text-info"> {med.dose} {med.doseType} of {med.label} {arch.meds.length > 1 && "AND"} </span>
                                 ))}
 
                               </td>
-
+ */}
 
                               <td className="align-middle">
                                 <div className="progress-wrapper w-75 mx-auto">

@@ -8,6 +8,7 @@ import Dialog from '../../Seniors/dialogDelete';
 import './Meds.css';
 import { useForm } from 'react-hook-form';
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
+import chefService from '../../../services/chef.service';
 
 
 
@@ -236,8 +237,11 @@ export default function Meds({ onChangeStepperLoading }) {
       }
   
   
-      seniorService.addToArchive(archive, archive.idArch).then(console.log("Archive"))
-      seniorService.affectMedToArch(archive.idArch,meds.idmed);
+      seniorService.addToArchive(archive, archive.idArch).then(()=>{
+        console.warn("Archiveid : ",meds.idmed," Med Id : ",meds.idmed-1)
+        chefService.addToArchiveee(archive.idArch,meds.idmed);
+      })
+      
       })
       
     }

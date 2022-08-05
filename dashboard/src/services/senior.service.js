@@ -36,7 +36,6 @@ class SeniorService {
     return http.put(`/updateArchive/${idArchive}`,data, { headers: authHeader()});
   }
 
-  
 
   /*********************File **************************/
 
@@ -60,9 +59,7 @@ class SeniorService {
   getArchiveBySenior(idSenior){
     return http.get(`/getarchives-bysenior/${idSenior}`,{headers: authHeader()})
   }
-  affectMedToArch(idArch,idMed){
-    return http.post(`/addArchMed/${idArch}/${idMed}`,{headers: authHeader()})
-  }
+ 
  
 
   /********************Medication ************************/
