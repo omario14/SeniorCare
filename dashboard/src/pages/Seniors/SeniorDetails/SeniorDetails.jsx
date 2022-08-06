@@ -1,12 +1,14 @@
 import { Button, ButtonGroup } from '@mui/material'
 import React, { useEffect, useRef } from 'react'
 import { useState } from 'react'
-import { GiEyedropper, GiHealthPotion, GiPill, GiReturnArrow, GiSpoon, GiSyringe } from 'react-icons/gi'
+import { GiEyedropper, GiHealthPotion, GiOverdose, GiPill, GiReturnArrow, GiSpoon, GiSyringe } from 'react-icons/gi'
+import { IoCalendarNumber } from "react-icons/io5";
 import seniorService from '../../../services/senior.service'
 import '../AddSenior/AddSenior.css'
 import './SeniorDetails.css'
 import { BiSortAlt2 } from 'react-icons/bi';
 import { Badge } from 'react-bootstrap'
+import MedsArch from './MedsArch'
 
 export default function SeniorDetails({ senior, addSeniorPage }) {
   const [seniorArch, setSeniorArch] = useState([]);
@@ -14,18 +16,23 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
   const [colm, setColm] = useState("idArch");
   const [meds, setMeds] = useState([]);
   const [medDialog, setMedDialog] = useState(false);
-
+  const [medsByArch,setMedsByArch]=useState([])
   const myRef = useRef(null);
 
   const retrieveArch = (senior) => {
-    console.log("seniorzz", senior.senior)
+  
     seniorService.getArchiveBySenior(senior.senior.id)
       .then((res) => {
         setSeniorArch(res.data)
       });
-      console.log("Archive is here : ",seniorArch);
+    console.log("Archive is here : ", seniorArch);
+    seniorService.getMedsByArchive("ARCH-10-2022-08-05")
+    .then((res)=>{
+      setMedsByArch(...medsByArch,res.data)
+    })
 
   }
+
 
 
   useEffect(() => {
@@ -56,6 +63,8 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
       setOrder("ASC");
     }
   }
+
+
 
   return (
     <>
@@ -204,48 +213,14 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
 
 
 
-                      {/** 
+
                         <div className="timeline-block mb-3" >
-                          {
-                            arch.meds.map((med) => (
-                              <div className='medsCardBodyItem' onClick={() => { setMedDialog(true); myRef.current = med }}>
-                                <span className="timeline-step">
-                                  {(() => {
-                                    switch (med.doseType) {
-                                      case "PILL":
-                                        return <GiPill className='iconDose' />
-                                        break;
-                                      case "SPOON":
-                                        return <GiSpoon className='iconDose' />
-                                      case "DROP":
-                                        return <GiEyedropper className='iconDose' />
-                                      case "INJECTION":
-                                        return <GiSyringe className='iconDose' />
-                                      default:
-                                        break;
-                                    }
-                                  })()}
-                                </span>
-                                <div className="timeline-content">
-                                  <div className='flex' style={{ display: "flex", justifyItems: "left", justifyContent: "space-between" }}>
-                                    <div >
-                                      <h6 className="text-dark text-sm font-weight-bold mb-0 text-capitalize">{med.label} </h6>
-
-                                      <p className="text-secondary font-weight-bold text-xs mt-1 mb-0">{med.idmed}</p>
-                                    </div>
-                                    <div className='' >
-                                      {med.dose} {med.doseType}
-                                    </div>
-                                  </div>
-
-                                </div>
-
-
-                              </div>
-                            ))}
+                          
+                       <MedsArch arch={arch} setMedDialog={setMedDialog} myRef={myRef}/>
+                            
+                          
                         </div>
 
-**/}
 
 
                       </div>
@@ -418,9 +393,9 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                   </div>
                   <div className="col-md-6">
                     <div className="text-white mt-4">
-                      <span className="intro-1">{myRef.current.label} <span >
+                      <span className="intro-1">{myRef.current.meds.label} <span >
                         {(() => {
-                          switch (myRef.current.doseType) {
+                          switch (myRef.current.meds.doseType) {
                             case "PILL":
                               return <GiPill className='iconDose' />
                               break;
@@ -435,16 +410,29 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                           }
                         })()}
                       </span></span>
-                      <div className="mt-2"> <span className="intro-2">Gain access to analytic tools, desktop apps, templates, read-through, features, and autp-translate all for the price of a pro subscription</span> </div>
-                      <div className="mt-4 mb-5"> 
-                      <label class="toggleButton">
-                        <input type="checkbox" />
-                        <div>
-                          <svg viewBox="0 0 44 44">
-                            <path d="M14,24 L21,31 L39.7428882,11.5937758 C35.2809627,6.53125861 30.0333333,4 24,4 C12.95,4 4,12.95 4,24 C4,35.05 12.95,44 24,44 C35.05,44 44,35.05 44,24 C44,19.3 42.5809627,15.1645919 39.7428882,11.5937758" transform="translate(-2.000000, -2.000000)"></path>
-                          </svg>
+                      <div className="d-flex flex-column mt-2" >
+                      <span className="intro-2"> <IoCalendarNumber /> {myRef.current.archive.date}</span>
+                      <span className="intro-2"><GiOverdose/> {myRef.current.meds.dose} {myRef.current.meds.doseType} </span>
+                       </div>
+                      <div className="d-flex flex-row mt-4 mb-5">
+                        <label class="toggleButton m-2">
+                          <input type="checkbox" checked={myRef.current.isDone} />
+                          <div>
+                            <svg viewBox="0 0 44 44">
+                              <path d="M14,24 L21,31 L39.7428882,11.5937758 C35.2809627,6.53125861 30.0333333,4 24,4 C12.95,4 4,12.95 4,24 C4,35.05 12.95,44 24,44 C35.05,44 44,35.05 44,24 C44,19.3 42.5809627,15.1645919 39.7428882,11.5937758" transform="translate(-2.000000, -2.000000)"></path>
+                            </svg>
+                          </div>
+                        </label> 
+                        <label class="toggleButton m-2">
+                          <input type="checkbox" checked={myRef.current.isDone} />
+                          <div>
+                            <svg viewBox="0 0 44 44">
+                              <path d="M14,24 L21,31 L39.7428882,11.5937758 C35.2809627,6.53125861 30.0333333,4 24,4 C12.95,4 4,12.95 4,24 C4,35.05 12.95,44 24,44 C35.05,44 44,35.05 44,24 C44,19.3 42.5809627,15.1645919 39.7428882,11.5937758" transform="translate(-2.000000, -2.000000)"></path>
+                            </svg>
+                          </div>
+                          <span className="intro-2 text-uppercase text-white"> Take</span>
+                        </label> 
                         </div>
-                      </label> </div>
                     </div>
                   </div>
                 </div>

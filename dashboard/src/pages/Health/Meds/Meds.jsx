@@ -239,7 +239,7 @@ export default function Meds({ onChangeStepperLoading }) {
   
       seniorService.addToArchive(archive, archive.idArch).then(()=>{
         console.warn("Archiveid : ",meds.idmed," Med Id : ",meds.idmed-1)
-        chefService.addToArchiveee(archive.idArch,meds.idmed);
+        seniorService.addToArchiveee(archive.idArch,meds.idmed);
       })
       
       })
