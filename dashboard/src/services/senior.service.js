@@ -61,9 +61,9 @@ class SeniorService {
   getMedsByArchive(idArchive) {
     return http.get(`/getMedications-byArch/${idArchive}`, { headers: authHeader() })
   }
-  addToArchiveee(idArch, idmed) {
-    console.log(authHeader())
-    return http.post(`addabc/${idArch}/${idmed}`, { headers: authHeader() })
+  putMedsToArchive(idArch, idmed,done) {
+    
+    return http.put(`addabc/${idArch}/${idmed}/${done}`, { headers: authHeader() })
   }
 
   addToArchive(data, idArchive) {

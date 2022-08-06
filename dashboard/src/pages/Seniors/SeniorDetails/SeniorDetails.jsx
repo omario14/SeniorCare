@@ -15,7 +15,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
   const [order, setOrder] = useState("ASC");
   const [colm, setColm] = useState("idArch");
   const [meds, setMeds] = useState([]);
-  const [medDialog, setMedDialog] = useState(false);
+ 
   const [medsByArch,setMedsByArch]=useState([])
   const myRef = useRef(null);
 
@@ -64,6 +64,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
     }
   }
 
+  
 
 
   return (
@@ -207,7 +208,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
 
 
 
-                    <div className="card-body medsCardBody p-3 pb-0" onClick={() => setMedDialog(true)}>
+                    <div className="card-body medsCardBody p-3 pb-0" >
                       <div className="timeline timeline-one-side">
 
 
@@ -216,7 +217,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
 
                         <div className="timeline-block mb-3" >
                           
-                       <MedsArch arch={arch} setMedDialog={setMedDialog} myRef={myRef}/>
+                       <MedsArch arch={arch}  myRef={myRef}/>
                             
                           
                         </div>
@@ -370,79 +371,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
 
 
       </div>
-      {medDialog &&
-        <div style={{
-          position: "fixed",
-          zIndex: 9999,
-          top: "0",
-          left: "0",
-          right: "0",
-          bottom: "0",
-          backgroundColor: "rgba(0,0,0,0.5)"
-
-        }} onClick={() => setMedDialog(false)}>
-
-
-          <div onClick={(e) => e.stopPropagation()} className="modal-dialog modal-lg">
-            <div className="modal-content">
-              <div className="modal-body">
-                <div className="text-right" onClick={() => setMedDialog(false)}> <i className="fa fa-close close" ></i> </div>
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="text-center mt-2"> <img src="../../../assets/img/images/medic1.png" width="300" /> </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="text-white mt-4">
-                      <span className="intro-1">{myRef.current.meds.label} <span >
-                        {(() => {
-                          switch (myRef.current.meds.doseType) {
-                            case "PILL":
-                              return <GiPill className='iconDose' />
-                              break;
-                            case "SPOON":
-                              return <GiSpoon className='iconDose' />
-                            case "DROP":
-                              return <GiEyedropper className='iconDose' />
-                            case "INJECTION":
-                              return <GiSyringe className='iconDose' />
-                            default:
-                              break;
-                          }
-                        })()}
-                      </span></span>
-                      <div className="d-flex flex-column mt-2" >
-                      <span className="intro-2"> <IoCalendarNumber /> {myRef.current.archive.date}</span>
-                      <span className="intro-2"><GiOverdose/> {myRef.current.meds.dose} {myRef.current.meds.doseType} </span>
-                       </div>
-                      <div className="d-flex flex-row mt-4 mb-5">
-                        <label class="toggleButton m-2">
-                          <input type="checkbox" checked={myRef.current.isDone} />
-                          <div>
-                            <svg viewBox="0 0 44 44">
-                              <path d="M14,24 L21,31 L39.7428882,11.5937758 C35.2809627,6.53125861 30.0333333,4 24,4 C12.95,4 4,12.95 4,24 C4,35.05 12.95,44 24,44 C35.05,44 44,35.05 44,24 C44,19.3 42.5809627,15.1645919 39.7428882,11.5937758" transform="translate(-2.000000, -2.000000)"></path>
-                            </svg>
-                          </div>
-                        </label> 
-                        <label class="toggleButton m-2">
-                          <input type="checkbox" checked={myRef.current.isDone} />
-                          <div>
-                            <svg viewBox="0 0 44 44">
-                              <path d="M14,24 L21,31 L39.7428882,11.5937758 C35.2809627,6.53125861 30.0333333,4 24,4 C12.95,4 4,12.95 4,24 C4,35.05 12.95,44 24,44 C35.05,44 44,35.05 44,24 C44,19.3 42.5809627,15.1645919 39.7428882,11.5937758" transform="translate(-2.000000, -2.000000)"></path>
-                            </svg>
-                          </div>
-                          <span className="intro-2 text-uppercase text-white"> Take</span>
-                        </label> 
-                        </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-      }
+  
     </>
   )
 }

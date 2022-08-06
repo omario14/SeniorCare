@@ -192,3 +192,21 @@
 .medsCardBodyItem:hover .timeline-step{background-color: #8291bf;}
 .medsCardBodyItem:hover .iconDose{color: #ffffff;}
 
+
+
+#binCover{
+ 
+  
+  width: 96px;
+  height: 96px;
+  margin-top: -25px;
+  margin-left: -25px;
+  margin-bottom: -25px;
+  padding-left: 0;
+ 
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%;
+  box-shadow: 0 0 0 8px #ffffff;
+  overflow: hidden;
+  transform: scale(0.41);
+}
