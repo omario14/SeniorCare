@@ -1,3 +1,13 @@
 .staff{
     flex: 20;
 }
+
+
+
+.table .theadstafTable th {
+    padding: 0.75rem 4.5rem;
+    width: 100%;
+    text-transform: capitalize;
+    letter-spacing: 0px;
+    border-bottom: 1px solid #e9ecef;
+  }

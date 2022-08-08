@@ -98,6 +98,15 @@
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
   }
+
+
+  .vertical-center {
+    margin-top:25px ;
+    margin-left: 60px;
+    position: relative;
+    
+    
+  }
   
   
   

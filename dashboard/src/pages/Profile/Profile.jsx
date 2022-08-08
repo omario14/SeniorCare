@@ -52,10 +52,13 @@ class Profile extends Component {
                 </div>
                 <div className="col-auto my-auto">
                   <div className="h-100">
-                    <h5 className="mb-1">{currentUser.username}</h5>
-                    <p className="mb-0 font-weight-bold text-sm">
-                      CEO / Co-Founder
-                    </p>
+                    <h5 className="mb-1 text-capitalize">{currentUser.username}</h5>
+                    
+                    {currentUser.roles &&
+                            currentUser.roles.map((role, index) => (
+                              <p className="mb-0 font-weight-bold text-sm"key={index}>{role.substring(5, role.length)}</p>
+                            ))}
+                    
                   </div>
                 </div>
                 <div className="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">

@@ -13,8 +13,8 @@ class UserService {
     return axios.get(API_URL + "user", { headers: authHeader() });
   }
 
-  updateUser(user) {
-    return http.put(`/update-user`,user, { headers: authHeader() });
+  updateUser(id,user) {
+    return http.put(`/update-user/${id}`,user, { headers: authHeader() });
   }
 
   delete(id) {

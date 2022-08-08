@@ -1,8 +1,7 @@
 import { Button, ButtonGroup } from '@mui/material'
 import React, { useEffect, useRef } from 'react'
 import { useState } from 'react'
-import { GiEyedropper, GiHealthPotion, GiOverdose, GiPill, GiReturnArrow, GiSpoon, GiSyringe } from 'react-icons/gi'
-import { IoCalendarNumber } from "react-icons/io5";
+import {  GiHealthPotion,   GiReturnArrow } from 'react-icons/gi'
 import seniorService from '../../../services/senior.service'
 import '../AddSenior/AddSenior.css'
 import './SeniorDetails.css'
@@ -13,10 +12,7 @@ import MedsArch from './MedsArch'
 export default function SeniorDetails({ senior, addSeniorPage }) {
   const [seniorArch, setSeniorArch] = useState([]);
   const [order, setOrder] = useState("ASC");
-  const [colm, setColm] = useState("idArch");
-  const [meds, setMeds] = useState([]);
- 
-  const [medsByArch,setMedsByArch]=useState([])
+  
   const myRef = useRef(null);
 
   const retrieveArch = (senior) => {
@@ -25,11 +21,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
       .then((res) => {
         setSeniorArch(res.data)
       });
-    console.log("Archive is here : ", seniorArch);
-    seniorService.getMedsByArchive("ARCH-10-2022-08-05")
-    .then((res)=>{
-      setMedsByArch(...medsByArch,res.data)
-    })
+   
 
   }
 
@@ -37,15 +29,12 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
 
   useEffect(() => {
     retrieveArch({ senior });
-    seniorService.getMedicationBySenior(senior.id).then((res) => {
-      setMeds(res.data);
-    })
-    console.log("seniorArch", seniorArch)
+   
 
   }, []);
 
   const sorting = (col) => {
-    setColm(col);
+   
     if (order === "ASC") {
       const sorted = [...seniorArch].sort((a, b) =>
         a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
@@ -188,7 +177,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                 {seniorArch.map((arch, index) => (
                   <div key={index} style={{
                     height: "80vh",
-
+                    
                     top: "800px",
                     left: "0px",
                     display: "flex",
@@ -208,7 +197,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
 
 
 
-                    <div className="card-body medsCardBody p-3 pb-0" >
+                    <div className="card-body medsCardBody p-3 mb-3" >
                       <div className="timeline timeline-one-side">
 
 

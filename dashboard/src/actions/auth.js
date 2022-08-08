@@ -10,9 +10,9 @@ import {
 import AuthService from "../services/auth.service";
 
 
-export const register = (name,lastName,username, email,fileId, password,roles) => (dispatch) => {
-  console.log(roles,"/br  ",username,"azae   ", email);
-  return AuthService.register(name,lastName,username, email,fileId, password,roles).then(
+export const register = (name,lastName,username, email, password,mobile,gender,adress,picture,roles) => (dispatch) => {
+  console.log(roles,"/br  ",username,"azae   ", email,"pass",password,"mobl",mobile,"gender",gender,"address",adress,"pic",picture);
+  return AuthService.register(name,lastName,username, email, password,mobile,gender,adress,picture,roles).then(
   
     (response) => {
       

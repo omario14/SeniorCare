@@ -14,7 +14,7 @@ class AuthService {
           console.log('doneeeeeeee')
           localStorage.setItem("user", JSON.stringify(response.data));
         }
- 
+
         return response.data;
       });
   }
@@ -23,17 +23,11 @@ class AuthService {
     localStorage.clear();
   }
 
-  register(name,lastName,username, email,fileId, password,role) {
+  register(name, lastName, username, email, password, mobile, gender, adress, picture, role) {
     return Axios.post(API_URL + "signup", {
-      name,
-      lastName,
-      username,
-      email,
-      password,
-      fileId,
-      role,
-     
-    }, { headers: authHeader()});
+      name, lastName, username, email, password, mobile, gender, adress, picture, role
+
+    }, { headers: authHeader() });
   }
 }
 

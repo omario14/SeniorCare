@@ -31,7 +31,6 @@ export default function MedsArch({ arch, myRef }) {
 
         }));
       })
-    console.log(meds)
 
 
   }, [])
@@ -40,7 +39,8 @@ export default function MedsArch({ arch, myRef }) {
 
 
   return (
-    <div> {meds.map((med,index) => (
+    <div> 
+      {meds.length!==0 ?  meds.map((med,index) => (
 
 
       <div key={index} className='medsCardBodyItem' onClick={() => { setMedDialog(true); myRef.current = med }}>
@@ -60,7 +60,7 @@ export default function MedsArch({ arch, myRef }) {
               switch (med.meds.doseType) {
                 case "PILL":
                   return <GiPill className='iconDose' />
-                  break;
+                  
                 case "SPOON":
                   return <GiSpoon className='iconDose' />
                 case "DROP":
@@ -89,7 +89,8 @@ export default function MedsArch({ arch, myRef }) {
 
 
       </div>
-    ))
+    )):
+    <span className='vertical-center'>There is no Meds for this day</span>
     }
 
 
@@ -113,7 +114,7 @@ export default function MedsArch({ arch, myRef }) {
                 <div className="text-right" onClick={() => setMedDialog(false)}> <i className="fa fa-close close" ></i> </div>
                 <div className="row">
                   <div className="col-md-6">
-                    <div className="text-center mt-2"> <img src="../../../assets/img/images/medic1.png" width="300" /> </div>
+                    <div className="text-center mt-2"> <img src="../../../assets/img/images/medic1.png" width="300" alt='medic1' /> </div>
                   </div>
                   <div className="col-md-6">
                     <div className="text-white mt-4">
@@ -122,7 +123,7 @@ export default function MedsArch({ arch, myRef }) {
                           switch (myRef.current.meds.doseType) {
                             case "PILL":
                               return <GiPill className='iconDose' />
-                              break;
+                              
                             case "SPOON":
                               return <GiSpoon className='iconDose' />
                             case "DROP":

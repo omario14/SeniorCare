@@ -559,28 +559,15 @@ class Senior extends Component {
                                                                                                     <label className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 my-3">Medication :</label>
                                                                                                     
                                                                                                     <div class="medicationRow">
-                                                                                                        {this.state.sArch && this.state.sArch.map((a, mindex) => (
-                                                                                                            <>
-                                                                                                            {
-                                                                                                                a.meds.map((med )=> (
-                                                                                                                    <>
-                                                                                                                    {med.date===new Date().toISOString().split("T")[0]&&
-                                                                                                                    
+                                                                                                       
                                                                                                                     
                                                                                                                     <div class="card">
-                                                                                                                      <h3>{med.idmed}</h3>
+                                                                                                                      <h3>Omar</h3>
                                                                                                                       <p>Some text</p>
                                                                                                                       <p>Some text</p>
                                                                                                                     </div>
                                                                                                                 
-                                                                                                                    }
-                                                                                                                    </>
-                                                                                                                ))}
-                                                                                                                
-                                                                                                                </>
-
-                                                                                                        )) }
-                                                                                                        
+                                                                                                                  
                                                                                                         
 
 
