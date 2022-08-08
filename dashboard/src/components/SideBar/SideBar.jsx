@@ -16,10 +16,11 @@ export default function SideBar({setTitle}) {
 
 
   useEffect(() => {
+    console.log("user",currentUser.roles[0].name)
     if (currentUser) {
-      setShowAccompagnantBoard(currentUser.roles.includes("ROLE_ACCOMPAGNANT"));
-      setShowAdminBoard(currentUser.roles.includes("ROLE_ADMIN"));
-      setShowChefBoard(currentUser.roles.includes("ROLE_CHEF"));
+      setShowAccompagnantBoard(currentUser.roles[0].name==="ROLE_ACCOMPAGNANT");
+      setShowAdminBoard(currentUser.roles[0].name==="ROLE_ADMIN");
+      setShowChefBoard(currentUser.roles[0].name==="ROLE_CHEF");
     }
   }, [currentUser]);
 

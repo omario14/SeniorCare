@@ -209,7 +209,7 @@ class Staff extends Component {
     render() {
         TabTitle('Staff');
         const { user: currentUser } = this.props;
-        if (!currentUser || !currentUser.roles.includes("ROLE_ADMIN")) {
+        if (!currentUser || !currentUser.roles[0].name==="ROLE_ADMIN") {
             console.log(currentUser)
             return <Navigate to="/notFound" />;
 

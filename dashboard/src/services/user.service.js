@@ -16,6 +16,9 @@ class UserService {
   updateUser(id,user) {
     return http.put(`/update-user/${id}`,user, { headers: authHeader() });
   }
+  updateUserProfile(id,user,jwt) {
+    return http.put(`/update-user-profile/${id}/${jwt}`,user, { headers: authHeader() });
+  }
 
   delete(id) {
     return http.delete(`/delete-user/${id}`, { headers: authHeader() });

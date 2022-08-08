@@ -34,9 +34,9 @@ export default function Routingg() {
   
     useEffect(() => {
       if (currentUser) {
-        setShowAccompagnantBoard(currentUser.roles.includes("ROLE_ACCOMPAGNANT"));
-        setShowAdminBoard(currentUser.roles.includes("ROLE_ADMIN"));
-        setShowChefBoard(currentUser.roles.includes("ROLE_CHEF"));
+        setShowAccompagnantBoard(currentUser.roles.name==="ROLE_ACCOMPAGNANT");
+        setShowAdminBoard(currentUser.roles.name==="ROLE_ADMIN");
+        setShowChefBoard(currentUser.roles.name==="ROLE_CHEF");
       }
     }, [currentUser]);
 

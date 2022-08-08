@@ -4,9 +4,155 @@ import { connect } from "react-redux";
 import TopBar from "../../components/TopBar/TopBar";
 import { TabTitle } from "../../utils/GeneralFunctions";
 import "./Profile.css";
+import userService from "../../services/user.service";
+import { GiConfirmed } from "react-icons/gi";
 class Profile extends Component {
+  constructor(props) {
+    super(props);
+    this.handleUpdate = this.handleUpdate.bind(this);
+    this.onChangeName = this.onChangeName.bind(this);
+    this.onChangeLastName = this.onChangeLastName.bind(this);
+   
+    this.onChangeEmail = this.onChangeEmail.bind(this);
+    this.onChangePassword = this.onChangePassword.bind(this);
+    this.onChangeRole = this.onChangeRole.bind(this);
+    this.onChangeGender = this.onChangeGender.bind(this);
+    this.onChangeMobile = this.onChangeMobile.bind(this);
+    this.changeEditMode = this.changeEditMode.bind(this);
+
+    this.state = {
+      username: this.props.user.username,
+      email: this.props.user.email,
+      password: this.props.user.password,
+      name: this.props.user.name,
+      lastName: this.props.user.lastName,
+      gender: this.props.user.gender,
+      mobile: this.props.user.mobile,
+      adress:this.props.user.adress,
+      user:this.props.user,
+      userImg: "../../../assets/img/images/avartarU.png",
+      selectedFile: null,
+      picture: this.props.user.picture,
+      edit: false,
+    };
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+   
+   
+    if (prevState.user !== this.state.user) {
+      localStorage.setItem("user", JSON.stringify(this.state.user));
+    }
+  };
+
+
+
+  changeEditMode=(e)=>{
+    e.preventDefault();
+    this.setState({
+      edit:!this.state.edit,
+    })
+  }
+
+  
+  imageHandler = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        this.setState({ userImg: reader.result, selectedFile: e.target.files[0] })
+      }
+    }
+    console.log("this is image " + this.state.userImg)
+    reader.readAsDataURL(e.target.files[0])
+  }
+ 
+  onChangeMobile(e) {
+    this.setState({
+      mobile: e.target.value,
+    });
+  }
+
+  onChangeGender(e) {
+    this.setState({
+      gender: e.target.value,
+    });
+   }
+   
+  onChangeName(e) {
+    this.setState({
+      name: e.target.value,
+    });
+  }
+
+  onChangeLastName(e) {
+    this.setState({
+      lastName: e.target.value,
+    });
+  }
+  onChangePassword(e){
+    this.setState({
+      password: e.target.value,
+    });
+  }
+
+
+  onChangeRole(e) {
+    this.setState({
+      roleuser: [e.target.value]
+    })
+    console.log(JSON.stringify(this.state.roleuser))
+
+  }
+  onChangeEmail(e) {
+    this.setState({
+      email: e.target.value,
+    });
+  }
+  handleUpdate = (e) => {
+    e.preventDefault();
+    const id = this.state.user.id;
+
+    let user = {
+        id: id,
+        name: this.state.name,
+        lastName: this.state.lastName,
+        username: this.state.username,
+        email: this.state.email,
+        mobile: this.state.mobile,
+        adress: this.state.adress,
+        roles:this.state.user.roles,
+        password:this.state.user.password,
+        gender:this.state.gender,
+
+    };
+    const jwt=this.state.user.accessToken
+    console.log("this",this.props.user);
+   
+    userService.updateUserProfile(user.id,user,jwt).then((response) => {
+      console.log("user",response.data);
+      if (response.data.accessToken) {
+        console.log('doneeeeeeee')
+        this.setState({
+          edit:false,
+          user:response.data,
+          username: response.data.username,
+          email: response.data.email,
+          password:response.data.password,
+          name: response.data.name,
+          lastName: response.data.lastName,
+          gender: response.data.gender,
+          mobile: response.data.mobile,
+          adress: response.data.adress,
+        })
+        window.location.reload();
+      }
+      
+      
+    })
+}
+
   render() {
-    TabTitle("Home");
+    TabTitle("Profile");
     const { user: currentUser } = this.props;
     if (!currentUser) {
       return <Navigate to="/login" />;
@@ -28,20 +174,20 @@ class Profile extends Component {
               <div className="row gx-4">
                 <div className="col-auto">
                   <div className="avatar avatar-xl position-relative">
-                    {currentUser.fileId === null ?
-                        <>
-                      
+                    {this.state.user.picture === null ?
+                      <>
+
                         <img
-                        src="..\..\..\assets\img\images\avatarNoimage.jpg"
-                        alt="profile_image"
-                        className="w-100 border-radius-lg shadow-sm"
-                    />
-                   
-                            
-                        </>
+                          src="..\..\..\assets\img\images\avatarNoimage.jpg"
+                          alt="profile_image"
+                          className="w-100 border-radius-lg shadow-sm"
+                        />
+
+
+                      </>
                       :
                       <img
-                        src={`http://localhost:8080/files/${currentUser.fileId}`}
+                        src={`http://localhost:8080/files/${currentUser.picture.id}`}
                         alt="profile_image"
                         className="w-100 border-radius-lg shadow-sm"
                       />
@@ -53,12 +199,12 @@ class Profile extends Component {
                 <div className="col-auto my-auto">
                   <div className="h-100">
                     <h5 className="mb-1 text-capitalize">{currentUser.username}</h5>
-                    
+
                     {currentUser.roles &&
-                            currentUser.roles.map((role, index) => (
-                              <p className="mb-0 font-weight-bold text-sm"key={index}>{role.substring(5, role.length)}</p>
-                            ))}
-                    
+                      currentUser.roles.map((role, index) => (
+                        <p className="mb-0 font-weight-bold text-sm" key={index}>{role.name.substring(5, role.name.length)}</p>
+                      ))}
+
                   </div>
                 </div>
                 <div className="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
@@ -224,120 +370,9 @@ class Profile extends Component {
             </div>
           </div>
           <div className="container-fluid py-4">
-            <div className="row">
-              <div className="col-12 col-xl-4">
-                <div className="card h-100">
-                  <div className="card-header pb-0 p-3">
-                    <h6 className="mb-0">Platform Settings</h6>
-                  </div>
-                  <div className="card-body p-3">
-                    <h6 className="text-uppercase text-body text-xs font-weight-bolder">
-                      Account
-                    </h6>
-                    <ul className="list-group">
-                      <li className="list-group-item border-0 px-0">
-                        <div className="form-check form-switch ps-0">
-                          <input
-                            className="form-check-input ms-auto"
-                            type="checkbox"
-                            id="flexSwitchCheckDefault"
+            <div className="row mx-1">
 
-                          />
-                          <label
-                            className="form-check-label text-body ms-3 text-truncate w-80 mb-0"
-                            htmlFor="flexSwitchCheckDefault"
-                          >
-                            Email me when someone follows me
-                          </label>
-                        </div>
-                      </li>
-                      <li className="list-group-item border-0 px-0">
-                        <div className="form-check form-switch ps-0">
-                          <input
-                            className="form-check-input ms-auto"
-                            type="checkbox"
-                            id="flexSwitchCheckDefault1"
-                          />
-                          <label
-                            className="form-check-label text-body ms-3 text-truncate w-80 mb-0"
-                            htmlFor="flexSwitchCheckDefault1"
-                          >
-                            Email me when someone answers on my post
-                          </label>
-                        </div>
-                      </li>
-                      <li className="list-group-item border-0 px-0">
-                        <div className="form-check form-switch ps-0">
-                          <input
-                            className="form-check-input ms-auto"
-                            type="checkbox"
-                            id="flexSwitchCheckDefault2"
-
-                          />
-                          <label
-                            className="form-check-label text-body ms-3 text-truncate w-80 mb-0"
-                            htmlFor="flexSwitchCheckDefault2"
-                          >
-                            Email me when someone mentions me
-                          </label>
-                        </div>
-                      </li>
-                    </ul>
-                    <h6 className="text-uppercase text-body text-xs font-weight-bolder mt-4">
-                      Application
-                    </h6>
-                    <ul className="list-group">
-                      <li className="list-group-item border-0 px-0">
-                        <div className="form-check form-switch ps-0">
-                          <input
-                            className="form-check-input ms-auto"
-                            type="checkbox"
-                            id="flexSwitchCheckDefault3"
-                          />
-                          <label
-                            className="form-check-label text-body ms-3 text-truncate w-80 mb-0"
-                            htmlFor="flexSwitchCheckDefault3"
-                          >
-                            New launches and projects
-                          </label>
-                        </div>
-                      </li>
-                      <li className="list-group-item border-0 px-0">
-                        <div className="form-check form-switch ps-0">
-                          <input
-                            className="form-check-input ms-auto"
-                            type="checkbox"
-                            id="flexSwitchCheckDefault4"
-
-                          />
-                          <label
-                            className="form-check-label text-body ms-3 text-truncate w-80 mb-0"
-                            htmlFor="flexSwitchCheckDefault4"
-                          >
-                            Monthly product updates
-                          </label>
-                        </div>
-                      </li>
-                      <li className="list-group-item border-0 px-0 pb-0">
-                        <div className="form-check form-switch ps-0">
-                          <input
-                            className="form-check-input ms-auto"
-                            type="checkbox"
-                            id="flexSwitchCheckDefault5"
-                          />
-                          <label
-                            className="form-check-label text-body ms-3 text-truncate w-80 mb-0"
-                            htmlFor="flexSwitchCheckDefault5"
-                          >
-                            Subscribe to newsletter
-                          </label>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div className="col-12 col-xl-4">
+              <div className="col-12 col-xl-12">
                 <div className="card h-100">
                   <div className="card-header pb-0 p-3">
                     <div className="row">
@@ -345,448 +380,206 @@ class Profile extends Component {
                         <h6 className="mb-0">Profile Information</h6>
                       </div>
                       <div className="col-md-4 text-end">
-                        <a href="/">
+                        <a href="#">
+                          {this.state.edit===false?
                           <i
-                            className="fas fa-user-edit text-secondary text-sm"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            title="Edit Profile"
-                          ></i>
+                          className="fas fa-user-edit text-secondary text-sm"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          onClick={this.changeEditMode}
+                          title="Edit Profile"
+                        ></i>
+                        :
+                        <GiConfirmed 
+                        onClick={this.handleUpdate} className="text-secondary text-sm" data-bs-toggle="tooltip"
+                        data-bs-placement="top" />
+                          }
+                          
                         </a>
                       </div>
                     </div>
                   </div>
                   <div className="card-body p-3">
-                    <p className="text-sm">
-                      Hi, I’m Alec Thompson, Decisions: If you can’t decide, the
-                      answer is no. If two equally difficult paths, choose the
-                      one more painful in the short term (pain avoidance is
-                      creating an illusion of equality).
-                    </p>
+
                     <hr className="horizontal gray-light my-4" />
-                    <ul className="list-group">
-                      <li className="list-group-item border-0 ps-0 pt-0 text-sm">
-                        <strong className="text-dark">Full Name:</strong> &nbsp;{" "}
-                        {currentUser.username}
-                      </li>
-                      <li className="list-group-item border-0 ps-0 text-sm">
-                        <strong className="text-dark">Mobile:</strong> &nbsp; (44)
-                        123 1234 123
-                      </li>
-                      <li className="list-group-item border-0 ps-0 text-sm">
-                        <strong className="text-dark">Email:</strong> &nbsp;{" "}
-                        {currentUser.email}
-                      </li>
-                      <li className="list-group-item border-0 ps-0 text-sm">
-                        <strong className="text-dark">Roles:</strong> &nbsp;{" "}
-                        <ul>
-                          {currentUser.roles &&
-                            currentUser.roles.map((role, index) => (
-                              <li key={index}>{role}</li>
-                            ))}
-                        </ul>
-                      </li>
-                      <li className="list-group-item border-0 ps-0 pb-0">
-                        <strong className="text-dark text-sm">Social:</strong>{" "}
-                        &nbsp;
-                        <a
-                          className="btn btn-facebook btn-simple mb-0 ps-1 pe-2 py-0"
-                          href="/"
-                        >
-                          <i className="fab fa-facebook fa-lg"></i>
-                        </a>
-                        <a
-                          className="btn btn-twitter btn-simple mb-0 ps-1 pe-2 py-0"
-                          href="/"
-                        >
-                          <i className="fab fa-twitter fa-lg"></i>
-                        </a>
-                        <a
-                          className="btn btn-instagram btn-simple mb-0 ps-1 pe-2 py-0"
-                          href="/"
-                        >
-                          <i className="fab fa-instagram fa-lg"></i>
-                        </a>
-                      </li>
-                    </ul>
+                    {this.state.edit ?
+
+                      <div style={{ display: "flex", alignContent: "space-evenly", alignItems: "center", justifyItems: "center", justifyContent: "space-evenly" }}>
+                        <div style={{ width: "45%" }}>
+
+
+                          <ul className="list-group">
+                          <li className="list-group-item border-0 ps-0 pt-0 text-sm">
+                              <strong className="text-dark">Username :</strong> &nbsp;{" "}
+                              <input
+                                disabled={true}
+                                style={{ width: "60%" }}
+                                className="input--style-4"
+                                type="text"
+                                name="lastName"
+                                defaultValue={this.props.user.username}
+                               />
+
+                            </li>
+                            <li className="list-group-item border-0 ps-0 text-sm">
+                              <strong className="text-dark">Email :</strong> &nbsp;{" "}
+                              <input
+                                style={{ width: "60%" }}
+                                className="input--style-4"
+                                type="text"
+                                name="lastName"
+                                defaultValue={this.props.user.email}
+                                onChange={this.onChangeEmail} />
+
+                            </li>
+                            <li className="list-group-item border-0 ps-0 text-sm">
+                              <strong className="text-dark">Mobile :</strong> &nbsp;
+                              <input
+                                style={{ width: "60%" }}
+                                className="input--style-4"
+                                type="text"
+                                name="lastName"
+                                defaultValue={this.props.user.mobile}
+                                onChange={this.onChangeMobile} />
+
+                            </li>
+
+                            <li className="list-group-item border-0 ps-0 text-sm">
+                              <strong className="text-dark">Roles :</strong> &nbsp;{" "}
+                              <ul>
+                                {currentUser.roles &&
+                                  currentUser.roles.map((role, index) => (
+                                    <li key={index}>{role.name.substring(5, role.name.length)}</li>
+                                  ))}
+                              </ul>
+                            </li>
+
+                          </ul>
+                        </div>
+                        <div style={{ width: "45%" }}>
+
+
+                          <ul className="list-group">
+                            <li className="list-group-item border-0 ps-0 pt-0 text-sm">
+                              <strong className="text-dark">Name :</strong> &nbsp;{" "}
+                              <input
+                                style={{ width: "60%" }}
+                                className="input--style-4"
+                                type="text"
+                                name="lastName"
+                                defaultValue={this.props.user.name}
+                                onChange={this.onChangeName} />
+
+                            </li>
+                            <li className="list-group-item border-0 ps-0 text-sm">
+                              <strong className="text-dark">LastName :</strong> &nbsp; {" "}
+                              <input
+                                style={{ width: "60%" }}
+                                className="input--style-4"
+                                type="text"
+                                name="lastName"
+                                defaultValue={this.props.user.lastName}
+                                onChange={this.onChangeLastName} />
+
+                            </li>
+                            <li className="list-group-item border-0 ps-0 text-sm">
+                              <strong className="text-dark">Adress :</strong> &nbsp;{" "}
+                              <input
+                                style={{ width: "60%" }}
+                                className="input--style-4"
+                                type="text"
+                                name="lastName"
+                                defaultValue={this.props.user.adress}
+                                onChange={this.onChangeAdress} />
+
+                            </li>
+                            <li className="list-group-item border-0 ps-0 text-sm">
+                              <strong className="text-dark">Gender :</strong> &nbsp;{" "}
+                              <div className="genderBox">
+
+                                <input type="radio" value="male" id="option-1" onChange={this.onChangeGender} checked={this.state.gender === "male"} />
+                                <input type="radio" value="female" id="option-2" onChange={this.onChangeGender} checked={ this.state.gender === "female"} />
+                                <label htmlFor="option-1" className="option option-1">
+                                  <div className="dot"></div>
+                                  <span>Male</span>
+                                </label>
+                                <label htmlFor="option-2" className="option option-2">
+                                  <div className="dot"></div>
+                                  <span>Female</span>
+                                </label>
+                              </div>
+
+
+                            </li>
+
+                          </ul>
+                        </div>
+
+                      </div>
+
+                      :
+                      <div style={{ display: "flex", alignContent: "space-evenly", alignItems: "center", justifyItems: "center", justifyContent: "space-evenly" }}>
+                        <div style={{ width: "45%" }}>
+
+
+                          <ul className="list-group">
+                            <li className="list-group-item border-0 ps-0 pt-0 text-sm">
+                              <strong className="text-dark">Username :</strong> &nbsp;{" "}
+                              {this.state.user.username}
+                            </li>
+                            <li className="list-group-item border-0 ps-0 text-sm">
+                              <strong className="text-dark">Email :</strong> &nbsp;{" "}
+                              {currentUser.email}
+                            </li>
+                            <li className="list-group-item border-0 ps-0 text-sm">
+                              <strong className="text-dark">Mobile :</strong> &nbsp;
+                              {currentUser.mobile}
+                            </li>
+
+                            <li className="list-group-item border-0 ps-0 text-sm">
+                              <strong className="text-dark">Roles :</strong> &nbsp;{" "}
+                              <ul>
+                                {currentUser.roles &&
+                                  currentUser.roles.map((role, index) => (
+                                    <li key={index}>{role.name.substring(5, role.name.length)}</li>
+                                  ))}
+                              </ul>
+                            </li>
+
+                          </ul>
+                        </div>
+                        <div style={{ width: "45%" }}>
+
+
+                          <ul className="list-group">
+                            <li className="list-group-item border-0 ps-0 pt-0 text-sm">
+                              <strong className="text-dark">Name :</strong> &nbsp;{" "}
+                              {currentUser.name}
+                            </li>
+                            <li className="list-group-item border-0 ps-0 text-sm">
+                              <strong className="text-dark">LastName :</strong> &nbsp; {" "}
+                              {currentUser.lastName}
+                            </li>
+                            <li className="list-group-item border-0 ps-0 text-sm">
+                              <strong className="text-dark">Adress :</strong> &nbsp;{" "}
+                              {currentUser.adress}
+                            </li>
+                            <li className="list-group-item border-0 ps-0 text-sm">
+                              <strong className="text-dark">Gender :</strong> &nbsp;{" "}
+                              {currentUser.gender}
+                            </li>
+
+                          </ul>
+                        </div>
+
+                      </div>
+                    }
+
                   </div>
                 </div>
               </div>
-              <div className="col-12 col-xl-4">
-                <div className="card h-100">
-                  <div className="card-header pb-0 p-3">
-                    <h6 className="mb-0">Conversations</h6>
-                  </div>
-                  <div className="card-body p-3">
-                    <ul className="list-group">
-                      <li className="list-group-item border-0 d-flex align-items-center px-0 mb-2">
-                        <div className="avatar me-3">
-                          <img
-                            src="../../../assets/img/kal-visuals-square.jpg"
-                            alt="kal"
-                            className="border-radius-lg shadow"
-                          />
-                        </div>
-                        <div className="d-flex align-items-start flex-column justify-content-center">
-                          <h6 className="mb-0 text-sm">Sophie B.</h6>
-                          <p className="mb-0 text-xs">
-                            Hi! I need more information..
-                          </p>
-                        </div>
-                        <a className="btn btn-link pe-3 ps-0 mb-0 ms-auto" href="/">
-                          Reply
-                        </a>
-                      </li>
-                      <li className="list-group-item border-0 d-flex align-items-center px-0 mb-2">
-                        <div className="avatar me-3">
-                          <img
-                            src="../../../assets/img/marie.jpg"
-                            alt="kal"
-                            className="border-radius-lg shadow"
-                          />
-                        </div>
-                        <div className="d-flex align-items-start flex-column justify-content-center">
-                          <h6 className="mb-0 text-sm">Anne Marie</h6>
-                          <p className="mb-0 text-xs">Awesome work, can you..</p>
-                        </div>
-                        <a className="btn btn-link pe-3 ps-0 mb-0 ms-auto" href="/">
-                          Reply
-                        </a>
-                      </li>
-                      <li className="list-group-item border-0 d-flex align-items-center px-0 mb-2">
-                        <div className="avatar me-3">
-                          <img
-                            src="../../../assets/img/ivana-square.jpg"
-                            alt="kal"
-                            className="border-radius-lg shadow"
-                          />
-                        </div>
-                        <div className="d-flex align-items-start flex-column justify-content-center">
-                          <h6 className="mb-0 text-sm">Ivanna</h6>
-                          <p className="mb-0 text-xs">About files I can..</p>
-                        </div>
-                        <a className="btn btn-link pe-3 ps-0 mb-0 ms-auto" href="/">
-                          Reply
-                        </a>
-                      </li>
-                      <li className="list-group-item border-0 d-flex align-items-center px-0 mb-2">
-                        <div className="avatar me-3">
-                          <img
-                            src="../../../assets/img/team-4.jpg"
-                            alt="kal"
-                            className="border-radius-lg shadow"
-                          />
-                        </div>
-                        <div className="d-flex align-items-start flex-column justify-content-center">
-                          <h6 className="mb-0 text-sm">Peterson</h6>
-                          <p className="mb-0 text-xs">Have a great afternoon..</p>
-                        </div>
-                        <a className="btn btn-link pe-3 ps-0 mb-0 ms-auto" href="/">
-                          Reply
-                        </a>
-                      </li>
-                      <li className="list-group-item border-0 d-flex align-items-center px-0">
-                        <div className="avatar me-3">
-                          <img
-                            src="../../../assets/img/team-3.jpg"
-                            alt="kal"
-                            className="border-radius-lg shadow"
-                          />
-                        </div>
-                        <div className="d-flex align-items-start flex-column justify-content-center">
-                          <h6 className="mb-0 text-sm">Nick Daniel</h6>
-                          <p className="mb-0 text-xs">
-                            Hi! I need more information..
-                          </p>
-                        </div>
-                        <a className="btn btn-link pe-3 ps-0 mb-0 ms-auto" href="/">
-                          Reply
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div className="col-12 mt-4">
-                <div className="card mb-4">
-                  <div className="card-header pb-0 p-3">
-                    <h6 className="mb-1">Projects</h6>
-                    <p className="text-sm">Architects design houses</p>
-                  </div>
-                  <div className="card-body p-3">
-                    <div className="row">
-                      <div className="col-xl-3 col-md-6 mb-xl-0 mb-4">
-                        <div className="card card-blog card-plain">
-                          <div className="position-relative">
-                            <a
-                              href="/"
-                              className="d-block shadow-xl border-radius-xl"
-                            >
-                              <img
-                                src="../../../assets/img/home-decor-1.jpg"
-                                alt="img-blur-shadow"
-                                className="img-fluid shadow border-radius-xl"
-                              />
-                            </a>
-                          </div>
-                          <div className="card-body px-1 pb-0">
-                            <p className="text-gradient text-dark mb-2 text-sm">
-                              Project /2
-                            </p>
-                            <a href="/">
-                              <h5>Modern</h5>
-                            </a>
-                            <p className="mb-4 text-sm">
-                              As Uber works through a huge amount of internal
-                              management turmoil.
-                            </p>
-                            <div className="d-flex align-items-center justify-content-between">
-                              <button
-                                type="button"
-                                className="btn btn-outline-primary btn-sm mb-0"
-                              >
-                                View Project
-                              </button>
-                              <div className="avatar-group mt-2">
-                                <a
-                                  href="/"
-                                  className="avatar avatar-xs rounded-circle"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-placement="bottom"
-                                  title="Elena Morison"
-                                >
-                                  <img
-                                    alt="imagees placeholder"
-                                    src="../../../assets/img/team-1.jpg"
-                                  />
-                                </a>
-                                <a
-                                  href="/"
-                                  className="avatar avatar-xs rounded-circle"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-placement="bottom"
-                                  title="Ryan Milly"
-                                >
-                                  <img
-                                    alt="imagees placeholder"
-                                    src="../../../assets/img/team-2.jpg"
-                                  />
-                                </a>
-                                <a
-                                  href="/"
-                                  className="avatar avatar-xs rounded-circle"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-placement="bottom"
-                                  title="Nick Daniel"
-                                >
-                                  <img
-                                    alt="imagees placeholder"
-                                    src="../../../assets/img/team-3.jpg"
-                                  />
-                                </a>
-                                <a
-                                  href="/"
-                                  className="avatar avatar-xs rounded-circle"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-placement="bottom"
-                                  title="Peterson"
-                                >
-                                  <img
-                                    alt="imagees placeholder"
-                                    src="../../../assets/img/team-4.jpg"
-                                  />
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-xl-3 col-md-6 mb-xl-0 mb-4">
-                        <div className="card card-blog card-plain">
-                          <div className="position-relative">
-                            <a
-                              href="/"
-                              className="d-block shadow-xl border-radius-xl"
-                            >
-                              <img
-                                src="../../../assets/img/home-decor-2.jpg"
-                                alt="img-blur-shadow"
-                                className="img-fluid shadow border-radius-lg"
-                              />
-                            </a>
-                          </div>
-                          <div className="card-body px-1 pb-0">
-                            <p className="text-gradient text-dark mb-2 text-sm">
-                              Project /1
-                            </p>
-                            <a href="/">
-                              <h5>Scandinavian</h5>
-                            </a>
-                            <p className="mb-4 text-sm">
-                              Music is something that every person has his or
-                              her own specific opinion about.
-                            </p>
-                            <div className="d-flex align-items-center justify-content-between">
-                              <button
-                                type="button"
-                                className="btn btn-outline-primary btn-sm mb-0"
-                              >
-                                View Project
-                              </button>
-                              <div className="avatar-group mt-2">
-                                <a
-                                  href="/"
-                                  className="avatar avatar-xs rounded-circle"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-placement="bottom"
-                                  title="Nick Daniel"
-                                >
-                                  <img
-                                    alt="imagees placeholder"
-                                    src="../../../assets/img/team-3.jpg"
-                                  />
-                                </a>
-                                <a
-                                  href="/"
-                                  className="avatar avatar-xs rounded-circle"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-placement="bottom"
-                                  title="Peterson"
-                                >
-                                  <img
-                                    alt="imagees placeholder"
-                                    src="../../../assets/img/team-4.jpg"
-                                  />
-                                </a>
-                                <a
-                                  href="/"
-                                  className="avatar avatar-xs rounded-circle"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-placement="bottom"
-                                  title="Elena Morison"
-                                >
-                                  <img
-                                    alt="imagees placeholder"
-                                    src="../../../assets/img/team-1.jpg"
-                                  />
-                                </a>
-                                <a
-                                  href="/"
-                                  className="avatar avatar-xs rounded-circle"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-placement="bottom"
-                                  title="Ryan Milly"
-                                >
-                                  <img
-                                    alt="imagees placeholder"
-                                    src="../../../assets/img/team-2.jpg"
-                                  />
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-xl-3 col-md-6 mb-xl-0 mb-4">
-                        <div className="card card-blog card-plain">
-                          <div className="position-relative">
-                            <a
-                              href="/"
-                              className="d-block shadow-xl border-radius-xl"
-                            >
-                              <img
-                                src="../../../assets/img/home-decor-3.jpg"
-                                alt="img-blur-shadow"
-                                className="img-fluid shadow border-radius-xl"
-                              />
-                            </a>
-                          </div>
-                          <div className="card-body px-1 pb-0">
-                            <p className="text-gradient text-dark mb-2 text-sm">
-                              Project /3
-                            </p>
-                            <a href="/">
-                              <h5>Minimalist</h5>
-                            </a>
-                            <p className="mb-4 text-sm">
-                              Different people have different taste, and various
-                              types of music.
-                            </p>
-                            <div className="d-flex align-items-center justify-content-between">
-                              <button
-                                type="button"
-                                className="btn btn-outline-primary btn-sm mb-0"
-                              >
-                                View Project
-                              </button>
-                              <div className="avatar-group mt-2">
-                                <a
-                                  href="/"
-                                  className="avatar avatar-xs rounded-circle"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-placement="bottom"
-                                  title="Peterson"
-                                >
-                                  <img
-                                    alt="imagees placeholder"
-                                    src="../../../assets/img/team-4.jpg"
-                                  />
-                                </a>
-                                <a
-                                  href="/"
-                                  className="avatar avatar-xs rounded-circle"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-placement="bottom"
-                                  title="Nick Daniel"
-                                >
-                                  <img
-                                    alt="imagees placeholder"
-                                    src="../../../assets/img/team-3.jpg"
-                                  />
-                                </a>
-                                <a
-                                  href="/"
-                                  className="avatar avatar-xs rounded-circle"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-placement="bottom"
-                                  title="Ryan Milly"
-                                >
-                                  <img
-                                    alt="imagees placeholder"
-                                    src="../../../assets/img/team-2.jpg"
-                                  />
-                                </a>
-                                <a
-                                  href="/"
-                                  className="avatar avatar-xs rounded-circle"
-                                  data-bs-toggle="tooltip"
-                                  data-bs-placement="bottom"
-                                  title="Elena Morison"
-                                >
-                                  <img
-                                    alt="imagees placeholder"
-                                    src="../../../assets/img/team-1.jpg"
-                                  />
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-xl-3 col-md-6 mb-xl-0 mb-4">
-                        <div className="card h-100 card-plain border">
-                          <div className="card-body d-flex flex-column justify-content-center text-center">
-                            <a href="/">
-                              <i className="fa fa-plus text-secondary mb-3"></i>
-                              <h5 className=" text-secondary"> New project </h5>
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+
+
             </div>
             <footer className="footer pt-3  ">
               <div className="container-fluid">

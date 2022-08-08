@@ -29,8 +29,8 @@ class TopBar extends Component {
     if (user) {
       this.setState({
         currentUser: user,
-        showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
-        showAdminBoard: user.roles.includes("ROLE_ADMIN"),
+        showModeratorBoard: user.roles[0].name==="ROLE_MODERATOR",
+        showAdminBoard: user.roles[0].name==="ROLE_ADMIN",
       });
     }
   }
