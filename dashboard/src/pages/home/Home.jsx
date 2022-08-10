@@ -1,16 +1,21 @@
 import { Component } from 'react';
 import TopBar from '../../components/TopBar/TopBar';
 import { TabTitle } from '../../utils/GeneralFunctions';
-
+import { BsFillFileEarmarkPersonFill } from "react-icons/bs";
 import UserService from "../../services/user.service";
 import './home.css';
+import userService from '../../services/user.service';
+import seniorService from '../../services/senior.service';
+import { MdElderly ,MdNoFood } from "react-icons/md";
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      content: ""
+      content: "",
+      userNumber:0,
+      seniorNumber:0,
     };
   }
 
@@ -30,12 +35,22 @@ export default class Home extends Component {
         });
       }
     );
-  }
 
+    userService.getUserNumber().then((res)=>{
+      this.setState({
+        userNumber:res.data,
+      })
+    })
+    seniorService.getSeniorNumber().then((res)=>{
+      this.setState({
+        seniorNumber:res.data,
+      })
+    })
+  }
   render() {
 
     TabTitle('Home');
-
+    const style = { color: "white", fontSize: "1.8em" }
     return (
       <div className='home'>
         <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
@@ -49,16 +64,18 @@ export default class Home extends Component {
                     <div className="row">
                       <div className="col-8">
                         <div className="numbers">
-                          <p className="text-sm mb-0 text-capitalize font-weight-bold">Today's Money</p>
+                          <p className="text-sm mb-0 text-capitalize font-weight-bold">STAFF</p>
                           <h5 className="font-weight-bolder mb-0">
-                            $53,000
-                            <span className="text-success text-sm font-weight-bolder">+55%</span>
+                          {this.state.userNumber} 
+                          &nbsp;&nbsp;
+                          <span className="text-success text-sm font-weight-bolder">Users</span>
                           </h5>
                         </div>
                       </div>
                       <div className="col-4 text-end">
                         <div className="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                          <i className="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                          
+                        <BsFillFileEarmarkPersonFill className="text-lg opacity-10 mt-3" aria-hidden="true" style={style}/>
                         </div>
                       </div>
                     </div>
@@ -71,16 +88,17 @@ export default class Home extends Component {
                     <div className="row">
                       <div className="col-8">
                         <div className="numbers">
-                          <p className="text-sm mb-0 text-capitalize font-weight-bold">Today's Users</p>
+                          <p className="text-sm mb-0 text-capitalize font-weight-bold">SENIOR</p>
                           <h5 className="font-weight-bolder mb-0">
-                            2,300
-                            <span className="text-success text-sm font-weight-bolder">+3%</span>
+                           {this.state.seniorNumber}
+                           &nbsp;&nbsp;
+                            <span className="text-success text-sm font-weight-bolder">Seniors</span>
                           </h5>
                         </div>
                       </div>
                       <div className="col-4 text-end">
                         <div className="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                          <i className="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                          <MdElderly style={style} className="text-lg opacity-10 mt-3" aria-hidden="true"/>
                         </div>
                       </div>
                     </div>

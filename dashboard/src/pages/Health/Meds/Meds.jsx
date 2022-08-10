@@ -237,7 +237,7 @@ export default function Meds({ onChangeStepperLoading }) {
       }
   
   
-      seniorService.addToArchive(archive, archive.idArch).then(()=>{
+      seniorService.addToArchive(archive).then(()=>{
         console.warn("Archiveid : ",meds.idmed," Med Id : ",meds.idmed-1)
         seniorService.putMedsToArchive(archive.idArch,meds.idmed,false);
       })

@@ -120,10 +120,7 @@ class Login extends Component {
                               className="form-control"
                             />
                           </div>
-                          <div className="form-check form-switch">
-                            <input className="form-check-input" type="checkbox" id="rememberMe" />
-                            <label className="form-check-label" htmlFor="rememberMe">Remember me</label>
-                          </div>
+                         
                           <div className="text-center">
                             <button disabled={this.state.loading} className="btn bg-gradient-info w-100 mt-4 mb-0">
                               {this.state.loading && (

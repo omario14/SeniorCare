@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import seniorService from '../../../services/senior.service';
 import { Button, ButtonGroup } from '@mui/material';
 import { GiHealthPotion, GiReturnArrow } from 'react-icons/gi';
+import { Navigate } from 'react-router-dom';
 
 class AddSenior extends Component {
 	constructor(props) {
@@ -21,6 +22,7 @@ class AddSenior extends Component {
 		this.saveSenior = this.saveSenior.bind(this);
 		this.newSenior = this.newSenior.bind(this);
 		this.state = {
+			senior:null,
 			name: "",
 			lastname: "",
 			telephone: "",
@@ -35,6 +37,7 @@ class AddSenior extends Component {
 			selectedFile: null,
 			published: false,
 			submitted: false,
+
 		};
 
 
@@ -125,15 +128,30 @@ class AddSenior extends Component {
 			
 			
 
-			seniorService.create(senior).then(()=>{
+			seniorService.create(senior).then((res)=>{
+				console.log("ddddd",res.data.id)
 				addSeniorPage()
-				this.setState({ published: true, });
-				
-			})
-			console.warn(addSeniorPage)
+				this.setState({ 
+				published: true,
+				senior:res.data 
+			});
+			let archive={
+				idArch: `arch-${res.data.id}-${new Date().toISOString().split("T")[0]}`,
+				senior: res.data,
+				date: new Date().toISOString().split("T")[0],
+				checkedBreakfast: 0,
+				checkedLunch: 0,
+				checkedDinner: 0,
+			}
+			seniorService.addToArchive(archive)
 			
-		
+			
+			})
+			
+			
+			
 		})
+		
 		
 	}else{
 		let senior = {
@@ -150,14 +168,28 @@ class AddSenior extends Component {
 		};
 		this.setState({ published: true, });
 
-		seniorService.create(senior).finally(()=>{
+		seniorService.create(senior).then((res)=>{
+			
+			this.setState({
+				senior:res.data
+			})
+			let archive={
+				idArch: `arch-${this.state.senior.id}-${new Date().toISOString().split("T")[0]}`,
+				senior: this.state.senior,
+				date: new Date().toISOString().split("T")[0],
+				checkedBreakfast: 0,
+				checkedLunch: 0,
+				checkedDinner: 0,
+			}
+			seniorService.addToArchive(archive)
+			
 			addSeniorPage()
 		})
-		
 		
 
 
 	}
+	
 
 	}
 	newSenior() {
@@ -177,9 +209,16 @@ class AddSenior extends Component {
 			{ value: 'playing', label: '♟️ Playing' },
 			{ value: 'listening', label: '📻 Listening' }
 		]
+		const { addSeniorPage } = this.props;
+		const { user: currentUser } = this.props;
+        
+        if (!currentUser || currentUser.roles[0].name!=="ROLE_ACCOMPAGNANT") {
+            return <Navigate to="/notFound" />;
+
+        }
 		
 
-		const { addSeniorPage } = this.props;
+		
 
 		return (
 			<section className="timeline_area section_padding_130">
@@ -194,9 +233,7 @@ class AddSenior extends Component {
           <Button onClick={()=>addSeniorPage()}>
             <GiReturnArrow /> &nbsp;&nbsp; Return
           </Button>
-          <Button >
-            <GiHealthPotion /> &nbsp;&nbsp; Add New Menu Plan
-          </Button>
+         
         </ButtonGroup>
       </div>
 
@@ -341,6 +378,12 @@ class AddSenior extends Component {
 		)
 	}
 }
+function mapStateToProps(state) {
+    const { user } = state.auth;
+    return {
+        user,
+    };
+}
 
 
-export default connect(null, { createSenior })(AddSenior);
+export default connect(mapStateToProps, { createSenior })(AddSenior);

@@ -17,7 +17,7 @@ import { IoTrashOutline } from "react-icons/io5";
 import { BiDetail } from "react-icons/bi";
 import Pagination from "../Chef/Pagination";
 import SeniorDetails from "./SeniorDetails/SeniorDetails";
-import { Divider, Paper, Stack, styled } from '@mui/material';
+import {  Paper,  styled } from '@mui/material';
 import './Senior.scss';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -65,6 +65,7 @@ class Senior extends Component {
             seniorMeds: [],
             currentPage: 1,
             seniorsPerPage: 4,
+            seniorArch:[],
 
 
 
@@ -75,15 +76,54 @@ class Senior extends Component {
 
     componentDidMount() {
         this.retrieveSeniors();
-
+        
 
     }
     componentDidUpdate = (prevProps, prevState) => {
 
         if (prevState.addSeniorPage !== this.state.addSeniorPage) {
+            
             this.retrieveSeniors();
         }
+        if (prevState.seniors.length<this.state.seniors.length){
+            this.setState({
+                currentPage:Math.ceil(this.state.seniors.length / this.state.seniorsPerPage),
+                expand:null
+            })
+           
+        }
     };
+
+     retrieveArch = (senior) => {
+  
+        seniorService.getArchiveBySenior(senior.id)
+          .then((res) => {
+            this.setState({
+                seniorArch:
+            
+            res.data.map((arch)=>{
+               
+               if (arch.date === new Date().toISOString().split("T")[0]){
+               
+                return {
+                    idArch: arch.idArch,
+                    date: arch.date,
+                    checkedLunch: arch.checkedLunch,
+                    checkedDinner: arch.checkedDinner,
+                    checkedBreakfast: arch.checkedBreakfast,
+                  
+                }
+               }
+
+          })
+        })
+           
+           
+          });
+          
+       
+    
+      }
 
 
 
@@ -124,6 +164,7 @@ class Senior extends Component {
 
 
                 this.setState({
+                   
                     isSkeleton: false,
                 })
             })
@@ -144,18 +185,23 @@ class Senior extends Component {
         })
     }
 
-    handleToggle = (i) => {
+    handleToggle = (i,senior) => {
         const item = i;
         if (this.state.expand === item) {
             return this.setState({ expand: null })
         }
 
 
-        return this.setState({
+        return (
+            this.setState({
             section: "section1",
             expand: item
-        })
+        }),
 
+        this.retrieveArch(senior)
+        )
+     
+       
 
     }
 
@@ -176,7 +222,7 @@ class Senior extends Component {
         });
     };
     handleClose = () => {
-        this.retrieveSeniors();
+       
         this.setState({
             editDialog: false,
 
@@ -194,8 +240,7 @@ class Senior extends Component {
             const seniors = this.state.seniors.filter(item => item.id !== this.myRef.current.id);
             seniorService.delete(this.myRef.current.id)
                 .then(res => {
-                    console.log(res);
-                    console.log(res.data);
+                   
                     if (this.myRef.current.file) {
                         seniorService.removeFileById(this.myRef.current.file);
 
@@ -303,6 +348,7 @@ class Senior extends Component {
         };
 
         seniorService.update(id, senior).then(() => {
+            this.retrieveSeniors();
             this.handleClose();
         })
     }
@@ -352,12 +398,15 @@ class Senior extends Component {
 
         // Change page
         const paginate = (pageNumber) => this.setState({
-            currentPage: pageNumber
+            currentPage: pageNumber,
+             expand: null 
         });
 
         TabTitle('Senior');
+       
         const { user: currentUser } = this.props;
-        if (!currentUser || !currentUser.roles.includes("ROLE_ACCOMPAGNANT")) {
+        
+        if (!currentUser || currentUser.roles[0].name!=="ROLE_ACCOMPAGNANT") {
             return <Navigate to="/notFound" />;
 
         }
@@ -544,7 +593,7 @@ class Senior extends Component {
                                                                                         </td>
 
                                                                                         <td >
-                                                                                            <div style={{ cursor: "pointer" }} className="relative-bottom" onClick={() => this.handleToggle(i)}>
+                                                                                            <div style={{ cursor: "pointer" }} className="relative-bottom" onClick={() => this.handleToggle(i,senior)}>
                                                                                                 <h6>{this.state.expand === i ? <MdOutlineExpandLess size={30} /> : <MdOutlineExpandMore size={30} />}</h6>
                                                                                             </div>
 
@@ -586,7 +635,7 @@ class Senior extends Component {
                                                                                         <label className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 my-3">Food :</label>
                                                                                         <input
                                                                                             id={senior.id + "BREAKFAST"}
-                                                                                            checked={senior.checkedBreakfast}
+                                                                                            checked={this.state.seniorArch.checkedBreakfast}
                                                                                             value={senior.id}
                                                                                             name="customCheckbox"
                                                                                             type="checkbox"
@@ -687,7 +736,7 @@ class Senior extends Component {
                                                                                                 }
 
 
-                                                                                                seniorService.addToArchive(archive, archive.idArch).then(console.log("Archive"))
+                                                                                                seniorService.addToArchive(archive).then(console.log("Archive"))
                                                                                                 seniorService.update(senior.id, senioret).then(console.log("successs"))
 
                                                                                             }
@@ -696,7 +745,7 @@ class Senior extends Component {
                                                                                         <label htmlFor={senior.id + "BREAKFAST"} className="align-middle-label text-secondary">BREAKFAST </label>
                                                                                         <input
                                                                                             id={senior.id + "LUNCH"}
-                                                                                            checked={senior.checkedLunch}
+                                                                                            checked={this.state.seniorArch.checkedLunch}
                                                                                             value={senior.id}
                                                                                             name="customCheckbox"
                                                                                             type="checkbox"
@@ -795,13 +844,13 @@ class Senior extends Component {
                                                                                                 }
 
 
-                                                                                                seniorService.addToArchive(archive, archive.idArch).then(console.log("Archive"))
+                                                                                                seniorService.addToArchive(archive).then(console.log("Archive"))
                                                                                                 seniorService.update(senior.id, senioret).then(console.log("successs"))
                                                                                             }
                                                                                             } />
                                                                                         <label htmlFor={senior.id + "LUNCH"} className="align-middle-label text-secondary">LUNCH </label>
                                                                                         <input id={senior.id + "DINNER"}
-                                                                                            checked={senior.checkedDinner}
+                                                                                            checked={this.state.seniorArch.checkedDinner}
                                                                                             value={senior.id}
                                                                                             name="customCheckbox"
                                                                                             type="checkbox"
@@ -899,7 +948,7 @@ class Senior extends Component {
                                                                                                 }
 
 
-                                                                                                seniorService.addToArchive(archive, archive.idArch).then(console.log("Archive"))
+                                                                                                seniorService.addToArchive(archive).then(console.log("Archive"))
                                                                                                 seniorService.update(senior.id, senioret).then(console.log("successs"))
 
 
@@ -948,7 +997,7 @@ class Senior extends Component {
         )
                             : this.state.addSeniorPage === "addSenior" ?
             (
-                <AddSenior addSeniorPage={this.handleAddSenior} />
+                <AddSenior addSeniorPage={this.handleAddSenior}   />
             ) : (
                 <SeniorDetails addSeniorPage={this.handleAddSenior} senior={this.myRef.current} />
             )

@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { register } from "../../actions/auth";
 import roleService from "../../services/role.service";
 import seniorService from "../../services/senior.service";
+import { Navigate } from "react-router-dom";
 
 const required = (value) => {
   if (!value) {
@@ -176,7 +177,7 @@ class Register extends Component {
       seniorService.upload(formData).then(res => {
 
         this.setState({
-          picture: res.data.id,
+          picture: res.data,
         })
       }).then(() => {
 
@@ -242,18 +243,23 @@ class Register extends Component {
 
   render() {
     const { message } = this.props;
+    const { user: currentUser } = this.props;
+    if (!currentUser || currentUser.roles[0].name!=="ROLE_ADMIN") {
+      return <Navigate to="/notFound" />;
 
+  }
     return (
       <div className='sign'>
 
         <section className="min-vh-100 mb-8">
-          <div className="page-header align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg" style={{ backgroundImage: "url('../../../assets/img/curved-images/curved14.jpg')" }}>
-            <span className="mask bg-gradient-dark opacity-6"></span>
-            <div className="container">
-              <div className="row justify-content-center">
+          <div className="page-header  bg-gradient-dark opacity-9 align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg" style={{ backgroundImage: "url('../../../assets/img/curved-images/curved14.jpg')" }}>
+           
+            <div className="container ">
+          
+              <div className="row justify-content-center ">
                 <div className="col-lg-5 text-center mx-auto">
-                  <h1 className="text-white mb-2 mt-5">Welcome!</h1>
-                  <p className="text-lead text-white">Use these awesome forms to login or create new account in your project for free.</p>
+                  <h1 className="text-white mb-2 mt-5 text-uppercase">Add new Member</h1>
+                 
                 </div>
               </div>
             </div>
@@ -262,9 +268,7 @@ class Register extends Component {
             <div className="row mt-lg-n10 mt-md-n11 mt-n10">
               <div className="col-xl-6 col-lg-5 col-md-7 mx-auto">
                 <div className="card z-index-0" >
-                  <div className="card-header text-center pt-4">
-                    <h5>Register with</h5>
-                  </div>
+                 
                   <div className="form-header text-center  pt-4 " >
                     <div className="avartar" >
                       <div className='image-preview' >
@@ -367,16 +371,16 @@ class Register extends Component {
                             </div>
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
 
-                              <div className="mb-3" style={{ width: "45%" }}>
-                                <label htmlFor="email">Email</label>
-                                <Input
-                                  type="email"
-                                  className="form-control"
-                                  value={this.state.email}
-                                  onChange={this.onChangeEmail}
-                                  validations={[required, email]}
-                                />
-                              </div>
+                            <div className="mb-3" style={{ width: "45%" }}>
+                              <label htmlFor="email">Email</label>
+                              <Input
+                                type="email"
+                                className="form-control"
+                                value={this.state.email}
+                                onChange={this.onChangeEmail}
+                                validations={[required, email]}
+                              />
+                            </div>
                               <div className="mb-3" style={{ width: "45%" }}>
                                 <label htmlFor="password">Password</label>
                                 <Input
@@ -423,9 +427,13 @@ class Register extends Component {
 
 function mapStateToProps(state) {
   const { message } = state.message;
+  const { user } = state.auth;
   return {
     message,
+    user,
   };
 }
+
+
 
 export default connect(mapStateToProps)(Register);

@@ -26,7 +26,6 @@ class Staff extends Component {
         this.handleUpdate = this.handleUpdate.bind(this);
         this.onChangeName = this.onChangeName.bind(this);
         this.onChangelastname = this.onChangelastname.bind(this);
-        this.onChangeUsername = this.onChangeUsername.bind(this);
         this.onChangeEmail = this.onChangeEmail.bind(this);
         this.onChangeMobile = this.onChangeMobile.bind(this);
         this.handleDialog = this.handleDialog.bind(this);
@@ -59,11 +58,16 @@ class Staff extends Component {
     }
 
     getAllUsers = () => {
+        this.setState({
+            isSkeleton: true,
+        })
         seniorService.getFiles().then(response => {
 
             this.setState({
                 fileInfo: response.data,
+                isSkeleton: false,
             })
+                   
 
         })
 
@@ -78,14 +82,13 @@ class Staff extends Component {
 
 
     handleShow = (user, editDialog) => {
-        console.log(user)
+        
         this.myRef.current = user;
         
         this.setState({
             editDialog: editDialog,
             name: this.myRef.current.name,
             lastName: this.myRef.current.lastName,
-            username: this.myRef.current.username,
             email: this.myRef.current.email,
             mobile:this.myRef.current.mobile,
             adress:this.myRef.current.adress,
@@ -113,13 +116,14 @@ class Staff extends Component {
             id: id,
             name: this.state.name,
             lastName: this.state.lastName,
-            username: this.state.username,
+            username: this.myRef.current.username,
             email: this.state.email,
             mobile: this.state.mobile,
             adress: this.state.adress,
             roles:this.myRef.current.roles,
             password:this.myRef.current.password,
             gender:this.myRef.current.gender,
+            picture:this.myRef.current.picture
 
 
             
@@ -128,7 +132,7 @@ class Staff extends Component {
 
         };
 
-        console.log("user",user)
+       
         userService.updateUser(user.id,user).then(() => {
             this.handleClose();
         })
@@ -144,11 +148,7 @@ class Staff extends Component {
             lastName: e.target.value,
         });
     }
-    onChangeUsername = (e) => {
-        this.setState({
-            username: e.target.value,
-        });
-    }
+   
     onChangeEmail = (e) => {
         this.setState({
             email: e.target.value,
@@ -210,7 +210,7 @@ class Staff extends Component {
         TabTitle('Staff');
         const { user: currentUser } = this.props;
         if (!currentUser || !currentUser.roles[0].name==="ROLE_ADMIN") {
-            console.log(currentUser)
+            
             return <Navigate to="/notFound" />;
 
         }
@@ -264,17 +264,18 @@ class Staff extends Component {
                                                             <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                                 Role
                                                             </th>
-                                                            <th className="text-secondary opacity-7">aaaaction</th>
+                                                            <th className="text-secondary opacity-7">Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody key="tbody">
-                                                        {this.state.users.length === 0 ? (
-                                                            <tr>
-                                                                <td colSpan="10">
-                                                                    <Skeleton count={5} />
+                                                    {this.state.isSkeleton ? (
+                                                                    <tr>
+                                                                        <td colSpan="10">
+                                                                            <Skeleton count={5} />
 
-                                                                </td>
-                                                            </tr>
+                                                                        </td>
+                                                                    </tr>
+                                                               
                                                         ) : (
                                                             <>
                                                                 {this.state.users
@@ -365,7 +366,7 @@ class Staff extends Component {
                                                                                         </a>
                                                                                         <ul className="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
                                                                                             <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#" onClick={(e) => this.handleShow(user, true)}> Edit <MdEditNote /></a></li>
-                                                                                            <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#" onClick={() => this.handleDetails(user)} >Details <BiDetail /></a></li>
+                                                                                           
                                                                                             <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#" onClick={(e) => this.deleteSenior(user, e)}>Delete <IoTrashOutline />  </a></li>
                                                                                         </ul>
                                                                                     </div>
@@ -423,15 +424,7 @@ class Staff extends Component {
                                         required
                                     />
                                 </Form.Group>
-                                <Form.Group style={{ padding: "12px 12px 0" }}>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Cin"
-                                        name="cin"
-                                        value={this.state.username}
-                                        onChange={this.onChangeUsername}
-                                    />
-                                </Form.Group>
+                               
                                 <Form.Group style={{ padding: "12px 12px 0" }}>
                                     <Form.Control
                                         type="text"

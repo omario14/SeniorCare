@@ -171,7 +171,7 @@ class Meal extends Component {
           });
         });
     } else {
-      return alert("plz choose an image");
+      return alert("Please choose an image");
     }
   };
   render() {

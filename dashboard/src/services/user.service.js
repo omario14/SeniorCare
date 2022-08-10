@@ -27,6 +27,9 @@ class UserService {
   getAllUsers(){
     return http.get('/retrieves-all-users', { headers: authHeader() })
   }
+  getUserNumber(){
+    return http.get('/user-numbers',{headers: authHeader()})
+  }
 }
 
 export default new UserService();

@@ -31,6 +31,9 @@ class SeniorService {
     return http.get(`/tutorials?title=${title}`, { headers: authHeader() });
 
   }
+  getSeniorNumber(){
+    return http.get('/senior-numbers',{headers: authHeader()})
+  }
 
 
 
@@ -66,8 +69,8 @@ class SeniorService {
     return http.put(`addabc/${idArch}/${idmed}/${done}`, { headers: authHeader() })
   }
 
-  addToArchive(data, idArchive) {
-    return http.put(`/updateArchive/${idArchive}`, data, { headers: authHeader() });
+  addToArchive(data) {
+    return http.put(`/updateArchive`, data, { headers: authHeader() });
   }
 
 

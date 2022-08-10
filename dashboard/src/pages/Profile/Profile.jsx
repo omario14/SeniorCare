@@ -6,13 +6,14 @@ import { TabTitle } from "../../utils/GeneralFunctions";
 import "./Profile.css";
 import userService from "../../services/user.service";
 import { GiConfirmed } from "react-icons/gi";
+import seniorService from "../../services/senior.service";
 class Profile extends Component {
   constructor(props) {
     super(props);
     this.handleUpdate = this.handleUpdate.bind(this);
     this.onChangeName = this.onChangeName.bind(this);
     this.onChangeLastName = this.onChangeLastName.bind(this);
-   
+
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
     this.onChangeRole = this.onChangeRole.bind(this);
@@ -28,18 +29,21 @@ class Profile extends Component {
       lastName: this.props.user.lastName,
       gender: this.props.user.gender,
       mobile: this.props.user.mobile,
-      adress:this.props.user.adress,
-      user:this.props.user,
+      roles: this.props.user.roles,
+      adress: this.props.user.adress,
+      user: this.props.user,
       userImg: "../../../assets/img/images/avartarU.png",
+      imgChange: false,
       selectedFile: null,
+      fileId: null,
       picture: this.props.user.picture,
       edit: false,
     };
   }
 
   componentDidUpdate = (prevProps, prevState) => {
-   
-   
+
+
     if (prevState.user !== this.state.user) {
       localStorage.setItem("user", JSON.stringify(this.state.user));
     }
@@ -47,25 +51,26 @@ class Profile extends Component {
 
 
 
-  changeEditMode=(e)=>{
+  changeEditMode = (e) => {
     e.preventDefault();
     this.setState({
-      edit:!this.state.edit,
+      edit: !this.state.edit,
     })
   }
 
-  
+
   imageHandler = (e) => {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
-        this.setState({ userImg: reader.result, selectedFile: e.target.files[0] })
+        this.setState({ userImg: reader.result, selectedFile: e.target.files[0], imgChange: true })
       }
     }
     console.log("this is image " + this.state.userImg)
+
     reader.readAsDataURL(e.target.files[0])
   }
- 
+
   onChangeMobile(e) {
     this.setState({
       mobile: e.target.value,
@@ -76,8 +81,8 @@ class Profile extends Component {
     this.setState({
       gender: e.target.value,
     });
-   }
-   
+  }
+
   onChangeName(e) {
     this.setState({
       name: e.target.value,
@@ -89,7 +94,7 @@ class Profile extends Component {
       lastName: e.target.value,
     });
   }
-  onChangePassword(e){
+  onChangePassword(e) {
     this.setState({
       password: e.target.value,
     });
@@ -110,46 +115,114 @@ class Profile extends Component {
   }
   handleUpdate = (e) => {
     e.preventDefault();
-    const id = this.state.user.id;
 
-    let user = {
-        id: id,
+    // Create an object of formData
+    const formData = new FormData();
+    // Update the formData object
+    formData.append(
+      "file",
+      this.state.selectedFile,
+    );
+
+
+    if (this.state.selectedFile) {
+      seniorService.upload(formData).then(res => {
+        if (res) {
+          seniorService.removeFileById(this.state.picture.id)
+          this.setState({
+            picture: res.data,
+          })
+        }
+      })
+
+        .then(() => {
+          
+
+
+
+
+          let user = {
+            id: this.state.user.id,
+            name: this.state.name,
+            lastName: this.state.lastName,
+            username: this.state.username,
+            email: this.state.email,
+            mobile: this.state.mobile,
+            adress: this.state.adress,
+            roles: this.state.user.roles,
+            password: this.state.user.password,
+            gender: this.state.gender,
+            picture: this.state.picture,
+
+          };
+          const jwt = this.state.user.accessToken
+
+
+          userService.updateUserProfile(user.id, user, jwt).then((response) => {
+            
+            if (response.data.accessToken) {
+              this.setState({
+                edit: false,
+                user: response.data,
+                username: response.data.username,
+                email: response.data.email,
+                password: response.data.password,
+                name: response.data.name,
+                lastName: response.data.lastName,
+                gender: response.data.gender,
+                mobile: response.data.mobile,
+                picture: response.data.picture,
+                adress: response.data.adress,
+                roles: response.data.roles,
+              })
+
+            }
+
+
+          })
+        })
+    }else{
+      let user = {
+        id: this.state.user.id,
         name: this.state.name,
         lastName: this.state.lastName,
         username: this.state.username,
         email: this.state.email,
         mobile: this.state.mobile,
         adress: this.state.adress,
-        roles:this.state.user.roles,
-        password:this.state.user.password,
-        gender:this.state.gender,
+        roles: this.state.user.roles,
+        password: this.state.user.password,
+        gender: this.state.gender,
+        picture: this.state.picture,
 
-    };
-    const jwt=this.state.user.accessToken
-    console.log("this",this.props.user);
-   
-    userService.updateUserProfile(user.id,user,jwt).then((response) => {
-      console.log("user",response.data);
-      if (response.data.accessToken) {
-        console.log('doneeeeeeee')
-        this.setState({
-          edit:false,
-          user:response.data,
-          username: response.data.username,
-          email: response.data.email,
-          password:response.data.password,
-          name: response.data.name,
-          lastName: response.data.lastName,
-          gender: response.data.gender,
-          mobile: response.data.mobile,
-          adress: response.data.adress,
-        })
-        window.location.reload();
-      }
-      
-      
-    })
-}
+      };
+      const jwt = this.state.user.accessToken
+
+
+      userService.updateUserProfile(user.id, user, jwt).then((response) => {
+        
+        if (response.data.accessToken) {
+          this.setState({
+            edit: false,
+            user: response.data,
+            username: response.data.username,
+            email: response.data.email,
+            password: response.data.password,
+            name: response.data.name,
+            lastName: response.data.lastName,
+            gender: response.data.gender,
+            mobile: response.data.mobile,
+            picture: response.data.picture,
+            adress: response.data.adress,
+            roles: response.data.roles,
+          })
+
+        }
+
+
+      })
+    }
+  }
 
   render() {
     TabTitle("Profile");
@@ -174,34 +247,60 @@ class Profile extends Component {
               <div className="row gx-4">
                 <div className="col-auto">
                   <div className="avatar avatar-xl position-relative">
-                    {this.state.user.picture === null ?
+                    {this.state.edit === false ?
                       <>
+                        {this.state.user.picture === null ?
+                          <>
 
+                            <img
+                              src="..\..\..\assets\img\images\avatarNoimage.jpg"
+                              alt="profile_image"
+                              className="w-100 border-radius-lg shadow-sm"
+                            />
+
+
+                          </>
+                          :
+                          
+                            <img
+                              src={`http://localhost:8080/files/${this.state.picture.id}`}
+                              alt="profile_image"
+                              className="w-100 border-radius-lg shadow-sm"
+
+                            />
+                         
+
+
+                        }
+                      </>
+
+                      :
+                      <>
+                       
                         <img
-                          src="..\..\..\assets\img\images\avatarNoimage.jpg"
+                          src={this.state.imgChange ? this.state.userImg : `http://localhost:8080/files/${this.state.picture.id}`}
                           alt="profile_image"
                           className="w-100 border-radius-lg shadow-sm"
                         />
+                        
+                        <div className="avartar-picker" style={{ position: "absolute", bottom: "-7px", right: "-4px" }}>
+                          <input type="file" name="file-1[]" id="file-1" className="inputfile" data-multiple-caption="{count} files selected" onChange={this.imageHandler} />
+                          <label htmlFor="file-1" >
+                            <i className="zmdi zmdi-camera" style={{ width: "20px", heigth: "20px", color: "#ffaa" }}></i>
 
-
+                          </label>
+                        </div>
                       </>
-                      :
-                      <img
-                        src={`http://localhost:8080/files/${currentUser.picture.id}`}
-                        alt="profile_image"
-                        className="w-100 border-radius-lg shadow-sm"
-                      />
-
                     }
 
                   </div>
                 </div>
                 <div className="col-auto my-auto">
                   <div className="h-100">
-                    <h5 className="mb-1 text-capitalize">{currentUser.username}</h5>
+                    <h5 className="mb-1 text-capitalize" >{this.state.username}</h5>
 
-                    {currentUser.roles &&
-                      currentUser.roles.map((role, index) => (
+                    {this.state.roles &&
+                      this.state.roles.map((role, index) => (
                         <p className="mb-0 font-weight-bold text-sm" key={index}>{role.name.substring(5, role.name.length)}</p>
                       ))}
 
@@ -381,20 +480,20 @@ class Profile extends Component {
                       </div>
                       <div className="col-md-4 text-end">
                         <a href="#">
-                          {this.state.edit===false?
-                          <i
-                          className="fas fa-user-edit text-secondary text-sm"
-                          data-bs-toggle="tooltip"
-                          data-bs-placement="top"
-                          onClick={this.changeEditMode}
-                          title="Edit Profile"
-                        ></i>
-                        :
-                        <GiConfirmed 
-                        onClick={this.handleUpdate} className="text-secondary text-sm" data-bs-toggle="tooltip"
-                        data-bs-placement="top" />
+                          {this.state.edit === false ?
+                            <i
+                              className="fas fa-user-edit text-secondary text-sm"
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              onClick={this.changeEditMode}
+                              title="Edit Profile"
+                            ></i>
+                            :
+                            <GiConfirmed
+                              onClick={this.handleUpdate} className="text-secondary text-sm" data-bs-toggle="tooltip"
+                              data-bs-placement="top" />
                           }
-                          
+
                         </a>
                       </div>
                     </div>
@@ -409,7 +508,7 @@ class Profile extends Component {
 
 
                           <ul className="list-group">
-                          <li className="list-group-item border-0 ps-0 pt-0 text-sm">
+                            <li className="list-group-item border-0 ps-0 pt-0 text-sm">
                               <strong className="text-dark">Username :</strong> &nbsp;{" "}
                               <input
                                 disabled={true}
@@ -418,7 +517,7 @@ class Profile extends Component {
                                 type="text"
                                 name="lastName"
                                 defaultValue={this.props.user.username}
-                               />
+                              />
 
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm">
@@ -447,8 +546,8 @@ class Profile extends Component {
                             <li className="list-group-item border-0 ps-0 text-sm">
                               <strong className="text-dark">Roles :</strong> &nbsp;{" "}
                               <ul>
-                                {currentUser.roles &&
-                                  currentUser.roles.map((role, index) => (
+                                {this.state.roles &&
+                                  this.state.roles.map((role, index) => (
                                     <li key={index}>{role.name.substring(5, role.name.length)}</li>
                                   ))}
                               </ul>
@@ -498,7 +597,7 @@ class Profile extends Component {
                               <div className="genderBox">
 
                                 <input type="radio" value="male" id="option-1" onChange={this.onChangeGender} checked={this.state.gender === "male"} />
-                                <input type="radio" value="female" id="option-2" onChange={this.onChangeGender} checked={ this.state.gender === "female"} />
+                                <input type="radio" value="female" id="option-2" onChange={this.onChangeGender} checked={this.state.gender === "female"} />
                                 <label htmlFor="option-1" className="option option-1">
                                   <div className="dot"></div>
                                   <span>Male</span>
@@ -529,18 +628,18 @@ class Profile extends Component {
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm">
                               <strong className="text-dark">Email :</strong> &nbsp;{" "}
-                              {currentUser.email}
+                              {this.state.email}
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm">
                               <strong className="text-dark">Mobile :</strong> &nbsp;
-                              {currentUser.mobile}
+                              {this.state.mobile}
                             </li>
 
                             <li className="list-group-item border-0 ps-0 text-sm">
                               <strong className="text-dark">Roles :</strong> &nbsp;{" "}
                               <ul>
-                                {currentUser.roles &&
-                                  currentUser.roles.map((role, index) => (
+                                {this.state.roles &&
+                                  this.state.roles.map((role, index) => (
                                     <li key={index}>{role.name.substring(5, role.name.length)}</li>
                                   ))}
                               </ul>
@@ -554,19 +653,19 @@ class Profile extends Component {
                           <ul className="list-group">
                             <li className="list-group-item border-0 ps-0 pt-0 text-sm">
                               <strong className="text-dark">Name :</strong> &nbsp;{" "}
-                              {currentUser.name}
+                              {this.state.name}
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm">
                               <strong className="text-dark">LastName :</strong> &nbsp; {" "}
-                              {currentUser.lastName}
+                              {this.state.lastName}
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm">
                               <strong className="text-dark">Adress :</strong> &nbsp;{" "}
-                              {currentUser.adress}
+                              {this.state.adress}
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm">
                               <strong className="text-dark">Gender :</strong> &nbsp;{" "}
-                              {currentUser.gender}
+                              {this.state.gender}
                             </li>
 
                           </ul>
@@ -583,68 +682,7 @@ class Profile extends Component {
             </div>
             <footer className="footer pt-3  ">
               <div className="container-fluid">
-                <div className="row align-items-center justify-content-lg-between">
-                  <div className="col-lg-6 mb-lg-0 mb-4">
-                    <div className="copyright text-center text-sm text-muted text-lg-start">
-                      ©{" "}
-                      <script>document.write(new Date().getFullYear())</script>,
-                      made with <i className="fa fa-heart"></i> by
-                      <a
-                        href="https://www.creative-tim.com"
-                        className="font-weight-bold"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Creative Tim
-                      </a>
-                      for a better web.
-                    </div>
-                  </div>
-                  <div className="col-lg-6">
-                    <ul className="nav nav-footer justify-content-center justify-content-lg-end">
-                      <li className="nav-item">
-                        <a
-                          href="https://www.creative-tim.com"
-                          className="nav-link text-muted"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          Creative Tim
-                        </a>
-                      </li>
-                      <li className="nav-item">
-                        <a
-                          href="https://www.creative-tim.com/presentation"
-                          className="nav-link text-muted"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          About Us
-                        </a>
-                      </li>
-                      <li className="nav-item">
-                        <a
-                          href="https://creative-tim.com/blog"
-                          className="nav-link text-muted"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          Blog
-                        </a>
-                      </li>
-                      <li className="nav-item">
-                        <a
-                          href="https://www.creative-tim.com/license"
-                          className="nav-link pe-0 text-muted"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          License
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
+               
               </div>
             </footer>
           </div>
