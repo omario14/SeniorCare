@@ -164,7 +164,7 @@ class Senior extends Component {
 
 
                 this.setState({
-                   
+                   currentPage:1,
                     isSkeleton: false,
                 })
             })
@@ -240,7 +240,12 @@ class Senior extends Component {
             const seniors = this.state.seniors.filter(item => item.id !== this.myRef.current.id);
             seniorService.delete(this.myRef.current.id)
                 .then(res => {
-                   
+                    if (Math.ceil(this.state.seniors.length / this.state.seniorsPerPage) != Math.ceil(seniors.length / this.state.seniorsPerPage)) {
+                        this.setState({
+                            currentPage: (Math.ceil(seniors.length / this.state.seniorsPerPage))
+                        })
+                        
+                    }
                     if (this.myRef.current.file) {
                         seniorService.removeFileById(this.myRef.current.file);
 

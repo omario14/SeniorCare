@@ -189,12 +189,12 @@ const   LinaerStepper = () => {
             symptomss:[],
         }
     });
-
-    
+    const [allsymptoms,setAllSymptoms]=useState();
     
   
 
     const handleNext = () => {
+        
         setActiveStep(activeStep + 1);
         setSkippedSteps(skippedSteps.filter((skipItem) => skipItem !== activeStep));
     };
@@ -206,8 +206,13 @@ const   LinaerStepper = () => {
    
 
     const onSubmit =(data )=>{
-        
-        console.log(data.symptomss);
+      
+    
+        console.log("ssss",data.symptomss);
+       
+        console.log("ggaaggga",data.symptoms);
+        setAllSymptoms([...data.symptoms,...data.symptomss])
+        console.log("alll",allsymptoms);
 
     }
 
@@ -242,7 +247,7 @@ const   LinaerStepper = () => {
                     >
                         back
                     </Button>
-                    
+                  
                     <Button
                         className={classes.button}
                         variant="contained"

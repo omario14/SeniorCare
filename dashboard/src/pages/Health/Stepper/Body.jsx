@@ -32,18 +32,18 @@ export default function Body() {
   function getStepContent(bodyPart) {
     switch (bodyPart) {
       case "HEAD":
-        return 1
+        return 5
 
       case "CHEST":
-        return 2
+        return 6
       case "ARM":
-        return 3
+        return 8
       case "ABDOMEN":
         return 4
       case "LEGS":
-        return 5
+        return 7
         default:
-          return 0;
+          return 3;
     }
   }
 

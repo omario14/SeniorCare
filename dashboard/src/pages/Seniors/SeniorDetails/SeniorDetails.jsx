@@ -11,6 +11,7 @@ import MedsArch from './MedsArch'
 
 export default function SeniorDetails({ senior, addSeniorPage }) {
   const [seniorArch, setSeniorArch] = useState([]);
+  const [seniorArchsrtd, setSeniorArchsrtd] = useState([]);
   const [order, setOrder] = useState("ASC");
   
   const myRef = useRef(null);
@@ -20,6 +21,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
     seniorService.getArchiveBySenior(senior.senior.id)
       .then((res) => {
         setSeniorArch(res.data)
+        setSeniorArchsrtd(res.data)
       });
    
 
@@ -174,7 +176,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
             <div className="col-lg-4 col-md-6" >
 
               <div className="card  " style={{ overflowY: "auto", maxHeight: "60vh" }}>
-                {seniorArch.map((arch, index) => (
+                {seniorArchsrtd.map((arch, index) => (
                   <div key={index} style={{
                     height: "80vh",
                     
@@ -226,7 +228,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                   <div className="card-body pb-2">
                     <div className="table-responsive" style={{ overflowX: "hidden" }}>
                       <table className="table align-items-center mb-0" >
-                        <thead >
+                        <thead className='theadarchTable' >
                           <tr style={{ cursor: "pointer" }}>
                             <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" onClick={() => sorting("idArch")}>
 
