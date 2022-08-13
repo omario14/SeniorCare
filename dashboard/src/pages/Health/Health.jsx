@@ -60,9 +60,9 @@ export default function Health({ title, setTitle }) {
               </div>
             </div>
             : stepperLoading==="symptomChecker" ?
-            <>
+            <div className="mb-5">
               <Form  onChangeStepperLoading={onChangeStepperLoading} title={"health"} setTitle={title} />
-            </>
+            </div>
             :
             <Meds onChangeStepperLoading={onChangeStepperLoading} title={"health"} setTitle={title}/>
         }

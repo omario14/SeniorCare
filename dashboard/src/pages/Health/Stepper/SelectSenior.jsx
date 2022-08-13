@@ -10,9 +10,11 @@ export default class SelectSenior extends Component {
     constructor(props) {
         super(props);
         
-        
-        this.fetchData = this.fetchData.bind(this);
        
+        this.fetchData = this.fetchData.bind(this);
+       this.state={
+        seniorError:false,
+       }
       }
 
     
@@ -51,6 +53,7 @@ const DropdownIndicator = props => {
 
         <Controller control={control} 
         name="senior"
+        
         render={({field})=>(
           <AsyncSelect
             defaultOptions
@@ -60,6 +63,7 @@ const DropdownIndicator = props => {
             loadOptions={this.fetchData}
             components={{ DropdownIndicator }}
             {...field}
+            
             />
         )}
            

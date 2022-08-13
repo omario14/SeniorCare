@@ -19,7 +19,7 @@ export default function Form() {
        
         <div className="form__container">
         <CssBaseline />
-      <Container component={Box} p={2}>
+      <Container component={Box} p={2} >
        
           <LinearStepper />
       

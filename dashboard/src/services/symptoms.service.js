@@ -7,6 +7,7 @@ class SymptomsService {
   
 
   getAll() {
+    console.log("ad",authHeader);
     return http.get("/retrieveAllSymptoms", { headers: authHeader()});
   }
   get(idSymptom) {
@@ -18,6 +19,14 @@ class SymptomsService {
   }
   findByBodyPart(id) {
     return http.get(`/findSymptomByBodyPart/${id}`, { headers: authHeader()});
+  }
+  updateSymptoms(symptomId){
+   
+    return http.put(`/updateSymptoms/${symptomId}`);
+  }
+
+  checkIllnes(){
+    return http.get(`/checkIllnes`,{headers : authHeader()});
   }
 
 }
