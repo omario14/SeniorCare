@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-    
+
     TextField,
     Button,
     Stepper,
@@ -13,6 +13,14 @@ import SelectSenior from "./SelectSenior";
 import SelectSymptoms from "./Symptoms";
 import { useForm, FormProvider, Controller, useFormContext } from 'react-hook-form'
 import symptomsService from "../../../services/symptoms.service";
+import {
+    CircularProgressbar,
+    CircularProgressbarWithChildren,
+    buildStyles
+} from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import { MdExpandLess, MdExpandMore } from "react-icons/md";
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -191,8 +199,9 @@ const LinaerStepper = () => {
         }
     });
     const [allsymptoms, setAllSymptoms] = useState();
-    const [acccordion,setAcordion] = useState(null);
-    const [results,setResults]=useState([]);
+    const [acccordion, setAcordion] = useState(null);
+    const [results, setResults] = useState([]);
+    const [expandInfo, setExpandInfo] = useState(false);
 
 
 
@@ -213,7 +222,7 @@ const LinaerStepper = () => {
 
 
         setAllSymptoms([...data.symptoms, ...data.symptomss])
-        console.log("alll", allsymptoms);
+        console.log("alll", methods.control._formValues);
         allsymptoms.map((symp) => {
             return (
                 symptomsService.updateSymptoms(symp.id).then((result) => {
@@ -226,19 +235,19 @@ const LinaerStepper = () => {
     const handleConfirm = () => {
         symptomsService.checkIllnes()
             .then((result) => {
-                const sorted = [...result.data].sort((a, b) =>(
-                console.log(),
-                (a["rate"]/a["symptoms"].length) < (b["rate"]/b["symptoms"].length) ? 1 : -1)
-            );
+                const sorted = [...result.data].sort((a, b) => (
 
-            setResults(sorted);
-            console.log("hhh",sorted)
+                    (a["rate"] / a["symptoms"].length) < (b["rate"] / b["symptoms"].length) ? 1 : -1)
+                );
+
+                setResults(sorted);
+                console.log("hhh", sorted)
             })
     }
 
-    const toggleAccordion = (i)=>{
+    const toggleAccordion = (i) => {
 
-       
+
         if (acccordion === i) {
             return setAcordion(null)
         }
@@ -249,7 +258,7 @@ const LinaerStepper = () => {
 
     }
 
-    
+
     return (
         <div>
             <Stepper alternativeLabel activeStep={activeStep}>
@@ -267,11 +276,80 @@ const LinaerStepper = () => {
 
             {activeStep === steps.length ? (
                 <div className="symptomResult">
-                     <Button onClick={handleConfirm}  className={classes.button}
-                                variant="contained"
-                                color="primary">
+                    <Button onClick={handleConfirm} className={classes.button}
+                        variant="contained"
+                        color="primary"
+                        type="submit">
                         Confirm
-                     </Button>
+                    </Button>
+                    <div className="page-content page-container" id="page-content">
+                        <div className="py-5">
+                            <div className="row container d-flex justify-content-center">
+                                <div className="col-lg-11 grid-margin stretch-card">
+                                    <div className="cardSymptom">
+                                        <div className="card-body">
+                                            <div style={{ display: "flex", justifyItems: "center", justifyContent: "space-between", marginRight: "25px" }}>
+                                                <div className="text-dark" style={{ color: "black", fontSize: "25px" }} >Informations </div>
+                                                <button onClick={() => setExpandInfo(!expandInfo)} className="btn-link" style={{ background: "none", color: "#1471c9" }}>{expandInfo ? <> Show <MdExpandMore size={20} /></> : <> Hide <MdExpandLess size={20} /></>}</button>
+
+                                            </div>
+                                            <div className={expandInfo ? "mt-4 collapse" : "mt-4 collapse show "}>
+                                                <div className="accordion" id="accordion" role="tablist">
+
+
+
+                                                    <div className="row" >
+                                                        <h5 >Senior Info </h5>
+                                                        <div className="col-3">
+                                                            <p className="card-description center" >Name</p>
+                                                            <span className="text-capitalize">{methods.control._formValues.senior.name}</span>
+                                                        </div>
+                                                        <div className="col-3">
+                                                            <h6 className="card-description center" >Lastname</h6>
+                                                            <span className="text-capitalize">{methods.control._formValues.senior.lastname}</span>
+                                                        </div>
+                                                        <div className="col-3">
+                                                            <h6 className="card-description center">Date of birth</h6>
+                                                            <p className="text-capitalize">{methods.control._formValues.senior.dateOfBirth}</p>
+                                                        </div>
+                                                        <div className="col-3">
+                                                            <h6 className="card-description center">Sex</h6>
+                                                            <p className="text-capitalize">{methods.control._formValues.senior.sex}</p>
+                                                        </div>
+
+                                                    </div>
+                                                    <div className="row" >
+                                                        <h5 >Symptoms</h5>
+                                                        
+                                                        <ul className="o-vertical-spacing " style={{margin:"5px 0 0 12px"}} >
+
+
+                                                            {allsymptoms.map((symptom,i) => (
+                                                                <li key={i} style={{listStyleType: "circle"}} >
+                                                                  
+                                                                        <span className="text-capitalize">{symptom.label}</span>
+                                                                   
+
+                                                                </li>
+
+                                                            ))}
+                                                        </ul>
+
+
+
+                                                    </div>
+
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div className="page-content page-container" id="page-content">
                         <div className="py-5">
                             <div className="row container d-flex justify-content-center">
@@ -282,40 +360,64 @@ const LinaerStepper = () => {
                                             <p className="card-description center">Possible conditions</p>
                                             <div className="mt-4">
                                                 <div className="accordion" id="accordion" role="tablist">
-                                                    {results.map((res,index)=>(
+                                                    {results.filter(result => result.rate !== 0).map((res, index) => (
 
-                                                   
-                                                    <div key={index} className="cardSymptom">
-                                                        <div className="card-header" role="tab" id="heading-1">
-                                                            <h6 className="mb-0">
-                                                                <a  onClick={()=>toggleAccordion(res.id)} className="collapsed" data-toggle="collapse" href="#collapse-2" aria-expanded="false" aria-controls="collapse-2" data-abc="true">
-                                                                   {res.label}
-                                                                </a>
-                                                            </h6>
-                                                        </div>
-                                                        <div id="collapse-1" className={acccordion===res.id ? "collapse show " : "collapse " } role="tabpanel" aria-labelledby="heading-1" data-parent="#accordion" >
-                                                            <div className="card-body">
-                                                                <div className="row">
-                                                                    <div className="col-3">
-                                                                        <img src="https://img.icons8.com/bubbles/100/000000/administrator-male.png" className="mw-100" alt="image_admin" />
-                                                                    </div>
-                                                                    <div className="col-9">
-                                                                        <p className="mb-0">{res.category}</p>
+
+                                                        <div key={index} className="cardSymptom">
+                                                            <div className="card-header" role="tab" id="heading-1">
+                                                                <h6 className="mb-0">
+                                                                    <a onClick={() => toggleAccordion(res.id)} className="collapsed" data-toggle="collapse" href="#collapse-2" aria-expanded="false" aria-controls="collapse-2" data-abc="true">
+                                                                        {res.label}
+                                                                    </a>
+                                                                </h6>
+                                                            </div>
+                                                            <div id="collapse-1" className={acccordion === res.id ? "collapse show " : "collapse "} role="tabpanel" aria-labelledby="heading-1" data-parent="#accordion" >
+                                                                <div className="card-body">
+                                                                    <div className="row">
+
+                                                                        <div className="col-3" style={{ marginRight: "60px", width: "100px", height: "100px" }}>
+                                                                            <CircularProgressbar
+
+                                                                                value={(res.rate / res.symptoms.length)}
+                                                                                maxValue={1}
+                                                                                strokeWidth={5}
+                                                                                text={`${Math.floor((res.rate / res.symptoms.length) * 100)}%`}
+                                                                                styles={(res.rate / res.symptoms.length) > 0.5 ? buildStyles({
+                                                                                    textColor: "red",
+                                                                                    pathColor: "red",
+
+
+                                                                                }) : " "}
+                                                                            />
+                                                                        </div>
+
+
+                                                                        <div className="col-9 ">
+                                                                            <h4>What is {res.label} ?</h4>
+                                                                            <p className="mb-0">{res.description}</p>
+                                                                            <div className="col-9 mt-5">
+                                                                                <h4>What to do !</h4>
+                                                                                <p className="mb-0">{res.treatment}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="vl"></div>
+
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                         
-                                                         ))}
+
+                                                    ))}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             ) : (
                 <>

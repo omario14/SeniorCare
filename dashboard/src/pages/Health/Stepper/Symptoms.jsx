@@ -16,7 +16,7 @@ const ListItem = styled('li')(({ theme }) => ({
 
 
 export default class SelectSymptoms extends Component {
-  constructor(props) {
+  constructor(props) { 
     super(props);
 
     this.onInputChange = this.onInputChange.bind(this);

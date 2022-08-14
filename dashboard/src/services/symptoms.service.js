@@ -7,7 +7,6 @@ class SymptomsService {
   
 
   getAll() {
-    console.log("ad",authHeader);
     return http.get("/retrieveAllSymptoms", { headers: authHeader()});
   }
   get(idSymptom) {
