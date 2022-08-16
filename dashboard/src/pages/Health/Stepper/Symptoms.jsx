@@ -16,7 +16,7 @@ const ListItem = styled('li')(({ theme }) => ({
 
 
 export default class SelectSymptoms extends Component {
-  constructor(props) { 
+  constructor(props) {
     super(props);
 
     this.onInputChange = this.onInputChange.bind(this);
@@ -90,38 +90,42 @@ export default class SelectSymptoms extends Component {
                   loadOptions={this.fetchData}
                   components={{ DropdownIndicator }}
                   placeholder="Select Symptom"
+                  ref={field}
                   {...field}
 
                 />
 
-                <div></div>
+
               </>
             )}
 
 
           />
           <Controller
+            name="symptoms"
+            render={({ field }) => (
+              <Controller
             name="symptomss"
             render={({ field }) => (
               <Paper
                 control={control}
                 className='allSymptoms'
-                
+
                 sx={{
                   display: 'flex',
                   justifyContent: '',
                   flexWrap: 'wrap',
-                  flexDirection:'column',
+                  flexDirection: 'column',
                   listStyle: 'none',
                   p: 0.5,
                   m: 0,
                 }}
                 component="ul"
               >
-                {(control._fields.symptoms._f.value.map(detail => {
+                {(control._fields.symptoms._f.value.map((detail,i) => {
                   return (
                     <>
-                      <ListItem key={detail.id}>
+                      <ListItem key={i}>
                         <Chip
 
                           label={detail.label}
@@ -135,10 +139,10 @@ export default class SelectSymptoms extends Component {
 
                 ))}
 
-                {(control._fields.symptomss._f.value.map(detail => {
+                {(control._fields.symptomss._f.value.map((detail,i) => {
                   return (
                     <>
-                      <ListItem key={detail.id}>
+                      <ListItem key={i}>
                         <Chip
 
                           label={detail.label}
@@ -149,8 +153,9 @@ export default class SelectSymptoms extends Component {
                   )
                 }
 
-                ))}  </Paper>
-            )}
+                ))}  
+              </Paper>
+              )}  />)}
           />
         </>
       )

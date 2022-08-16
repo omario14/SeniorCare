@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
 
     TextField,
@@ -11,6 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Body from "./Body";
 import SelectSenior from "./SelectSenior";
 import SelectSymptoms from "./Symptoms";
+import { useReactToPrint } from "react-to-print";
 import { useForm, FormProvider, Controller, useFormContext } from 'react-hook-form'
 import symptomsService from "../../../services/symptoms.service";
 import {
@@ -20,6 +21,7 @@ import {
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
+import { FaPrint } from "react-icons/fa";
 
 
 
@@ -133,13 +135,15 @@ const MoreInformation = () => {
     return (
         <>
             <Controller control={control}
-                name="firstName"
+                name="note"
                 render={({ field }) => (
                     <TextField
-                        id="firstName"
-                        label="first Name"
-                        variant="outlined"
-                        placeholder="Enter Name"
+                        id="note"
+                        multiline={true}
+                        rows={8}
+                        label="Note "
+                        variant="filled"
+                        placeholder="Enter a Note"
                         fullWidth
                         margin="normal"
                         {...field}
@@ -147,24 +151,7 @@ const MoreInformation = () => {
                     />
                 )} />
 
-            <TextField
-                id="cardMonth"
-                label="Card Month"
-                variant="outlined"
-                placeholder="Enter Your Card Month"
-                fullWidth
-                margin="normal"
-                name="cardMonth"
-            />
-            <TextField
-                id="cardYear"
-                label="Card Year"
-                variant="outlined"
-                placeholder="Enter Your Card Year"
-                fullWidth
-                margin="normal"
-                name="cardYear"
-            />
+
         </>
     );
 }
@@ -193,7 +180,7 @@ const LinaerStepper = () => {
     const methods = useForm({
         defaultValues: {
             senior: [],
-            firstName: "",
+            note: "",
             symptoms: [],
             symptomss: [],
         }
@@ -202,7 +189,11 @@ const LinaerStepper = () => {
     const [acccordion, setAcordion] = useState(null);
     const [results, setResults] = useState([]);
     const [expandInfo, setExpandInfo] = useState(false);
-
+    const [buttonPrint, setButtonPrint] = useState(false);
+    const ref = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => ref.current,
+    });
 
 
     const handleNext = () => {
@@ -219,9 +210,18 @@ const LinaerStepper = () => {
 
     const onSubmit = (data) => {
 
+        const newState = [...data.symptoms, ...data.symptomss].reduce((res, data, index, arr) => {
+            if (res.findIndex(symp => symp.id === data.id) < 0) {
+                res.push(data);
+
+            }
+            return res;
+        }, [])
 
 
-        setAllSymptoms([...data.symptoms, ...data.symptomss])
+
+        console.log("newstate", newState);
+        setAllSymptoms(newState)
         console.log("alll", methods.control._formValues);
         allsymptoms.map((symp) => {
             return (
@@ -241,7 +241,7 @@ const LinaerStepper = () => {
                 );
 
                 setResults(sorted);
-                console.log("hhh", sorted)
+                setButtonPrint(true);
             })
     }
 
@@ -276,143 +276,173 @@ const LinaerStepper = () => {
 
             {activeStep === steps.length ? (
                 <div className="symptomResult">
-                    <Button onClick={handleConfirm} className={classes.button}
-                        variant="contained"
-                        color="primary"
-                        type="submit">
-                        Confirm
-                    </Button>
-                    <div className="page-content page-container" id="page-content">
-                        <div className="py-5">
-                            <div className="row container d-flex justify-content-center">
-                                <div className="col-lg-11 grid-margin stretch-card">
-                                    <div className="cardSymptom">
-                                        <div className="card-body">
-                                            <div style={{ display: "flex", justifyItems: "center", justifyContent: "space-between", marginRight: "25px" }}>
-                                                <div className="text-dark" style={{ color: "black", fontSize: "25px" }} >Informations </div>
-                                                <button onClick={() => setExpandInfo(!expandInfo)} className="btn-link" style={{ background: "none", color: "#1471c9" }}>{expandInfo ? <> Show <MdExpandMore size={20} /></> : <> Hide <MdExpandLess size={20} /></>}</button>
-
-                                            </div>
-                                            <div className={expandInfo ? "mt-4 collapse" : "mt-4 collapse show "}>
-                                                <div className="accordion" id="accordion" role="tablist">
 
 
+                    {buttonPrint ?
+                        <Button onClick={handlePrint}  style={{ width:"50%"}} fileName="Hello" variant="contained" className={classes.button + " position-absolute mt-3  font-weight-bold start-50 translate-middle"}>
+                           <FaPrint/> &nbsp;  Print
+                        </Button>
+                        
+                        :
+                        <Button
+                            onClick={handleConfirm}
+                            className={classes.button + " position-absolute mt-3 font-weight-bold   start-50 translate-middle"}
+                            variant="contained"
+                            color="primary"
 
-                                                    <div className="row" >
-                                                        <h5 >Senior Info </h5>
-                                                        <div className="col-3">
-                                                            <p className="card-description center" >Name</p>
-                                                            <span className="text-capitalize">{methods.control._formValues.senior.name}</span>
+                            style={{ width:"60%"}}>
+                            Result
+                        </Button>
+
+
+                    }
+
+                    <div ref={ref} className="mt-5">
+                        <div className="page-content page-container" id="page-content" >
+                            <div className="py-5">
+                                <div className="row container d-flex justify-content-center">
+                                    <div className="col-lg-11 grid-margin stretch-card">
+                                        <div className="cardSymptom">
+                                            <div className="card-body">
+                                                <div style={{ display: "flex", justifyItems: "center", justifyContent: "space-between", marginRight: "25px" }}>
+                                                    <div className="text-dark" style={{ color: "black", fontSize: "25px" }} >Informations </div>
+                                                    <button onClick={() => setExpandInfo(!expandInfo)} className="btn-link" style={{ background: "none", color: "#1471c9" }}>{expandInfo ? <> Show <MdExpandMore size={20} /></> : <> Hide <MdExpandLess size={20} /></>}</button>
+
+                                                </div>
+                                                <div className={expandInfo ? "mt-4 collapse" : "mt-4 collapse show "}>
+                                                    <div className="accordion" id="accordion" role="tablist">
+
+
+
+                                                        <div className="row mb-5" >
+                                                            <h5 >Senior Info </h5>
+                                                            <div className="col-3">
+                                                                <p className="card-description center" >Name</p>
+                                                                <span className="text-capitalize">{methods.control._formValues.senior.name}</span>
+                                                            </div>
+                                                            <div className="col-3">
+                                                                <h6 className="card-description center" >Lastname</h6>
+                                                                <span className="text-capitalize">{methods.control._formValues.senior.lastname}</span>
+                                                            </div>
+                                                            <div className="col-3">
+                                                                <h6 className="card-description center">Date of birth</h6>
+                                                                <p className="text-capitalize">{methods.control._formValues.senior.dateOfBirth}</p>
+                                                            </div>
+                                                            <div className="col-3">
+                                                                <h6 className="card-description center">Sex</h6>
+                                                                <span className="text-capitalize">{methods.control._formValues.senior.sex}</span>
+                                                            </div>
+                                                            {methods.control._formValues.note &&
+                                                                <div className="col-3 " style={{ width: "100%" }}>
+                                                                    <h6 className="card-description center">Note </h6>
+                                                                    <span className="text-capitalize" >
+                                                                        {methods.control._formValues.note}
+                                                                    </span>
+
+
+                                                                </div>
+                                                            }
                                                         </div>
-                                                        <div className="col-3">
-                                                            <h6 className="card-description center" >Lastname</h6>
-                                                            <span className="text-capitalize">{methods.control._formValues.senior.lastname}</span>
-                                                        </div>
-                                                        <div className="col-3">
-                                                            <h6 className="card-description center">Date of birth</h6>
-                                                            <p className="text-capitalize">{methods.control._formValues.senior.dateOfBirth}</p>
-                                                        </div>
-                                                        <div className="col-3">
-                                                            <h6 className="card-description center">Sex</h6>
-                                                            <p className="text-capitalize">{methods.control._formValues.senior.sex}</p>
-                                                        </div>
-
-                                                    </div>
-                                                    <div className="row" >
-                                                        <h5 >Symptoms</h5>
-                                                        
-                                                        <ul className="o-vertical-spacing " style={{margin:"5px 0 0 12px"}} >
 
 
-                                                            {allsymptoms.map((symptom,i) => (
-                                                                <li key={i} style={{listStyleType: "circle"}} >
-                                                                  
+
+
+                                                        <div className="row" >
+                                                            <h5 >Symptoms</h5>
+
+                                                            <ul className="o-vertical-spacing " style={{ margin: "5px 0 0 12px" }} >
+
+
+                                                                {allsymptoms.map((symptom, i) => (
+                                                                    <li key={i} style={{ listStyleType: "circle" }} >
+
                                                                         <span className="text-capitalize">{symptom.label}</span>
-                                                                   
 
-                                                                </li>
 
-                                                            ))}
-                                                        </ul>
+                                                                    </li>
+
+                                                                ))}
+                                                            </ul>
+
+
+
+                                                        </div>
 
 
 
                                                     </div>
-
-
-
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="page-content page-container" id="page-content">
-                        <div className="py-5">
-                            <div className="row container d-flex justify-content-center">
-                                <div className="col-lg-11 grid-margin stretch-card">
-                                    <div className="cardSymptom">
-                                        <div className="card-body">
-                                            <h4>Results</h4>
-                                            <p className="card-description center">Possible conditions</p>
-                                            <div className="mt-4">
-                                                <div className="accordion" id="accordion" role="tablist">
-                                                    {results.filter(result => result.rate !== 0).map((res, index) => (
+                        <div className="page-content page-container" id="page-content">
+                            <div className="py-5">
+                                <div className="row container d-flex justify-content-center">
+                                    <div className="col-lg-11 grid-margin stretch-card">
+                                        <div className="cardSymptom">
+                                            <div className="card-body">
+                                                <h4>Results</h4>
+                                                <p className="card-description center">Possible conditions</p>
+                                                <div className="mt-4">
+                                                    <div className="accordion" id="accordion" role="tablist">
+                                                        {results.filter(result => result.rate !== 0).map((res, index) => (
 
 
-                                                        <div key={index} className="cardSymptom">
-                                                            <div className="card-header" role="tab" id="heading-1">
-                                                                <h6 className="mb-0">
-                                                                    <a onClick={() => toggleAccordion(res.id)} className="collapsed" data-toggle="collapse" href="#collapse-2" aria-expanded="false" aria-controls="collapse-2" data-abc="true">
-                                                                        {res.label}
-                                                                    </a>
-                                                                </h6>
-                                                            </div>
-                                                            <div id="collapse-1" className={acccordion === res.id ? "collapse show " : "collapse "} role="tabpanel" aria-labelledby="heading-1" data-parent="#accordion" >
-                                                                <div className="card-body">
-                                                                    <div className="row">
+                                                            <div key={index} className="cardSymptom">
+                                                                <div className="card-header" role="tab" id="heading-1">
+                                                                    <h6 className="mb-0">
+                                                                        <a onClick={() => toggleAccordion(res.id)} className="collapsed" data-toggle="collapse" href="#collapse-2" aria-expanded="false" aria-controls="collapse-2" data-abc="true">
+                                                                            {res.label}
+                                                                        </a>
+                                                                    </h6>
+                                                                </div>
+                                                                <div id="collapse-1" className={acccordion === res.id ? "collapse show " : "collapse "} role="tabpanel" aria-labelledby="heading-1" data-parent="#accordion" >
+                                                                    <div className="card-body">
+                                                                        <div className="row">
 
-                                                                        <div className="col-3" style={{ marginRight: "60px", width: "100px", height: "100px" }}>
-                                                                            <CircularProgressbar
+                                                                            <div className="col-3" style={{ marginRight: "60px", width: "100px", height: "100px" }}>
+                                                                                <CircularProgressbar
 
-                                                                                value={(res.rate / res.symptoms.length)}
-                                                                                maxValue={1}
-                                                                                strokeWidth={5}
-                                                                                text={`${Math.floor((res.rate / res.symptoms.length) * 100)}%`}
-                                                                                styles={(res.rate / res.symptoms.length) > 0.5 ? buildStyles({
-                                                                                    textColor: "red",
-                                                                                    pathColor: "red",
-
-
-                                                                                }) : " "}
-                                                                            />
-                                                                        </div>
+                                                                                    value={(res.rate / res.symptoms.length)}
+                                                                                    maxValue={1}
+                                                                                    strokeWidth={5}
+                                                                                    text={`${Math.floor((res.rate / res.symptoms.length) * 100)}%`}
+                                                                                    styles={(res.rate / res.symptoms.length) > 0.5 ? buildStyles({
+                                                                                        textColor: "red",
+                                                                                        pathColor: "red",
 
 
-                                                                        <div className="col-9 ">
-                                                                            <h4>What is {res.label} ?</h4>
-                                                                            <p className="mb-0">{res.description}</p>
-                                                                            <div className="col-9 mt-5">
-                                                                                <h4>What to do !</h4>
-                                                                                <p className="mb-0">{res.treatment}</p>
+                                                                                    }) : " "}
+                                                                                />
                                                                             </div>
-                                                                        </div>
-                                                                        <div className="vl"></div>
 
+
+                                                                            <div className="col-9 ">
+                                                                                <h4>What is {res.label} ?</h4>
+                                                                                <p className="mb-0">{res.description}</p>
+                                                                                <div className="col-9 mt-5">
+                                                                                    <h4>What to Do/Take !</h4>
+                                                                                    <p className="mb-0">{res.treatment}</p>
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
 
-                                                    ))}
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
+                                    </div>
                                 </div>
                             </div>
                         </div>

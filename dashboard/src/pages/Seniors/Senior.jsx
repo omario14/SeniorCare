@@ -54,6 +54,7 @@ class Senior extends Component {
             lastName: "",
             telephone: "",
             sexOption: "male",
+            seniorPicture:null,
             birthDate: null,
             interests: "",
             cin: "",
@@ -66,6 +67,7 @@ class Senior extends Component {
             currentPage: 1,
             seniorsPerPage: 4,
             seniorArch:[],
+          
 
 
 
@@ -76,8 +78,18 @@ class Senior extends Component {
 
     componentDidMount() {
         this.retrieveSeniors();
+        this.seniors.map((senior)=>{
+            let archive={
+				idArch: `arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
+				senior: senior,
+				date: new Date().toISOString().split("T")[0],
+				checkedBreakfast: 0,
+				checkedLunch: 0,
+				checkedDinner: 0,
+			}
+			seniorService.addToArchive(archive)
+        })
         
-
     }
     componentDidUpdate = (prevProps, prevState) => {
 
@@ -330,6 +342,7 @@ class Senior extends Component {
             telephone: this.myRef.current.telephone,
             birthDate: this.myRef.current.dateOfBirth,
             sexOption: this.myRef.current.sex,
+            seniorPicture:this.myRef.current.file,
         })
 
 
@@ -345,6 +358,7 @@ class Senior extends Component {
             cin: this.state.cin,
             dateOfBirth: this.state.birthDate,
             sex: this.state.sexOption,
+            file:this.state.seniorPicture,
             checkedBreakfast: this.myRef.current.checkedBreakfast,
             checkedLunch: this.myRef.current.checkedLunch,
             checkedDinner: this.myRef.current.checkedDinner,
@@ -1015,8 +1029,49 @@ class Senior extends Component {
                 Edit Senior
             </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-            <Form onSubmit={this.handleUpdate}>
+        <Modal.Body >
+            <Form style={{backgroundColor:"#dd"}} onSubmit={this.handleUpdate}>
+            <div className="form-header">
+										<div className="avartar">
+											<div className='image-preview text-center' >
+                                            {this.state.seniorPicture === null ?
+                                                                                                        <>
+                                                                                                            {this.state.sexOption === "male" ?
+                                                                                                                <img
+                                                                                                                    src="..\..\..\assets\img\images\avatarNoimage.jpg"
+                                                                                                                    className="avatar avatar-sm me-3"
+                                                                                                                    alt="user1"
+                                                                                                                />
+                                                                                                                :
+                                                                                                                <img
+                                                                                                                    src="..\..\..\assets\img\images\avatarW.jpg"
+                                                                                                                    className="avatar avatar-sm me-3"
+                                                                                                                    alt="user1"
+                                                                                                                />
+
+                                                                                                            }
+
+                                                                                                        </>
+                                                                                                        :
+                                                                                                        <>
+                                                                                                            <img
+                                                                                                                src={`http://localhost:8080/files/${this.state.seniorPicture}`}
+                                                                                                                
+                                                                                                                alt="seniorPicture"
+                                                                                                            />
+                                                                                                        </>
+
+                                                                                                    }
+											</div>
+											<div className="avartar-picker text-center">
+												<input type="file" name="file-1[]" id="file-1" className="inputfile" data-multiple-caption="{count} files selected"  accept="image/png, image/jpeg" onChange={this.imageHandler} />
+												<label htmlFor="file-1">
+													<i className="zmdi zmdi-camera"></i>
+													<span>Choose Picture</span>
+												</label>
+											</div>
+										</div>
+									</div>
                 <Form.Group style={{ padding: "12px 12px 0" }}>
                     <Form.Control
                         type="text"

@@ -250,7 +250,7 @@ class Ingredients extends Component {
     render() {
         TabTitle('Ingredients');
         const { user: currentUser } = this.props;
-        if (!currentUser || !currentUser.roles.includes("ROLE_CHEF")) {
+        if (!currentUser || currentUser.roles[0].name!==("ROLE_CHEF")) {
             return <Navigate to="/notFound" />;
 
         }
@@ -422,7 +422,7 @@ class Ingredients extends Component {
                                                     <figcaption id="file-name"></figcaption>
                                                 </figure>
 
-                                                <input type="file" id="upload-button" accept="image/*" onChange={this.imageHandler} />
+                                                <input type="file" id="upload-button" accept="image/png, image/jpeg" onChange={this.imageHandler} />
                                                 <label className='imageIconIng' htmlFor="upload-button">
                                                     <i className="fas fa-upload"></i> &nbsp; Choose A Photo
                                                 </label>

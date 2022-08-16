@@ -177,7 +177,7 @@ class Meal extends Component {
   render() {
     TabTitle("Meal");
     const { user: currentUser } = this.props;
-    if (!currentUser || !currentUser.roles.includes("ROLE_CHEF")) {
+    if (!currentUser || currentUser.roles[0].name!==("ROLE_CHEF")) {
       return <Navigate to="/notFound" />;
     }
     const options = [
@@ -274,7 +274,7 @@ class Meal extends Component {
                     <input
                       type="file"
                       id="upload-button"
-                      accept="image/*"
+                      accept="image/png, image/jpeg"
                       onChange={this.imageHandler}
                     />
                     <label className="imageIconIng" htmlFor="upload-button">

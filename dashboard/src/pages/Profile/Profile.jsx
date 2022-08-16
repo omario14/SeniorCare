@@ -6,14 +6,18 @@ import { TabTitle } from "../../utils/GeneralFunctions";
 import "./Profile.css";
 import userService from "../../services/user.service";
 import { GiConfirmed } from "react-icons/gi";
+import { FaUserEdit } from "react-icons/fa";
 import seniorService from "../../services/senior.service";
+import { MdOutlinePhotoCameraFront } from "react-icons/md";
+import { TextField } from "@material-ui/core";
+import { Tooltip } from "@mui/material";
 class Profile extends Component {
   constructor(props) {
     super(props);
     this.handleUpdate = this.handleUpdate.bind(this);
     this.onChangeName = this.onChangeName.bind(this);
     this.onChangeLastName = this.onChangeLastName.bind(this);
-
+    this.onChangeadrs = this.onChangeadrs.bind(this);
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
     this.onChangeRole = this.onChangeRole.bind(this);
@@ -28,9 +32,10 @@ class Profile extends Component {
       name: this.props.user.name,
       lastName: this.props.user.lastName,
       gender: this.props.user.gender,
+      adress: this.props.user.adress,
       mobile: this.props.user.mobile,
       roles: this.props.user.roles,
-      adress: this.props.user.adress,
+
       user: this.props.user,
       userImg: "../../../assets/img/images/avartarU.png",
       imgChange: false,
@@ -48,6 +53,7 @@ class Profile extends Component {
       localStorage.setItem("user", JSON.stringify(this.state.user));
     }
   };
+
 
 
 
@@ -90,11 +96,13 @@ class Profile extends Component {
   }
 
   onChangeLastName(e) {
+    console.log("tareezaeget", e)
     this.setState({
       lastName: e.target.value,
     });
   }
   onChangePassword(e) {
+
     this.setState({
       password: e.target.value,
     });
@@ -113,6 +121,14 @@ class Profile extends Component {
       email: e.target.value,
     });
   }
+  onChangeadrs(e) {
+    console.log("target", e)
+    this.setState({
+      adress: e.target.value
+    })
+
+  }
+
   handleUpdate = (e) => {
     e.preventDefault();
 
@@ -136,7 +152,7 @@ class Profile extends Component {
       })
 
         .then(() => {
-          
+
 
 
 
@@ -159,7 +175,7 @@ class Profile extends Component {
 
 
           userService.updateUserProfile(user.id, user, jwt).then((response) => {
-            
+
             if (response.data.accessToken) {
               this.setState({
                 edit: false,
@@ -181,7 +197,7 @@ class Profile extends Component {
 
           })
         })
-    }else{
+    } else {
       let user = {
         id: this.state.user.id,
         name: this.state.name,
@@ -200,7 +216,7 @@ class Profile extends Component {
 
 
       userService.updateUserProfile(user.id, user, jwt).then((response) => {
-        
+
         if (response.data.accessToken) {
           this.setState({
             edit: false,
@@ -261,14 +277,14 @@ class Profile extends Component {
 
                           </>
                           :
-                          
-                            <img
-                              src={`http://localhost:8080/files/${this.state.picture.id}`}
-                              alt="profile_image"
-                              className="w-100 border-radius-lg shadow-sm"
 
-                            />
-                         
+                          <img
+                            src={`http://localhost:8080/files/${this.state.picture.id}`}
+                            alt="profile_image"
+                            className="w-100 border-radius-lg shadow-sm"
+
+                          />
+
 
 
                         }
@@ -276,18 +292,17 @@ class Profile extends Component {
 
                       :
                       <>
-                       
+
                         <img
                           src={this.state.imgChange ? this.state.userImg : `http://localhost:8080/files/${this.state.picture.id}`}
                           alt="profile_image"
                           className="w-100 border-radius-lg shadow-sm"
                         />
-                        
-                        <div className="avartar-picker" style={{ position: "absolute", bottom: "-7px", right: "-4px" }}>
-                          <input type="file" name="file-1[]" id="file-1" className="inputfile" data-multiple-caption="{count} files selected" onChange={this.imageHandler} />
-                          <label htmlFor="file-1" >
-                            <i className="zmdi zmdi-camera" style={{ width: "20px", heigth: "20px", color: "#ffaa" }}></i>
 
+                        <div className="avartar-picker" style={{ position: "absolute", bottom: "-7px", right: "-4px" }}>
+                          <input type="file" name="file-1[]" id="file-1" className="inputfile" data-multiple-caption="{count} files selected" onChange={this.imageHandler} accept="image/png, image/jpeg" />
+                          <label htmlFor="file-1" >
+                            <MdOutlinePhotoCameraFront size={40} style={{ width: "80px", heigth: "80px", color: "#ffaa" }} />
                           </label>
                         </div>
                       </>
@@ -481,13 +496,12 @@ class Profile extends Component {
                       <div className="col-md-4 text-end">
                         <a href="#">
                           {this.state.edit === false ?
-                            <i
-                              className="fas fa-user-edit text-secondary text-sm"
+
+                            <FaUserEdit className=" text-secondary text-sm"
                               data-bs-toggle="tooltip"
                               data-bs-placement="top"
                               onClick={this.changeEditMode}
-                              title="Edit Profile"
-                            ></i>
+                              title="Edit Profile" />
                             :
                             <GiConfirmed
                               onClick={this.handleUpdate} className="text-secondary text-sm" data-bs-toggle="tooltip"
@@ -510,35 +524,39 @@ class Profile extends Component {
                           <ul className="list-group">
                             <li className="list-group-item border-0 ps-0 pt-0 text-sm">
                               <strong className="text-dark">Username :</strong> &nbsp;{" "}
-                              <input
-                                disabled={true}
-                                style={{ width: "60%" }}
-                                className="input--style-4"
-                                type="text"
-                                name="lastName"
-                                defaultValue={this.props.user.username}
-                              />
-
+                              <Tooltip title="You don't have permission to change this" placement="top-end">
+  <span>
+                                <TextField
+                                  
+                                  disabled={true}
+                                  style={{ width: "60%" }}
+                                  className="input--style-4 "
+                                  type="text"
+                                  name="username"
+                                  defaultValue={this.state.username}
+                                />
+                                </span>
+                              </Tooltip>
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm">
                               <strong className="text-dark">Email :</strong> &nbsp;{" "}
-                              <input
+                              <TextField
                                 style={{ width: "60%" }}
                                 className="input--style-4"
                                 type="text"
-                                name="lastName"
-                                defaultValue={this.props.user.email}
+                                name="email"
+                                defaultValue={this.state.email}
                                 onChange={this.onChangeEmail} />
 
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm">
                               <strong className="text-dark">Mobile :</strong> &nbsp;
-                              <input
+                              <TextField
                                 style={{ width: "60%" }}
                                 className="input--style-4"
                                 type="text"
-                                name="lastName"
-                                defaultValue={this.props.user.mobile}
+                                name="mobile"
+                                defaultValue={this.state.mobile}
                                 onChange={this.onChangeMobile} />
 
                             </li>
@@ -561,52 +579,61 @@ class Profile extends Component {
                           <ul className="list-group">
                             <li className="list-group-item border-0 ps-0 pt-0 text-sm">
                               <strong className="text-dark">Name :</strong> &nbsp;{" "}
-                              <input
+                              <TextField
                                 style={{ width: "60%" }}
-                                className="input--style-4"
+                                className="input--style-4 "
                                 type="text"
-                                name="lastName"
-                                defaultValue={this.props.user.name}
+                                name="name"
+                                defaultValue={this.state.name}
                                 onChange={this.onChangeName} />
 
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm">
                               <strong className="text-dark">LastName :</strong> &nbsp; {" "}
-                              <input
+                              <TextField
                                 style={{ width: "60%" }}
-                                className="input--style-4"
+                                className="input--style-4 "
                                 type="text"
                                 name="lastName"
-                                defaultValue={this.props.user.lastName}
+                                defaultValue={this.state.lastName}
                                 onChange={this.onChangeLastName} />
 
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">Adress :</strong> &nbsp;{" "}
-                              <input
+                              <strong className="text-dark">Adress :</strong> &nbsp; {" "}
+                              <TextField
                                 style={{ width: "60%" }}
-                                className="input--style-4"
+                                className="input--style-4 "
                                 type="text"
-                                name="lastName"
-                                defaultValue={this.props.user.adress}
-                                onChange={this.onChangeAdress} />
+                                name="adress"
+                                variant="standard"
+                                defaultValue={this.state.adress}
+                                onChange={this.onChangeadrs} />
 
                             </li>
-                            <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">Gender :</strong> &nbsp;{" "}
-                              <div className="genderBox">
 
-                                <input type="radio" value="male" id="option-1" onChange={this.onChangeGender} checked={this.state.gender === "male"} />
-                                <input type="radio" value="female" id="option-2" onChange={this.onChangeGender} checked={this.state.gender === "female"} />
-                                <label htmlFor="option-1" className="option option-1">
-                                  <div className="dot"></div>
-                                  <span>Male</span>
+                            <li className="list-group-item border-0 ps-0 text-sm d-flex">
+
+
+
+                              <strong className="text-dark">Gender :</strong> &nbsp;{" "}
+                              <div className="p-t-5" style={{ marginLeft: "10px", width: "60%" }}>
+                                <label className="radio-container m-r-45">Male
+                                  <input onChange={this.onChangeGender} checked={this.state.gender === "male"}
+                                    type="radio"
+                                    value="male" />
+                                  <span className="checkmark"></span>
                                 </label>
-                                <label htmlFor="option-2" className="option option-2">
-                                  <div className="dot"></div>
-                                  <span>Female</span>
+                                <label className="radio-container">Female
+                                  <input
+                                    onChange={this.onChangeGender} checked={this.state.gender === "female"}
+                                    type="radio"
+                                    value="female" />
+                                  <span className="checkmark"></span>
                                 </label>
                               </div>
+
+
 
 
                             </li>
@@ -622,15 +649,15 @@ class Profile extends Component {
 
 
                           <ul className="list-group">
-                            <li className="list-group-item border-0 ps-0 pt-0 text-sm">
+                            <li className="list-group-item border-0 ps-0 pt-0 text-sm text-capitalize">
                               <strong className="text-dark">Username :</strong> &nbsp;{" "}
                               {this.state.user.username}
                             </li>
-                            <li className="list-group-item border-0 ps-0 text-sm">
+                            <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
                               <strong className="text-dark">Email :</strong> &nbsp;{" "}
                               {this.state.email}
                             </li>
-                            <li className="list-group-item border-0 ps-0 text-sm">
+                            <li className="list-group-item border-0 ps-0 text-sm ">
                               <strong className="text-dark">Mobile :</strong> &nbsp;
                               {this.state.mobile}
                             </li>
@@ -651,19 +678,19 @@ class Profile extends Component {
 
 
                           <ul className="list-group">
-                            <li className="list-group-item border-0 ps-0 pt-0 text-sm">
+                            <li className="list-group-item border-0 ps-0 pt-0 text-sm text-capitalize">
                               <strong className="text-dark">Name :</strong> &nbsp;{" "}
                               {this.state.name}
                             </li>
-                            <li className="list-group-item border-0 ps-0 text-sm">
+                            <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
                               <strong className="text-dark">LastName :</strong> &nbsp; {" "}
                               {this.state.lastName}
                             </li>
-                            <li className="list-group-item border-0 ps-0 text-sm">
+                            <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
                               <strong className="text-dark">Adress :</strong> &nbsp;{" "}
                               {this.state.adress}
                             </li>
-                            <li className="list-group-item border-0 ps-0 text-sm">
+                            <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
                               <strong className="text-dark">Gender :</strong> &nbsp;{" "}
                               {this.state.gender}
                             </li>
@@ -682,7 +709,7 @@ class Profile extends Component {
             </div>
             <footer className="footer pt-3  ">
               <div className="container-fluid">
-               
+
               </div>
             </footer>
           </div>

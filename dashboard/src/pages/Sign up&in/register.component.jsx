@@ -275,7 +275,7 @@ class Register extends Component {
                         <img src={this.state.userImg} alt="Userpic" />
                       </div>
                       <div className="avartar-picker" >
-                        <input type="file" name="file-1[]" id="file-1" className="inputfile" data-multiple-caption="{count} files selected" onChange={this.imageHandler} />
+                        <input type="file" name="file-1[]" id="file-1" className="inputfile" data-multiple-caption="{count} files selected" accept="image/png, image/jpeg" onChange={this.imageHandler} />
                         <label htmlFor="file-1">
                           <i className="zmdi zmdi-camera"></i>
                           <span>Choose Picture</span>
