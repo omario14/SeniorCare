@@ -17,16 +17,9 @@ import { IoTrashOutline } from "react-icons/io5";
 import { BiDetail } from "react-icons/bi";
 import Pagination from "../Chef/Pagination";
 import SeniorDetails from "./SeniorDetails/SeniorDetails";
-import {  Paper,  styled } from '@mui/material';
 import './Senior.scss';
 
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-}));
+
 class Senior extends Component {
     constructor(props) {
         super(props);
@@ -36,6 +29,7 @@ class Senior extends Component {
         this.retrieveSeniors = this.retrieveSeniors.bind(this);
         this.handleCheck = this.handleCheck.bind(this);
         this.handleDetails = this.handleDetails.bind(this);
+        this.onChangeImage=this.onChangeImage.bind(this);
         this.myRef = React.createRef();
         this.state = {
 
@@ -58,6 +52,9 @@ class Senior extends Component {
             birthDate: null,
             interests: "",
             cin: "",
+            selectedFile:null,
+            fileId:null,
+            imgChange: false,
             selected: null,
             select: [],
             fileInfo: [],
@@ -78,17 +75,7 @@ class Senior extends Component {
 
     componentDidMount() {
         this.retrieveSeniors();
-        this.seniors.map((senior)=>{
-            let archive={
-				idArch: `arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
-				senior: senior,
-				date: new Date().toISOString().split("T")[0],
-				checkedBreakfast: 0,
-				checkedLunch: 0,
-				checkedDinner: 0,
-			}
-			seniorService.addToArchive(archive)
-        })
+       
         
     }
     componentDidUpdate = (prevProps, prevState) => {
@@ -107,24 +94,22 @@ class Senior extends Component {
     };
 
      retrieveArch = (senior) => {
-  
+       
         seniorService.getArchiveBySenior(senior.id)
           .then((res) => {
             this.setState({
-                seniorArch:
-            
-            res.data.map((arch)=>{
+                seniorArch:res.data.map((arch)=>{
                
                if (arch.date === new Date().toISOString().split("T")[0]){
-               
-                return {
-                    idArch: arch.idArch,
-                    date: arch.date,
-                    checkedLunch: arch.checkedLunch,
-                    checkedDinner: arch.checkedDinner,
-                    checkedBreakfast: arch.checkedBreakfast,
-                  
-                }
+               let archive=  {
+                idArch: arch.idArch,
+                date: arch.date,
+                checkedLunch: arch.checkedLunch,
+                checkedDinner: arch.checkedDinner,
+                checkedBreakfast: arch.checkedBreakfast,
+              
+            }
+                return archive;
                }
 
           })
@@ -173,12 +158,24 @@ class Senior extends Component {
                         };
                     }),
                 });
-
+                
 
                 this.setState({
                    currentPage:1,
                     isSkeleton: false,
                 })
+                this.state.seniors.forEach((senior)=>{
+
+                    let archive={
+                        idArch: `arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
+                        senior: senior,
+                        date: new Date().toISOString().split("T")[0],
+                        checkedBreakfast: 0,
+                        checkedLunch: 0,
+                        checkedDinner: 0,
+                    }
+                    seniorService.addToArchive(archive)
+            })
             })
 
     }
@@ -237,7 +234,7 @@ class Senior extends Component {
        
         this.setState({
             editDialog: false,
-
+            imgChange:false,
         })
 
     }
@@ -252,7 +249,7 @@ class Senior extends Component {
             const seniors = this.state.seniors.filter(item => item.id !== this.myRef.current.id);
             seniorService.delete(this.myRef.current.id)
                 .then(res => {
-                    if (Math.ceil(this.state.seniors.length / this.state.seniorsPerPage) != Math.ceil(seniors.length / this.state.seniorsPerPage)) {
+                    if (Math.ceil(this.state.seniors.length / this.state.seniorsPerPage) !== Math.ceil(seniors.length / this.state.seniorsPerPage)) {
                         this.setState({
                             currentPage: (Math.ceil(seniors.length / this.state.seniorsPerPage))
                         })
@@ -344,12 +341,52 @@ class Senior extends Component {
             sexOption: this.myRef.current.sex,
             seniorPicture:this.myRef.current.file,
         })
+        
 
 
     }
     handleUpdate = (e) => {
         e.preventDefault();
+        	// Create an object of formData
+		const formData = new FormData();
+		// Update the formData object
+		formData.append(
+			"file",
+			this.state.selectedFile,
+		);	
         const id = this.myRef.current.id;
+        if (this.state.selectedFile){
+            seniorService.upload(formData).then(res => {
+                console.log("rr",res.data)
+                this.setState({
+                    fileId: res.data.id,
+                })
+        
+                
+            }).then(() => {
+                let senior = {
+                    name: this.state.name,
+                    lastname: this.state.lastName,
+                    telephone: this.state.telephone,
+                    cin: this.state.cin,
+                    dateOfBirth: this.state.birthDate,
+                    sex: this.state.sexOption,
+                    file:this.state.fileId,
+                    adress:this.myRef.current.adress,
+                    checkedBreakfast: this.myRef.current.checkedBreakfast,
+                    checkedLunch: this.myRef.current.checkedLunch,
+                    checkedDinner: this.myRef.current.checkedDinner,
+                    menus: this.myRef.current.menus
+        
+                };
+                seniorService.update(id, senior).then(() => {
+                    this.retrieveSeniors();
+                    this.handleClose();
+                })
+            })
+        }else{
+           
+       
 
         let senior = {
             name: this.state.name,
@@ -358,18 +395,33 @@ class Senior extends Component {
             cin: this.state.cin,
             dateOfBirth: this.state.birthDate,
             sex: this.state.sexOption,
-            file:this.state.seniorPicture,
+            file:this.myRef.current.file,
+            adress:this.myRef.current.adress,
             checkedBreakfast: this.myRef.current.checkedBreakfast,
             checkedLunch: this.myRef.current.checkedLunch,
             checkedDinner: this.myRef.current.checkedDinner,
             menus: this.myRef.current.menus
 
         };
+       
 
         seniorService.update(id, senior).then(() => {
             this.retrieveSeniors();
             this.handleClose();
         })
+    }
+    }
+
+    onChangeImage=(e)=>{
+        const reader = new FileReader();
+		reader.onload = () => {
+			if (reader.readyState === 2) {
+				this.setState({ seniorPicture: reader.result, selectedFile: e.target.files[0],imgChange:true })
+
+
+			}
+		}
+		reader.readAsDataURL(e.target.files[0])
     }
 
     onChangeName = (e) => {
@@ -601,9 +653,9 @@ class Senior extends Component {
                                                                                                         <i className="fa fa-ellipsis-v text-secondary"></i>
                                                                                                     </a>
                                                                                                     <ul className="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                                                                                                        <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#" onClick={(e) => this.handleShow(senior, true)}> Edit <MdEditNote /></a></li>
-                                                                                                        <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#" onClick={() => this.handleDetails(senior)} >Details <BiDetail /></a></li>
-                                                                                                        <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#" onClick={(e) => this.deleteSenior(senior, e)}>Delete <IoTrashOutline />  </a></li>
+                                                                                                        <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#/" onClick={(e) => this.handleShow(senior, true)}> Edit <MdEditNote /></a></li>
+                                                                                                        <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#/" onClick={() => this.handleDetails(senior)} >Details <BiDetail /></a></li>
+                                                                                                        <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#/" onClick={(e) => this.deleteSenior(senior, e)}>Delete <IoTrashOutline />  </a></li>
                                                                                                     </ul>
                                                                                                 </div>
                                                                                             </div>
@@ -620,38 +672,16 @@ class Senior extends Component {
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr style={this.state.expand === i ? { padding: "0.75rem 1.5rem", width: "100%", textTransform: "capitalize", letterSpacing: "0px", borderBottom: "1px solid #e9ecef" } : { display: "none", visibility: "hidden" }}>
-
-                                                                                        {
-                                                                                            this.state.section === "section2" ?
-                                                                                                <div id="section2" style={{ position: "relative", height: "50px", paddingLeft: "70px", marginBottom: "2rem", display: "flex", whiteSpace: "nowrap", width: "150px" }} >
-                                                                                                    <label className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 my-3">Medication :</label>
-                                                                                                    
-                                                                                                    <div class="medicationRow">
-                                                                                                       
-                                                                                                                    
-                                                                                                                    <div class="card">
-                                                                                                                      <h3>Omar</h3>
-                                                                                                                      <p>Some text</p>
-                                                                                                                      <p>Some text</p>
-                                                                                                                    </div>
-                                                                                                                
-                                                                                                                  
-                                                                                                        
-
-
-                                                                                                    </div>
-                                                                                                  
-                                                                                                    <div style={{ position: "absolute", right: "-1000px", top: "23px", cursor: "pointer" }} onClick={() => this.setState({ section: "section1" })}>
-                                                                                                        <h6> <MdOutlineExpandLess size={30} />
-                                                                                                            Food
-                                                                                                        </h6>
-                                                                                                    </div>
-
-                                                                                                </div>
-                                                                                    :
-
-                                                                                    <div id="section1" style={{ position: "relative", height: "50px", paddingLeft: "70px", marginBottom: "2rem", display: "flex", whiteSpace: "nowrap", width: "150px" }} >
-                                                                                        <label className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 my-3">Food :</label>
+                                                                                            <th style={{padding: "0.75rem 6.5rem"}}>
+                                                                                            
+                                                                                            </th>
+                                                                                            
+                                                                                            <td >
+                                                                                            
+                                                                                            
+                                                                                     
+                                                                                    <div id="section1" style={{ position: "relative", height: "50px",paddingLeft:"80px" ,display: "flex", whiteSpace: "nowrap", width: "150px" }} >
+                                                                                    <label className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 my-3  text-start m-0">Food :</label>
                                                                                         <input
                                                                                             id={senior.id + "BREAKFAST"}
                                                                                             checked={this.state.seniorArch.checkedBreakfast}
@@ -976,23 +1006,13 @@ class Senior extends Component {
                                                                                         <label htmlFor={senior.id + "DINNER"} className="align-middle-label text-secondary">DINNER </label>
 
 
-                                                                                        <div style={{ position: "absolute", right: "-1000px", top: "23px", cursor: "pointer" }} className="relative-bottom" onClick={() => {
-                                                                                            this.setState({ section: "section2" });
-                                                                                            seniorService.getArchiveBySenior(senior.id)
-                                                                                                .then((res) => {
-                                                                                                    this.setState({ sArch: res.data })
-                                                                                                    console.log("sArch", this.state.sArch);
-                                                                                                })
-                                                                                        }}>
-                                                                                            <h6> <MdOutlineExpandMore size={30} />Medication
-                                                                                            </h6>
-                                                                                        </div>
-
+                                                                                        
 
 
 
                                                                                     </div>
-                                                                                        }
+                                                                                    </td>
+                                                                                       
                                                                                 </tr>
                                                                                 </>)
                                                                 }
@@ -1034,19 +1054,20 @@ class Senior extends Component {
             <div className="form-header">
 										<div className="avartar">
 											<div className='image-preview text-center' >
+                                                {console.log("gimage",this.state.seniorPicture)}
                                             {this.state.seniorPicture === null ?
                                                                                                         <>
                                                                                                             {this.state.sexOption === "male" ?
                                                                                                                 <img
                                                                                                                     src="..\..\..\assets\img\images\avatarNoimage.jpg"
-                                                                                                                    className="avatar avatar-sm me-3"
-                                                                                                                    alt="user1"
+                                                                                                                   
+                                                                                                                    alt="seniorPicture"
                                                                                                                 />
                                                                                                                 :
                                                                                                                 <img
                                                                                                                     src="..\..\..\assets\img\images\avatarW.jpg"
-                                                                                                                    className="avatar avatar-sm me-3"
-                                                                                                                    alt="user1"
+                                                                                                                   
+                                                                                                                    alt="seniorPicture"
                                                                                                                 />
 
                                                                                                             }
@@ -1055,7 +1076,7 @@ class Senior extends Component {
                                                                                                         :
                                                                                                         <>
                                                                                                             <img
-                                                                                                                src={`http://localhost:8080/files/${this.state.seniorPicture}`}
+                                                                                                                src={this.state.imgChange ? this.state.seniorPicture : `http://localhost:8080/files/${this.state.seniorPicture}`}
                                                                                                                 
                                                                                                                 alt="seniorPicture"
                                                                                                             />
@@ -1064,7 +1085,7 @@ class Senior extends Component {
                                                                                                     }
 											</div>
 											<div className="avartar-picker text-center">
-												<input type="file" name="file-1[]" id="file-1" className="inputfile" data-multiple-caption="{count} files selected"  accept="image/png, image/jpeg" onChange={this.imageHandler} />
+												<input type="file" name="file-1[]" id="file-1" className="inputfile" data-multiple-caption="{count} files selected"  accept="image/png, image/jpeg" onChange={this.onChangeImage} />
 												<label htmlFor="file-1">
 													<i className="zmdi zmdi-camera"></i>
 													<span>Choose Picture</span>

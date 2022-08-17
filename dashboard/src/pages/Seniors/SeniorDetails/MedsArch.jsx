@@ -110,7 +110,7 @@ export default function MedsArch({ arch, myRef }) {
 
           <div onClick={(e) => e.stopPropagation()} className="modal-dialog modal-lg">
             <div className="modal-content">
-              <div className="modal-body">
+              <div className="modal-body-med">
                 <div className="text-right" onClick={() => setMedDialog(false)}> <i className="fa fa-close close" ></i> </div>
                 <div className="row">
                   <div className="col-md-6">

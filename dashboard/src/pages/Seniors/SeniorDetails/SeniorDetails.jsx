@@ -8,20 +8,23 @@ import './SeniorDetails.css'
 import { BiSortAlt2 } from 'react-icons/bi';
 import { Badge } from 'react-bootstrap'
 import MedsArch from './MedsArch'
+import Skeleton from 'react-loading-skeleton'
 
 export default function SeniorDetails({ senior, addSeniorPage }) {
   const [seniorArch, setSeniorArch] = useState([]);
   const [seniorArchsrtd, setSeniorArchsrtd] = useState([]);
   const [order, setOrder] = useState("ASC");
+  const [skeleton,setSkeleton]=useState(false);
   
   const myRef = useRef(null);
 
   const retrieveArch = (senior) => {
-  
+    setSkeleton(true);
     seniorService.getArchiveBySenior(senior.senior.id)
       .then((res) => {
         setSeniorArch(res.data)
         setSeniorArchsrtd(res.data)
+        setSkeleton(true);
       });
    
 
@@ -71,9 +74,6 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
           <ButtonGroup variant="text" aria-label="text button group">
             <Button onClick={() => addSeniorPage()}>
               <GiReturnArrow /> &nbsp;&nbsp; Return
-            </Button>
-            <Button >
-              <GiHealthPotion /> &nbsp;&nbsp; Add New Menu Plan
             </Button>
           </ButtonGroup>
         </div>
@@ -241,21 +241,28 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                               }
 
                               Archive</th>
-                            <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" onClick={() => sorting("date")}>
+                            <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" onClick={() => sorting("date")}>
                               Date</th>
-                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2" onClick={() => sorting("meals")}>
+                            <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center" onClick={() => sorting("meals")}>
                               Meals</th>
 
-                            <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Medications</th>
-                            <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Completion</th>
-                            <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Completion</th>
+                            <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Medications</th>
+                            
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody style={{ overflowY: "auto", maxHeight: "20vh" }}>
+                                                                   
+                          {seniorArch.length===0?
+                           <tr>
+                           <td colSpan="10">
+                               <Skeleton count={5} />
 
-                          {seniorArch.map((arch, index) =>
+                           </td>
+                          </tr>
+                          :
+                          seniorArch.map((arch, index) =>
 
-                            <tr key={index}>
+                            <tr key={index} style={arch.date === new Date().toISOString().split("T")[0] ? {borderRadius: "90px" ,background:"rgb(0,128,128,0.2)"}:{}}>
                               <td>
                                 <div className="d-flex px-2 py-1">
                                   <div className="icon icon-shape icon-xxs shadow border-radius-sm bg-gradient-primary text-center me-2 d-flex align-items-center justify-content-center">

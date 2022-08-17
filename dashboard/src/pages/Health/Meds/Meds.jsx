@@ -34,7 +34,7 @@ export default function Meds({ onChangeStepperLoading }) {
     const [dateError,setDateError]=useState(false);
 
     const { Option } = components;
-    const { register, handleSubmit, watch, formState: { errors }, clearErrors } = useForm();
+    const { register, handleSubmit, formState: { errors }, clearErrors } = useForm();
 
     const section = useRef(null);
     const myRef = useRef(null);

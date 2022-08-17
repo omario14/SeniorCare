@@ -138,6 +138,11 @@
   border-color: #5165ff;
 }
 
+.modal-body-med {
+  background-color: #5165ff;
+  border-color: #5165ff;
+}
+
 .intro-1 {
   text-transform: capitalize;
   font-size: 40px;
@@ -146,6 +151,7 @@
 }
 
 .close {
+  margin: 16px;
   color: #fff;
   cursor:pointer;
 }
