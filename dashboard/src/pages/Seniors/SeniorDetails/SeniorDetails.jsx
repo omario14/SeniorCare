@@ -1,7 +1,7 @@
 import { Button, ButtonGroup } from '@mui/material'
 import React, { useEffect, useRef } from 'react'
 import { useState } from 'react'
-import {  GiHealthPotion,   GiReturnArrow } from 'react-icons/gi'
+import {  GiReturnArrow } from 'react-icons/gi'
 import seniorService from '../../../services/senior.service'
 import '../AddSenior/AddSenior.css'
 import './SeniorDetails.css'
@@ -13,18 +13,15 @@ import Skeleton from 'react-loading-skeleton'
 export default function SeniorDetails({ senior, addSeniorPage }) {
   const [seniorArch, setSeniorArch] = useState([]);
   const [seniorArchsrtd, setSeniorArchsrtd] = useState([]);
-  const [order, setOrder] = useState("ASC");
-  const [skeleton,setSkeleton]=useState(false);
+  const [order, setOrder] = useState("DSC");
   
   const myRef = useRef(null);
 
   const retrieveArch = (senior) => {
-    setSkeleton(true);
     seniorService.getArchiveBySenior(senior.senior.id)
       .then((res) => {
         setSeniorArch(res.data)
         setSeniorArchsrtd(res.data)
-        setSkeleton(true);
       });
    
 
@@ -109,7 +106,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
 
                       </div>
                       <div className='mt-2'>
-                        <h6>{senior.name}</h6>
+                        <h6 className='text-capitalize'>{senior.name}</h6>
                         <p className="text-sm mb-0">
                           <i className="fa fa-check text-info" aria-hidden="true"></i>
                           <span className="font-weight-bold ms-1">30 done</span> this month

@@ -8,7 +8,6 @@ import Dialog from '../../Seniors/dialogDelete';
 import './Meds.css';
 import { useForm } from 'react-hook-form';
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
-import chefService from '../../../services/chef.service';
 
 
 
@@ -16,16 +15,15 @@ export default function Meds({ onChangeStepperLoading }) {
     const [seniorList, setSeniorList] = useState([]);
     const [senior, setSenior] = useState(null);
     const [seniorMedications, setSeniorMedications] = useState([]);
-    const [loading, setLoading] = useState([]);
     const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
     let date = new Date();
     date.setDate(date.getDate() + 1);
     const [endDate, setEndDate] = useState(new Date(date).toISOString().split("T")[0]);
-    const [medLabel, setMedLabel] = useState(null);
+    const [medLabel, setMedLabel] = useState("");
     const [dose, setDose] = useState("");
     const [num, setNum] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    const [medsPerPage, setMedsPerPage] = useState(3);
+    const [medsPerPage] = useState(3);
     const [message, setMessage] = useState("");
     const [deleteModel, setDeleteModel] = useState(false);
     const [order, setOrder] = useState("DSC");
@@ -34,7 +32,7 @@ export default function Meds({ onChangeStepperLoading }) {
     const [dateError,setDateError]=useState(false);
 
     const { Option } = components;
-    const { register, handleSubmit, formState: { errors }, clearErrors } = useForm();
+    const { register, handleSubmit,reset, formState: { errors }, clearErrors } = useForm();
 
     const section = useRef(null);
     const myRef = useRef(null);
@@ -74,7 +72,7 @@ export default function Meds({ onChangeStepperLoading }) {
                 .then(res => {
                     console.log(res);
                     console.log(res.data);
-                    if (Math.ceil(seniorMedications.length / medsPerPage) != Math.ceil(Meds.length / medsPerPage)) {
+                    if (Math.ceil(seniorMedications.length / medsPerPage) !== Math.ceil(Meds.length / medsPerPage)) {
                         setCurrentPage(Math.ceil(Meds.length / medsPerPage))
                     }
 
@@ -92,12 +90,12 @@ export default function Meds({ onChangeStepperLoading }) {
 
     const retrieveSeniors = () => {
         try {
-            setLoading(false);
+           
             seniorService.getAll().then((result) => {
                 setSeniorList(result.data);
             });
 
-            setLoading(true);
+           
         } catch (e) {
             console.log(e);
         }
@@ -134,6 +132,7 @@ export default function Meds({ onChangeStepperLoading }) {
     useEffect(() => {
         retrieveMeds(senior);
 
+       
     }, [senior]);
     useEffect(() => {
         retrieveSeniors();
@@ -224,7 +223,7 @@ export default function Meds({ onChangeStepperLoading }) {
 
     const archiveAdd=(meds)=>{
       const dates = getDatesInRange(new Date(startDate),new Date(endDate));
-         console.log("datesss",dates)
+       
       dates.forEach(d=>{
         let archive = {
           idArch: `arch-${senior.id}-${d}`,
@@ -238,7 +237,6 @@ export default function Meds({ onChangeStepperLoading }) {
   
   
       seniorService.addToArchive(archive).then(()=>{
-        console.warn("Archiveid : ",meds.idmed," Med Id : ",meds.idmed-1)
         seniorService.putMedsToArchive(archive.idArch,meds.idmed,false);
       })
       
@@ -260,23 +258,24 @@ export default function Meds({ onChangeStepperLoading }) {
         }
         seniorService.addMedication(medic).then(
             (res) => {
-                console.log(res)
+             
                 const newMedication = [res.data, ...seniorMedications];
                 setSeniorMedications(newMedication);
                 archiveAdd(res.data)
-               
+                clearInput();
             }
         )
-        clearInput();
+       
         
         window.scrollTo({
             top: section.current.offsetTop,
             behavior: 'smooth',
         });
-        console.log("startDate: ",startDate," enDate : ", endDate)
+       
+       reset({
+        medLabel:"",
 
-
-
+       })
     }
     const clearInput = ()=>{
       /********** Clear inputs *********/
@@ -416,7 +415,7 @@ export default function Meds({ onChangeStepperLoading }) {
                   <label htmlFor="name">Meds</label>
                   <input
                     value={medLabel}
-                    {...register("medLabel",  {required:"Medication's name is required! "})}
+                    {...register("medLabel",  {required:{value:true,message:"Medication's name is required! "}, minLength:{value:3,message:"laaaaaaaaa"}})}
                     onChange={(e) => {
                       setMedLabel(e.target.value);
                       clearErrors("medLabel");
@@ -557,7 +556,7 @@ export default function Meds({ onChangeStepperLoading }) {
                 <a
                   class="btn bg-gradient-dark mb-0"
                   onClick={handleSubmit(saveMedication, seniorValidation)}
-                  href="javascript:;"
+                  href="#/"
                 >
                   <i class="fas fa-plus"></i>&nbsp;&nbsp;Add{" "}
                 </a>
@@ -651,7 +650,7 @@ export default function Meds({ onChangeStepperLoading }) {
                             <a
                               className="btn btn-link text-danger text-gradient px-3 mb-0"
                               onClick={(e) => deleteMed(meds, e)}
-                              href="javascript:;"
+                              href="#/"
                             >
                               <i className="far fa-trash-alt me-2"></i>Delete
                             </a>

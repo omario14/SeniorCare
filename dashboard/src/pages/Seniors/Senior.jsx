@@ -99,7 +99,7 @@ class Senior extends Component {
           .then((res) => {
             this.setState({
                 seniorArch:res.data.map((arch)=>{
-               
+               let arg;
                if (arch.date === new Date().toISOString().split("T")[0]){
                let archive=  {
                 idArch: arch.idArch,
@@ -109,12 +109,12 @@ class Senior extends Component {
                 checkedBreakfast: arch.checkedBreakfast,
               
             }
-                return archive;
+                return  arg=archive;
                }
-
+               return arg
           })
         })
-           
+          
            
           });
           
@@ -207,7 +207,8 @@ class Senior extends Component {
             expand: item
         }),
 
-        this.retrieveArch(senior)
+        this.retrieveArch(senior),
+        console.log(this.state.seniorArch,"fff")
         )
      
        

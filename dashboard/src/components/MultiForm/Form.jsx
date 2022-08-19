@@ -4,7 +4,7 @@ import LinearStepper from '../../pages/Health/Stepper/LinearStepper';
 import { CssBaseline, Container, Box } from "@material-ui/core";
 
 
-export default function Form() {
+export default function Form({onChangeStepperLoading}) {
 
 
 
@@ -21,7 +21,7 @@ export default function Form() {
         <CssBaseline />
       <Container component={Box} p={2} >
        
-          <LinearStepper />
+          <LinearStepper onChangeStepperLoading={onChangeStepperLoading} />
       
       </Container>
 

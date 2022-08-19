@@ -24,8 +24,8 @@ export default function Health({ title, setTitle }) {
           stepperLoading==="health" ?
 
             <div className="container-fluid py-4">
-              <div className="row mt-4">
-                <div className="col-lg-5">
+              <div className="row mt-5">
+                <div className="col-lg-6">
                   <div className="card h-100 p-3">
                     <div className="overflow-hidden position-relative border-radius-lg bg-cover h-100" style={{ backgroundImage: "url('../assets/img/ivancik.jpg')" }}>
                       <span className="mask bg-gradient-dark"></span>
@@ -42,7 +42,7 @@ export default function Health({ title, setTitle }) {
                   </div>
                 </div>
 
-                <div className="col-lg-5">
+                <div className="col-lg-6">
                   <div className="card h-100 p-3">
                     <div className="overflow-hidden position-relative border-radius-lg bg-cover h-100" style={{ backgroundImage: "url('../assets/img/ivancikk.jpg')" }}>
                       <span className="mask bg-gradient-dark"></span>

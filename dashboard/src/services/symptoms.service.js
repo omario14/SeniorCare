@@ -19,9 +19,9 @@ class SymptomsService {
   findByBodyPart(id) {
     return http.get(`/findSymptomByBodyPart/${id}`, { headers: authHeader()});
   }
-  updateSymptoms(symptomId){
+  updateSymptoms(symptomIds){
    
-    return http.put(`/updateSymptoms/${symptomId}`);
+    return http.put(`/updateSymptoms/${symptomIds}`);
   }
 
   checkIllnes(){

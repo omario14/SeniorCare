@@ -22,6 +22,7 @@ import {
 import "react-circular-progressbar/dist/styles.css";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { FaPrint } from "react-icons/fa";
+import { useEffect } from "react";
 
 
 
@@ -140,7 +141,8 @@ const MoreInformation = () => {
                     <TextField
                         id="note"
                         multiline={true}
-                        rows={8}
+                        minRows={8}
+                        maxRows={20}
                         label="Note "
                         variant="filled"
                         placeholder="Enter a Note"
@@ -171,35 +173,65 @@ function getStepContent(step) {
     }
 }
 
-const LinaerStepper = () => {
+const LinaerStepper = ({onChangeStepperLoading}) => {
     const classes = useStyles();
 
     const [activeStep, setActiveStep] = useState(0);
-    const [skippedSteps, setSkippedSteps] = useState([]);
     const steps = getSteps();
     const methods = useForm({
         defaultValues: {
-            senior: [],
+            senior: null,
             note: "",
             symptoms: [],
             symptomss: [],
+            allSymps:[]
         }
+        
     });
+    
     const [allsymptoms, setAllSymptoms] = useState();
     const [acccordion, setAcordion] = useState(null);
     const [results, setResults] = useState([]);
     const [expandInfo, setExpandInfo] = useState(false);
     const [buttonPrint, setButtonPrint] = useState(false);
     const ref = useRef();
+    const section = useRef(null);
+    
+   
     const handlePrint = useReactToPrint({
         content: () => ref.current,
     });
 
 
+    useEffect(() => {
+        if(activeStep === steps.length){
+            setTimeout(() => {
+                window.scrollTo({
+                    top: section.current.offsetTop,
+                    behavior: 'smooth',
+                });
+                handleConfirm();
+               
+            }, 10000);
+            
+        }
+    }, [activeStep])
+    
     const handleNext = () => {
+        if (activeStep===1 && methods.control._formValues.senior===null ){
+            
+        setActiveStep(1);
+        }else if(activeStep===2 && methods.control._formValues.symptoms.length===0 && methods.control._formValues.symptomss.length===0){
 
-        setActiveStep(activeStep + 1);
-        setSkippedSteps(skippedSteps.filter((skipItem) => skipItem !== activeStep));
+            setActiveStep(2);
+        }else
+        {
+            setActiveStep(activeStep + 1);
+        }
+
+      
+       
+       
     };
 
     const handleBack = () => {
@@ -207,6 +239,21 @@ const LinaerStepper = () => {
     };
 
 
+    useEffect(() => {
+        let arrayIds = [];
+           allsymptoms&& allsymptoms.map(s=>{
+                arrayIds=[...arrayIds,s.id]
+            })
+                    symptomsService.updateSymptoms(arrayIds).then((result) => {
+                        console.log("Symptoms updated successfully")
+                    })
+          
+                   
+        
+    
+     
+    }, [allsymptoms])
+    
 
     const onSubmit = (data) => {
 
@@ -218,18 +265,11 @@ const LinaerStepper = () => {
             return res;
         }, [])
 
+        
+        methods.setValue('allSymps', newState)
 
-
-        console.log("newstate", newState);
+       
         setAllSymptoms(newState)
-        console.log("alll", methods.control._formValues);
-        allsymptoms.map((symp) => {
-            return (
-                symptomsService.updateSymptoms(symp.id).then((result) => {
-                    console.log(result.data)
-                }))
-        })
-
 
     }
     const handleConfirm = () => {
@@ -279,9 +319,20 @@ const LinaerStepper = () => {
 
 
                     {buttonPrint ?
-                        <Button onClick={handlePrint}  style={{ width:"50%"}} fileName="Hello" variant="contained" className={classes.button + " position-absolute mt-3  font-weight-bold start-50 translate-middle"}>
+                    < div style={{display:"flex",flexDirection:"column" ,alignItems:"center",justifyContent:"center",marginTop:"40px",marginBottom:"-15px"}}>
+                        <Button onClick={handlePrint}  style={{ width:"50%",marginBottom:"23px"}} filename="Hello" variant="contained" >
                            <FaPrint/> &nbsp;  Print
                         </Button>
+                        <Button
+                           
+                            
+                            variant="contained"
+                            color="primary"
+                            onClick={()=>setActiveStep(0)}
+                            style={{ width:"50%"}}>
+                            Start new checkup
+                        </Button>
+                        </div>
                         
                         :
                         <Button
@@ -297,7 +348,7 @@ const LinaerStepper = () => {
 
                     }
 
-                    <div ref={ref} className="mt-5">
+                    <div ref={ref} className="mt-0">
                         <div className="page-content page-container" id="page-content" >
                             <div className="py-5">
                                 <div className="row container d-flex justify-content-center">
@@ -379,7 +430,7 @@ const LinaerStepper = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="page-content page-container" id="page-content">
+                        <div className="page-content page-container" id="page-content"  ref={section}>
                             <div className="py-5">
                                 <div className="row container d-flex justify-content-center">
                                     <div className="col-lg-11 grid-margin stretch-card">
@@ -418,6 +469,7 @@ const LinaerStepper = () => {
 
                                                                                     }) : " "}
                                                                                 />
+                                                                                <span className="text-center">Probability</span>
                                                                             </div>
 
 

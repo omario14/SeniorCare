@@ -5,6 +5,7 @@ import ElderlyIcon from '@mui/icons-material/Elderly';
 
 import {Controller, useFormContext} from 'react-hook-form'
 import seniorService from '../../../services/senior.service';
+import { Alert, AlertTitle } from '@mui/material';
 
 export default class SelectSenior extends Component {
     constructor(props) {
@@ -48,13 +49,20 @@ const DropdownIndicator = props => {
 
     const Form =()=>
     {
-      const {control}=useFormContext();
+      const {control,register ,formState: { errors }}=useFormContext();
       return(
 
-        <Controller control={control} 
+        <>
+       
+        <Controller 
         name="senior"
+        
+       
+        control={control} 
         render={({field})=>(
+          <>
           <AsyncSelect
+           {...register("senior",  {required:{value:true,message:"Please select a senior "}})}
             defaultOptions
             getOptionLabel={e=>e.name+'  '+e.lastname}
             getOptionValue={e=>e.id}
@@ -62,11 +70,22 @@ const DropdownIndicator = props => {
             loadOptions={this.fetchData}
             components={{ DropdownIndicator }}
             {...field}
-            
+           
             />
+            <div style={{marginTop:"25px"}}  >
+            {errors.senior && (
+             <Alert variant="filled" color='info' severity="success">
+             
+                {errors.senior.message}
+              </Alert>
+            )}
+          </div>
+          </>
         )}
            
           />
+         
+        </>
       )
 
     }
