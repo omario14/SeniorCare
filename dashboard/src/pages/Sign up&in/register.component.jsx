@@ -244,7 +244,7 @@ class Register extends Component {
   render() {
     const { message } = this.props;
     const { user: currentUser } = this.props;
-    if (!currentUser || currentUser.roles[0].name!=="ROLE_ADMIN") {
+    if (!currentUser ) {
       return <Navigate to="/notFound" />;
 
   }

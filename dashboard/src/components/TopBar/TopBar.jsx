@@ -29,8 +29,7 @@ class TopBar extends Component {
     if (user) {
       this.setState({
         currentUser: user,
-        showModeratorBoard: user.roles[0].name==="ROLE_MODERATOR",
-        showAdminBoard: user.roles[0].name==="ROLE_ADMIN",
+       
       });
     }
   }
@@ -60,7 +59,7 @@ function toggleSidenav() {
   }
 
   }
-  const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+  const { currentUser } = this.state;
   const title = this.props.title;
   return (
     

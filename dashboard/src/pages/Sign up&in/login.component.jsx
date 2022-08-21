@@ -10,6 +10,7 @@ import {
   Link,
   Navigate
 } from 'react-router-dom';
+import { TabTitle } from '../../utils/GeneralFunctions';
 const required = (value) => {
   if (!value) {
     return (
@@ -54,7 +55,7 @@ class Login extends Component {
       dispatch(login(this.state.username, this.state.password))
         .then(() => {
           if(isMounted ){
-          history.push("/senior");
+          history.push("/profile");
           window.location.reload();}
         })
         .catch(() => {
@@ -73,6 +74,7 @@ class Login extends Component {
     
   }
   render() {
+    TabTitle('Login');
     const { isLoggedIn, message } = this.props;
     if (isLoggedIn) {
       return <Navigate  to="/profile" />;

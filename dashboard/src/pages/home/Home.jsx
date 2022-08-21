@@ -6,35 +6,23 @@ import UserService from "../../services/user.service";
 import './home.css';
 import userService from '../../services/user.service';
 import seniorService from '../../services/senior.service';
-import { MdElderly ,MdNoFood } from "react-icons/md";
+import { MdElderly  } from "react-icons/md";
+import { Navigate } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-export default class Home extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      content: "",
+      
       userNumber:0,
       seniorNumber:0,
     };
   }
 
   componentDidMount() {
-    UserService.getPublicContent().then(
-      response => {
-        this.setState({
-          content: response.data
-        });
-      },
-      error => {
-        this.setState({
-          content:
-            (error.response && error.response.data) ||
-            error.message ||
-            error.toString()
-        });
-      }
-    );
+   
 
     userService.getUserNumber().then((res)=>{
       this.setState({
@@ -48,8 +36,12 @@ export default class Home extends Component {
     })
   }
   render() {
-
     TabTitle('Home');
+    const { user: currentUser } = this.props;
+    if (!currentUser) {
+      return <Navigate  to="/login" />;
+    }
+    
     const style = { color: "white", fontSize: "1.8em" }
     return (
       <div className='home'>
@@ -713,3 +705,12 @@ export default class Home extends Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  const { user } = state.auth;
+  return {
+      user,
+  };
+}
+
+export default connect(mapStateToProps)(Home);

@@ -47,16 +47,18 @@ export const register = (name,lastName,username, email, password,mobile,gender,a
       return Promise.reject();
     }
   );
-};
+}; 
 
 export const login = (username, password) => (dispatch) => {
   return AuthService.login(username, password).then(
     (data) => {
+      console.log(data,"ddd")
+      runLogoutTimer(dispatch,data.expiresIn);
       dispatch({
         type: LOGIN_SUCCESS,
         payload: { user: data },
       });
-
+      
       return Promise.resolve();
     },
     (error) => {

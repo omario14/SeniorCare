@@ -250,7 +250,7 @@ class Ingredients extends Component {
     render() {
         TabTitle('Ingredients');
         const { user: currentUser } = this.props;
-        if (!currentUser || currentUser.roles[0].name!==("ROLE_CHEF")) {
+        if (!currentUser ) {
             return <Navigate to="/notFound" />;
 
         }

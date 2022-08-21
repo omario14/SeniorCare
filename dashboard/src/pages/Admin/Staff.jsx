@@ -45,8 +45,8 @@ class Staff extends Component {
             lastName: "",
             username: "",
             email: "",
-            mobile:"",
-            adress:"",
+            mobile: "",
+            adress: "",
             roles: null,
 
         }
@@ -67,7 +67,7 @@ class Staff extends Component {
                 fileInfo: response.data,
                 isSkeleton: false,
             })
-                   
+
 
         })
 
@@ -82,18 +82,18 @@ class Staff extends Component {
 
 
     handleShow = (user, editDialog) => {
-        
+
         this.myRef.current = user;
-        
+
         this.setState({
             editDialog: editDialog,
             name: this.myRef.current.name,
             lastName: this.myRef.current.lastName,
             email: this.myRef.current.email,
-            mobile:this.myRef.current.mobile,
-            adress:this.myRef.current.adress,
-            
-            
+            mobile: this.myRef.current.mobile,
+            adress: this.myRef.current.adress,
+
+
 
 
         })
@@ -120,20 +120,20 @@ class Staff extends Component {
             email: this.state.email,
             mobile: this.state.mobile,
             adress: this.state.adress,
-            roles:this.myRef.current.roles,
-            password:this.myRef.current.password,
-            gender:this.myRef.current.gender,
-            picture:this.myRef.current.picture
+            roles: this.myRef.current.roles,
+            password: this.myRef.current.password,
+            gender: this.myRef.current.gender,
+            picture: this.myRef.current.picture
 
 
-            
+
 
 
 
         };
 
-       
-        userService.updateUser(user.id,user).then(() => {
+
+        userService.updateUser(user.id, user).then(() => {
             this.handleClose();
         })
     }
@@ -148,7 +148,7 @@ class Staff extends Component {
             lastName: e.target.value,
         });
     }
-   
+
     onChangeEmail = (e) => {
         this.setState({
             email: e.target.value,
@@ -209,8 +209,8 @@ class Staff extends Component {
     render() {
         TabTitle('Staff');
         const { user: currentUser } = this.props;
-        if (!currentUser || !currentUser.roles[0].name==="ROLE_ADMIN") {
-            
+        if (!currentUser) {
+
             return <Navigate to="/notFound" />;
 
         }
@@ -226,15 +226,16 @@ class Staff extends Component {
                                     <div className="card mb-4">
                                         <div className="card-header pb-0 tableBG" >
                                             <div className="text-uppercase " ><h6 className="text-light ">Staff</h6></div>
+
                                             <div style={{ display: "flex", paddingBottom: "10px" }}>
                                                 <div className="tableIcons" >
-                                                    <NavLink class="btn btn-primary btn-lg" style={{ backgroundColor: "rgba(222, 222, 222,0.3)" }} to="#" onClick={() => { this.setState({ isAddStaff: false }) }} role="button">
-                                                        <FcPlus className="FcPlus" style={{ fontSize: "36px", paddingTop: "8px" }} />
+                                                    <NavLink style={{ backgroundColor: "rgba(222, 222, 222,0.2)", width: "50px", justifyItems: "center", justifyContent: "center" }} to="#" onClick={() => { this.setState({ isAddStaff: false }) }} role="button">
+                                                        <FcPlus className="FcPlus" size={50} style={{ fontSize: "36px", marginLeft: "2px", paddingTop: "8px" }} />
                                                     </NavLink>
                                                 </div>
                                                 <div className="tableIcons" style={{ paddingLeft: "20px" }}>
-                                                    <NavLink class="btn btn-primary btn-lg btn-floating" style={{ backgroundColor: "rgba(222, 222, 222,0.3)" }} to="#" onClick={() => { this.handleDialogDeleteCheckbox("Are you sure you want to delete selected seniors ?", true); }} role="button">
-                                                        <FcEmptyTrash className="iconss" style={{ fontSize: "36px", paddingTop: "8px" }} />
+                                                    <NavLink style={{ backgroundColor: "rgba(222, 222, 222,0.2)" }} to="#" onClick={() => { this.handleDialogDeleteCheckbox("Are you sure you want to delete selected persons ?", true); }} role="button">
+                                                        <FcEmptyTrash className="iconss" size={50} style={{ fontSize: "36px", marginLeft: "2px", paddingTop: "8px" }} />
 
 
                                                     </NavLink>
@@ -268,14 +269,14 @@ class Staff extends Component {
                                                         </tr>
                                                     </thead>
                                                     <tbody key="tbody">
-                                                    {this.state.isSkeleton ? (
-                                                                    <tr>
-                                                                        <td colSpan="10">
-                                                                            <Skeleton count={5} />
+                                                        {this.state.isSkeleton ? (
+                                                            <tr>
+                                                                <td colSpan="10">
+                                                                    <Skeleton count={5} />
 
-                                                                        </td>
-                                                                    </tr>
-                                                               
+                                                                </td>
+                                                            </tr>
+
                                                         ) : (
                                                             <>
                                                                 {this.state.users
@@ -366,7 +367,7 @@ class Staff extends Component {
                                                                                         </a>
                                                                                         <ul className="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
                                                                                             <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#" onClick={(e) => this.handleShow(user, true)}> Edit <MdEditNote /></a></li>
-                                                                                           
+
                                                                                             <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#" onClick={(e) => this.deleteSenior(user, e)}>Delete <IoTrashOutline />  </a></li>
                                                                                         </ul>
                                                                                     </div>
@@ -424,7 +425,7 @@ class Staff extends Component {
                                         required
                                     />
                                 </Form.Group>
-                               
+
                                 <Form.Group style={{ padding: "12px 12px 0" }}>
                                     <Form.Control
                                         type="text"

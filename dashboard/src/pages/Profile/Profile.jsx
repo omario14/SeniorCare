@@ -26,6 +26,31 @@ class Profile extends Component {
     this.changeEditMode = this.changeEditMode.bind(this);
 
     this.state = {
+      username: "",
+      email: "",
+      password: "",
+      name: "",
+      lastName: "",
+      gender: "",
+      adress: "",
+      mobile: "",
+      roles: [],
+
+      user: "",
+      userImg: "../../../assets/img/images/avartarU.png",
+      imgChange: false,
+      selectedFile: null,
+      fileId: null,
+      picture: "",
+      edit: false,
+    };
+  }
+
+  componentDidMount=()=>{
+    if(this.props.user){
+
+   
+    this.setState({
       username: this.props.user.username,
       email: this.props.user.email,
       password: this.props.user.password,
@@ -35,17 +60,11 @@ class Profile extends Component {
       adress: this.props.user.adress,
       mobile: this.props.user.mobile,
       roles: this.props.user.roles,
-
-      user: this.props.user,
-      userImg: "../../../assets/img/images/avartarU.png",
-      imgChange: false,
-      selectedFile: null,
-      fileId: null,
       picture: this.props.user.picture,
-      edit: false,
-    };
+      user: this.props.user,
+    })
   }
-
+  }
   componentDidUpdate = (prevProps, prevState) => {
 
 
@@ -265,7 +284,7 @@ class Profile extends Component {
                   <div className="avatar avatar-xl position-relative">
                     {this.state.edit === false ?
                       <>
-                        {this.state.user.picture === null ?
+                        {this.state.user.picture===null  ?
                           <>
 
                             <img

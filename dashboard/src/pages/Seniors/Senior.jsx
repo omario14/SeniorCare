@@ -148,7 +148,7 @@ class Senior extends Component {
                             cin: d.cin,
                             telephone: d.telephone,
                             file: d.file,
-                            residance: d.residance,
+                            adress: d.adress,
                             famillySituation: d.famillySituation,
                             centerOfInterest: d.centerOfInterest,
                             checkedBreakfast: d.checkedBreakfast,
@@ -478,7 +478,7 @@ class Senior extends Component {
        
         const { user: currentUser } = this.props;
         
-        if (!currentUser || currentUser.roles[0].name!=="ROLE_ACCOMPAGNANT") {
+        if (!currentUser) {
             return <Navigate to="/notFound" />;
 
         }

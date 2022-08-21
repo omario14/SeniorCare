@@ -240,7 +240,7 @@ class AddSenior extends Component {
 		const { addSeniorPage } = this.props;
 		const { user: currentUser } = this.props;
 
-		if (!currentUser || currentUser.roles[0].name !== "ROLE_ACCOMPAGNANT") {
+		if (!currentUser ) {
 			return <Navigate to="/notFound" />;
 
 		}

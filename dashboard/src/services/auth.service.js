@@ -1,4 +1,5 @@
 import Axios from "axios";
+import { logout } from "../actions/auth";
 import authHeader from "./auth-header";
 
 
@@ -11,8 +12,8 @@ class AuthService {
       .then((response) => {
         console.log("user",response.data);
         if (response.data.accessToken) {
-          console.log('doneeeeeeee')
           localStorage.setItem("user", JSON.stringify(response.data));
+        
         }
 
         return response.data;
@@ -20,6 +21,7 @@ class AuthService {
   }
 
   logout() {
+    localStorage.removeItem("user");
     localStorage.clear();
   }
 
@@ -29,6 +31,15 @@ class AuthService {
 
     }, { headers: authHeader() });
   }
+
+ 
 }
 
 export default new AuthService();
+
+export function runLogoutTimer(dispatch,timer){
+  setTimeout(()=>{
+    dispatch(logout())
+    
+  },9000);
+}

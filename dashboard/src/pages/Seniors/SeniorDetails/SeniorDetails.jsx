@@ -146,7 +146,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                             <p><span>Birthday</span>: {senior.dateOfBirth}</p>
                           </div>
                           <div className="bio-row text-capitalize">
-                            <p><span>Residance </span>: {senior.residance}</p>
+                            <p><span>Adress </span>: {senior.adress}</p>
                           </div>
                           <div className="bio-row text-capitalize">
                             <p><span>Gender </span>: {senior.sex}</p>
@@ -259,7 +259,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                           :
                           seniorArch.map((arch, index) =>
 
-                            <tr key={index} style={arch.date === new Date().toISOString().split("T")[0] ? {borderRadius: "90px" ,background:"rgb(0,128,128,0.2)"}:{}}>
+                            <tr key={index} style={arch.date === new Date().toISOString().split("T")[0] ? {border: "1pt solid #1471c9" ,background:"rgb(0,128,128,0.2)"}:{}}>
                               <td>
                                 <div className="d-flex px-2 py-1">
                                   <div className="icon icon-shape icon-xxs shadow border-radius-sm bg-gradient-primary text-center me-2 d-flex align-items-center justify-content-center">
@@ -283,7 +283,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                                 </div>
                               </td>
                               <td className="align-middle text-center text-sm">
-                                <span className="text-xs font-weight-bold text-info">  {arch.date}</span>
+                                <span className={arch.date === new Date().toISOString().split("T")[0] ? "text-xl text-dark font-weight-bold":"text-xl font-weight-bold text-info"}>  {arch.date}</span>
                               </td>
                               <td >
                                 <div className="align-middle text-center text-sm d-flex    justify-content-center" style={{ alignItems: "center" }} >

@@ -37,9 +37,12 @@ class Food extends Component {
     render() {
         TabTitle("Food");
         const { user: currentUser } = this.props;
-        if (!currentUser || !currentUser.roles.includes("ROLE_ACCOMPAGNANT")) {
+        if (!currentUser ) {
+            return <Navigate to="/login"/>
+        }else if(currentUser.roles[0].name!=="ROLE_ACCOMPAGNANT"){
             return <Navigate to="/notFound" />;
           }
+          
         return (
             <div className="food">
                 <main className="main-content  position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
