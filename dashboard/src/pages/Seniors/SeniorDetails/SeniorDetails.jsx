@@ -1,7 +1,7 @@
 import { Button, ButtonGroup } from '@mui/material'
 import React, { useEffect, useRef } from 'react'
 import { useState } from 'react'
-import {  GiReturnArrow } from 'react-icons/gi'
+import { GiReturnArrow } from 'react-icons/gi'
 import seniorService from '../../../services/senior.service'
 import '../AddSenior/AddSenior.css'
 import './SeniorDetails.css'
@@ -10,12 +10,15 @@ import { Badge } from 'react-bootstrap'
 import MedsArch from './MedsArch'
 import Skeleton from 'react-loading-skeleton'
 
-export default function SeniorDetails({ senior, addSeniorPage }) {
+export default function SeniorDetails({ senior, addSeniorPage,socket, user }) {
   const [seniorArch, setSeniorArch] = useState([]);
   const [seniorArchsrtd, setSeniorArchsrtd] = useState([]);
   const [order, setOrder] = useState("DSC");
   
+
   const myRef = useRef(null);
+
+
 
   const retrieveArch = (senior) => {
     seniorService.getArchiveBySenior(senior.senior.id)
@@ -23,20 +26,25 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
         setSeniorArch(res.data)
         setSeniorArchsrtd(res.data)
       });
-   
+
 
   }
 
 
 
+
+
+
+
   useEffect(() => {
     retrieveArch({ senior });
-   
+  
+
 
   }, []);
 
   const sorting = (col) => {
-   
+
     if (order === "ASC") {
       const sorted = [...seniorArch].sort((a, b) =>
         a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
@@ -55,7 +63,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
     }
   }
 
-  
+
 
 
   return (
@@ -176,7 +184,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                 {seniorArchsrtd.map((arch, index) => (
                   <div key={index} style={{
                     height: "80vh",
-                    
+
                     top: "800px",
                     left: "0px",
                     display: "flex",
@@ -204,10 +212,10 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
 
 
                         <div className="timeline-block mb-3" >
-                          
-                       <MedsArch arch={arch}  myRef={myRef}/>
-                            
-                          
+
+                          <MedsArch socket={socket} user={user} arch={arch} myRef={myRef} />
+
+
                         </div>
 
 
@@ -244,89 +252,89 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                               Meals</th>
 
                             <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">Medications</th>
-                            
+
                           </tr>
                         </thead>
                         <tbody style={{ overflowY: "auto", maxHeight: "20vh" }}>
-                                                                   
-                          {seniorArch.length===0?
-                           <tr>
-                           <td colSpan="10">
-                               <Skeleton count={5} />
 
-                           </td>
-                          </tr>
-                          :
-                          seniorArch.map((arch, index) =>
+                          {seniorArch.length === 0 ?
+                            <tr>
+                              <td colSpan="10">
+                                <Skeleton count={5} />
 
-                            <tr key={index} style={arch.date === new Date().toISOString().split("T")[0] ? {border: "1pt solid #1471c9" ,background:"rgb(0,128,128,0.2)"}:{}}>
-                              <td>
-                                <div className="d-flex px-2 py-1">
-                                  <div className="icon icon-shape icon-xxs shadow border-radius-sm bg-gradient-primary text-center me-2 d-flex align-items-center justify-content-center">
-                                    <svg width="10px" height="10px" viewBox="0 0 40 44" version="1.1" xmlns="http://www.w3.org/2000/svg" >
-                                      <title>document</title>
-                                      <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                        <g transform="translate(-1870.000000, -591.000000)" fill="#FFFFFF" fillRule="nonzero">
-                                          <g transform="translate(1716.000000, 291.000000)">
-                                            <g transform="translate(154.000000, 300.000000)">
-                                              <path className="color-background" d="M40,40 L36.3636364,40 L36.3636364,3.63636364 L5.45454545,3.63636364 L5.45454545,0 L38.1818182,0 C39.1854545,0 40,0.814545455 40,1.81818182 L40,40 Z" opacity="0.603585379"></path>
-                                              <path className="color-background" d="M30.9090909,7.27272727 L1.81818182,7.27272727 C0.814545455,7.27272727 0,8.08727273 0,9.09090909 L0,41.8181818 C0,42.8218182 0.814545455,43.6363636 1.81818182,43.6363636 L30.9090909,43.6363636 C31.9127273,43.6363636 32.7272727,42.8218182 32.7272727,41.8181818 L32.7272727,9.09090909 C32.7272727,8.08727273 31.9127273,7.27272727 30.9090909,7.27272727 Z M18.1818182,34.5454545 L7.27272727,34.5454545 L7.27272727,30.9090909 L18.1818182,30.9090909 L18.1818182,34.5454545 Z M25.4545455,27.2727273 L7.27272727,27.2727273 L7.27272727,23.6363636 L25.4545455,23.6363636 L25.4545455,27.2727273 Z M25.4545455,20 L7.27272727,20 L7.27272727,16.3636364 L25.4545455,16.3636364 L25.4545455,20 Z"></path>
+                              </td>
+                            </tr>
+                            :
+                            seniorArch.map((arch, index) =>
+
+                              <tr key={index} style={arch.date === new Date().toISOString().split("T")[0] ? { border: "1pt solid #1471c9", background: "rgb(0,128,128,0.2)" } : {}}>
+                                <td>
+                                  <div className="d-flex px-2 py-1">
+                                    <div className="icon icon-shape icon-xxs shadow border-radius-sm bg-gradient-primary text-center me-2 d-flex align-items-center justify-content-center">
+                                      <svg width="10px" height="10px" viewBox="0 0 40 44" version="1.1" xmlns="http://www.w3.org/2000/svg" >
+                                        <title>document</title>
+                                        <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                                          <g transform="translate(-1870.000000, -591.000000)" fill="#FFFFFF" fillRule="nonzero">
+                                            <g transform="translate(1716.000000, 291.000000)">
+                                              <g transform="translate(154.000000, 300.000000)">
+                                                <path className="color-background" d="M40,40 L36.3636364,40 L36.3636364,3.63636364 L5.45454545,3.63636364 L5.45454545,0 L38.1818182,0 C39.1854545,0 40,0.814545455 40,1.81818182 L40,40 Z" opacity="0.603585379"></path>
+                                                <path className="color-background" d="M30.9090909,7.27272727 L1.81818182,7.27272727 C0.814545455,7.27272727 0,8.08727273 0,9.09090909 L0,41.8181818 C0,42.8218182 0.814545455,43.6363636 1.81818182,43.6363636 L30.9090909,43.6363636 C31.9127273,43.6363636 32.7272727,42.8218182 32.7272727,41.8181818 L32.7272727,9.09090909 C32.7272727,8.08727273 31.9127273,7.27272727 30.9090909,7.27272727 Z M18.1818182,34.5454545 L7.27272727,34.5454545 L7.27272727,30.9090909 L18.1818182,30.9090909 L18.1818182,34.5454545 Z M25.4545455,27.2727273 L7.27272727,27.2727273 L7.27272727,23.6363636 L25.4545455,23.6363636 L25.4545455,27.2727273 Z M25.4545455,20 L7.27272727,20 L7.27272727,16.3636364 L25.4545455,16.3636364 L25.4545455,20 Z"></path>
+                                              </g>
                                             </g>
                                           </g>
                                         </g>
-                                      </g>
-                                    </svg>
+                                      </svg>
+                                    </div>
+                                    <div className="d-flex flex-column justify-content-center">
+                                      <h6 className="mb-0 text-sm">{arch.idArch}</h6>
+                                    </div>
                                   </div>
-                                  <div className="d-flex flex-column justify-content-center">
-                                    <h6 className="mb-0 text-sm">{arch.idArch}</h6>
+                                </td>
+                                <td className="align-middle text-center text-sm">
+                                  <span className={arch.date === new Date().toISOString().split("T")[0] ? "text-xl text-dark font-weight-bold" : "text-xl font-weight-bold text-info"}>  {arch.date}</span>
+                                </td>
+                                <td >
+                                  <div className="align-middle text-center text-sm d-flex    justify-content-center" style={{ alignItems: "center" }} >
+
+
+                                    <input
+                                      id={arch.idArch + "BREAKFAST"}
+                                      checked={arch.checkedBreakfast}
+                                      value={arch.idArch}
+                                      name="customCheckbox"
+                                      type="checkbox"
+                                      className="align-middle-inputDetails   "
+
+
+
+
+                                    />
+                                    <label htmlFor={arch.idArch + "BREAKFAST"} className="align-middle-labelDetails text-secondary">BREAKFAST </label>
+                                    <input
+                                      id={arch.idArch + "LUNCH"}
+                                      checked={arch.checkedLunch}
+                                      value={arch.idArch}
+                                      name="customCheckbox"
+                                      type="checkbox"
+                                      className="align-middle-inputDetails   "
+
+
+                                    />
+                                    <label htmlFor={arch.idArch + "LUNCH"} className="align-middle-labelDetails text-secondary">LUNCH </label>
+                                    <input
+                                      id={arch.idArch + "DINNER"}
+                                      checked={arch.checkedDinner}
+                                      value={arch.idArch}
+                                      name="customCheckbox"
+                                      type="checkbox"
+                                      className="align-middle-inputDetails   "
+
+
+                                    />
+                                    <label htmlFor={arch.idArch + "DINNER"} className="align-middle-labelDetails text-secondary">DINNER </label>
                                   </div>
-                                </div>
-                              </td>
-                              <td className="align-middle text-center text-sm">
-                                <span className={arch.date === new Date().toISOString().split("T")[0] ? "text-xl text-dark font-weight-bold":"text-xl font-weight-bold text-info"}>  {arch.date}</span>
-                              </td>
-                              <td >
-                                <div className="align-middle text-center text-sm d-flex    justify-content-center" style={{ alignItems: "center" }} >
-
-
-                                  <input
-                                    id={arch.idArch + "BREAKFAST"}
-                                    checked={arch.checkedBreakfast}
-                                    value={arch.idArch}
-                                    name="customCheckbox"
-                                    type="checkbox"
-                                    className="align-middle-inputDetails   "
-
-
-
-
-                                  />
-                                  <label htmlFor={arch.idArch + "BREAKFAST"} className="align-middle-labelDetails text-secondary">BREAKFAST </label>
-                                  <input
-                                    id={arch.idArch + "LUNCH"}
-                                    checked={arch.checkedLunch}
-                                    value={arch.idArch}
-                                    name="customCheckbox"
-                                    type="checkbox"
-                                    className="align-middle-inputDetails   "
-
-
-                                  />
-                                  <label htmlFor={arch.idArch + "LUNCH"} className="align-middle-labelDetails text-secondary">LUNCH </label>
-                                  <input
-                                    id={arch.idArch + "DINNER"}
-                                    checked={arch.checkedDinner}
-                                    value={arch.idArch}
-                                    name="customCheckbox"
-                                    type="checkbox"
-                                    className="align-middle-inputDetails   "
-
-
-                                  />
-                                  <label htmlFor={arch.idArch + "DINNER"} className="align-middle-labelDetails text-secondary">DINNER </label>
-                                </div>
-                              </td>
-                              {/**
+                                </td>
+                                {/**
                               <td className="align-middle text-center text-sm">
                                 {arch.meds.map((med, i) => (
                                   <span key={i} className="text-xs font-weight-bold text-info"> {med.dose} {med.doseType} of {med.label} {arch.meds.length > 1 && "AND"} </span>
@@ -335,21 +343,21 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
                               </td>
  */}
 
-                              <td className="align-middle">
-                                <div className="progress-wrapper w-75 mx-auto">
-                                  <div className="progress-info">
-                                    <div className="progress-percentage">
-                                      <span className="text-xs font-weight-bold">60%</span>
+                                <td className="align-middle">
+                                  <div className="progress-wrapper w-75 mx-auto">
+                                    <div className="progress-info">
+                                      <div className="progress-percentage">
+                                        <span className="text-xs font-weight-bold">60%</span>
+                                      </div>
+                                    </div>
+                                    <div className="progress">
+                                      <div className="progress-bar bg-gradient-info w-60" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                   </div>
-                                  <div className="progress">
-                                    <div className="progress-bar bg-gradient-info w-60" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
+                                </td>
+                              </tr>
 
-                          )}
+                            )}
                         </tbody>
                       </table>
                     </div>
@@ -366,7 +374,7 @@ export default function SeniorDetails({ senior, addSeniorPage }) {
 
 
       </div>
-  
+
     </>
   )
 }

@@ -50,9 +50,9 @@ class App extends Component {
 
   
   return (
-    <Router history={history}>
+    
     <Routing/>
-    </Router>
+    
     
   );
 }

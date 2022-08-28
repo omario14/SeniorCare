@@ -268,7 +268,7 @@ class Profile extends Component {
     return (
       <div className="profile ">
         <main className="main-content  position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
-          <TopBar title={"Profile"} />
+         
           <div className="container-fluid py-4">
             <div
               className="page-header min-height-300 border-radius-xl mt-4"

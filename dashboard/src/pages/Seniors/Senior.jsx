@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Navigate, NavLink } from "react-router-dom";
 import { FcEmptyTrash, FcPlus } from "react-icons/fc";
-import TopBar from "../../components/TopBar/TopBar";
 import seniorService from "../../services/senior.service";
 import { TabTitle } from "../../utils/GeneralFunctions";
 import { Modal, Button, Form } from 'react-bootstrap';
@@ -18,6 +17,20 @@ import { BiDetail } from "react-icons/bi";
 import Pagination from "../Chef/Pagination";
 import SeniorDetails from "./SeniorDetails/SeniorDetails";
 import './Senior.scss';
+import { Tooltip } from "@mui/material";
+import {
+    withStyles
+} from "@material-ui/core/styles";
+
+const BlueOnGreenTooltip = withStyles({
+    tooltip: {
+        color: "#1a2228",
+        backgroundColor: "rgba(250, 250, 255, 1)",
+        textTransform: "uppercase"
+    }
+
+})(Tooltip);
+
 
 
 class Senior extends Component {
@@ -29,7 +42,7 @@ class Senior extends Component {
         this.retrieveSeniors = this.retrieveSeniors.bind(this);
         this.handleCheck = this.handleCheck.bind(this);
         this.handleDetails = this.handleDetails.bind(this);
-        this.onChangeImage=this.onChangeImage.bind(this);
+        this.onChangeImage = this.onChangeImage.bind(this);
         this.myRef = React.createRef();
         this.state = {
 
@@ -48,12 +61,12 @@ class Senior extends Component {
             lastName: "",
             telephone: "",
             sexOption: "male",
-            seniorPicture:null,
+            seniorPicture: null,
             birthDate: null,
             interests: "",
             cin: "",
-            selectedFile:null,
-            fileId:null,
+            selectedFile: null,
+            fileId: null,
             imgChange: false,
             selected: null,
             select: [],
@@ -63,64 +76,67 @@ class Senior extends Component {
             seniorMeds: [],
             currentPage: 1,
             seniorsPerPage: 4,
-            seniorArch:[],
-          
+            seniorArch: [],
+           
+
+
 
 
 
         };
     }
 
-
+ 
+        
+       
 
     componentDidMount() {
         this.retrieveSeniors();
-       
-        
+
     }
     componentDidUpdate = (prevProps, prevState) => {
 
         if (prevState.addSeniorPage !== this.state.addSeniorPage) {
-            
+
             this.retrieveSeniors();
         }
-        if (prevState.seniors.length<this.state.seniors.length){
+        if (prevState.seniors.length < this.state.seniors.length) {
             this.setState({
-                currentPage:Math.ceil(this.state.seniors.length / this.state.seniorsPerPage),
-                expand:null
+                currentPage: Math.ceil(this.state.seniors.length / this.state.seniorsPerPage),
+                expand: null
             })
-           
-        }
+
+        }       
     };
 
-     retrieveArch = (senior) => {
-       
+    retrieveArch = (senior) => {
+
         seniorService.getArchiveBySenior(senior.id)
-          .then((res) => {
-            this.setState({
-                seniorArch:res.data.map((arch)=>{
-               let arg;
-               if (arch.date === new Date().toISOString().split("T")[0]){
-               let archive=  {
-                idArch: arch.idArch,
-                date: arch.date,
-                checkedLunch: arch.checkedLunch,
-                checkedDinner: arch.checkedDinner,
-                checkedBreakfast: arch.checkedBreakfast,
-              
-            }
-                return  arg=archive;
-               }
-               return arg
-          })
-        })
-          
-           
-          });
-          
-       
-    
-      }
+            .then((res) => {
+                this.setState({
+                    seniorArch: res.data.map((arch) => {
+                        let arg;
+                        if (arch.date === new Date().toISOString().split("T")[0]) {
+                            let archive = {
+                                idArch: arch.idArch,
+                                date: arch.date,
+                                checkedLunch: arch.checkedLunch,
+                                checkedDinner: arch.checkedDinner,
+                                checkedBreakfast: arch.checkedBreakfast,
+
+                            }
+                            return arg = archive;
+                        }
+                        return arg
+                    })
+                })
+
+
+            });
+
+
+
+    }
 
 
 
@@ -158,15 +174,15 @@ class Senior extends Component {
                         };
                     }),
                 });
-                
+
 
                 this.setState({
-                   currentPage:1,
+                    currentPage: 1,
                     isSkeleton: false,
                 })
-                this.state.seniors.forEach((senior)=>{
+                this.state.seniors.forEach((senior) => {
 
-                    let archive={
+                    let archive = {
                         idArch: `arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
                         senior: senior,
                         date: new Date().toISOString().split("T")[0],
@@ -175,7 +191,7 @@ class Senior extends Component {
                         checkedDinner: 0,
                     }
                     seniorService.addToArchive(archive)
-            })
+                })
             })
 
     }
@@ -194,7 +210,7 @@ class Senior extends Component {
         })
     }
 
-    handleToggle = (i,senior) => {
+    handleToggle = (i, senior) => {
         const item = i;
         if (this.state.expand === item) {
             return this.setState({ expand: null })
@@ -203,15 +219,14 @@ class Senior extends Component {
 
         return (
             this.setState({
-            section: "section1",
-            expand: item
-        }),
+                section: "section1",
+                expand: item
+            }),
 
-        this.retrieveArch(senior),
-        console.log(this.state.seniorArch,"fff")
+            this.retrieveArch(senior)
         )
-     
-       
+
+
 
     }
 
@@ -232,10 +247,10 @@ class Senior extends Component {
         });
     };
     handleClose = () => {
-       
+
         this.setState({
             editDialog: false,
-            imgChange:false,
+            imgChange: false,
         })
 
     }
@@ -254,7 +269,7 @@ class Senior extends Component {
                         this.setState({
                             currentPage: (Math.ceil(seniors.length / this.state.seniorsPerPage))
                         })
-                        
+
                     }
                     if (this.myRef.current.file) {
                         seniorService.removeFileById(this.myRef.current.file);
@@ -340,30 +355,30 @@ class Senior extends Component {
             telephone: this.myRef.current.telephone,
             birthDate: this.myRef.current.dateOfBirth,
             sexOption: this.myRef.current.sex,
-            seniorPicture:this.myRef.current.file,
+            seniorPicture: this.myRef.current.file,
         })
-        
+
 
 
     }
     handleUpdate = (e) => {
         e.preventDefault();
-        	// Create an object of formData
-		const formData = new FormData();
-		// Update the formData object
-		formData.append(
-			"file",
-			this.state.selectedFile,
-		);	
+        // Create an object of formData
+        const formData = new FormData();
+        // Update the formData object
+        formData.append(
+            "file",
+            this.state.selectedFile,
+        );
         const id = this.myRef.current.id;
-        if (this.state.selectedFile){
+        if (this.state.selectedFile) {
             seniorService.upload(formData).then(res => {
-                console.log("rr",res.data)
+                console.log("rr", res.data)
                 this.setState({
                     fileId: res.data.id,
                 })
-        
-                
+
+
             }).then(() => {
                 let senior = {
                     name: this.state.name,
@@ -372,57 +387,57 @@ class Senior extends Component {
                     cin: this.state.cin,
                     dateOfBirth: this.state.birthDate,
                     sex: this.state.sexOption,
-                    file:this.state.fileId,
-                    adress:this.myRef.current.adress,
+                    file: this.state.fileId,
+                    adress: this.myRef.current.adress,
                     checkedBreakfast: this.myRef.current.checkedBreakfast,
                     checkedLunch: this.myRef.current.checkedLunch,
                     checkedDinner: this.myRef.current.checkedDinner,
                     menus: this.myRef.current.menus
-        
+
                 };
                 seniorService.update(id, senior).then(() => {
                     this.retrieveSeniors();
                     this.handleClose();
                 })
             })
-        }else{
-           
-       
+        } else {
 
-        let senior = {
-            name: this.state.name,
-            lastname: this.state.lastName,
-            telephone: this.state.telephone,
-            cin: this.state.cin,
-            dateOfBirth: this.state.birthDate,
-            sex: this.state.sexOption,
-            file:this.myRef.current.file,
-            adress:this.myRef.current.adress,
-            checkedBreakfast: this.myRef.current.checkedBreakfast,
-            checkedLunch: this.myRef.current.checkedLunch,
-            checkedDinner: this.myRef.current.checkedDinner,
-            menus: this.myRef.current.menus
 
-        };
-       
 
-        seniorService.update(id, senior).then(() => {
-            this.retrieveSeniors();
-            this.handleClose();
-        })
+            let senior = {
+                name: this.state.name,
+                lastname: this.state.lastName,
+                telephone: this.state.telephone,
+                cin: this.state.cin,
+                dateOfBirth: this.state.birthDate,
+                sex: this.state.sexOption,
+                file: this.myRef.current.file,
+                adress: this.myRef.current.adress,
+                checkedBreakfast: this.myRef.current.checkedBreakfast,
+                checkedLunch: this.myRef.current.checkedLunch,
+                checkedDinner: this.myRef.current.checkedDinner,
+                menus: this.myRef.current.menus
+
+            };
+
+
+            seniorService.update(id, senior).then(() => {
+                this.retrieveSeniors();
+                this.handleClose();
+            })
+        }
     }
-    }
 
-    onChangeImage=(e)=>{
+    onChangeImage = (e) => {
         const reader = new FileReader();
-		reader.onload = () => {
-			if (reader.readyState === 2) {
-				this.setState({ seniorPicture: reader.result, selectedFile: e.target.files[0],imgChange:true })
+        reader.onload = () => {
+            if (reader.readyState === 2) {
+                this.setState({ seniorPicture: reader.result, selectedFile: e.target.files[0], imgChange: true })
 
 
-			}
-		}
-		reader.readAsDataURL(e.target.files[0])
+            }
+        }
+        reader.readAsDataURL(e.target.files[0])
     }
 
     onChangeName = (e) => {
@@ -467,17 +482,18 @@ class Senior extends Component {
         const indexOfLastSenior = this.state.currentPage * this.state.seniorsPerPage;
         const indexOfFirstSenior = indexOfLastSenior - this.state.seniorsPerPage;
         const currentSeniors = this.state.seniors.slice(indexOfFirstSenior, indexOfLastSenior);
-
+     
         // Change page
         const paginate = (pageNumber) => this.setState({
             currentPage: pageNumber,
-             expand: null 
+            expand: null
         });
+  
 
         TabTitle('Senior');
-       
+
         const { user: currentUser } = this.props;
-        
+        const {socket:socket}=this.props;
         if (!currentUser) {
             return <Navigate to="/notFound" />;
 
@@ -488,7 +504,7 @@ class Senior extends Component {
         return (
             <div className="seniorList">
                 <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
-                    <TopBar title={'senior'} />
+                    
                     {
                         this.state.addSeniorPage === "getSenior" ?
                             (
@@ -501,16 +517,24 @@ class Senior extends Component {
 
                                                     <div style={{ display: "flex", paddingBottom: "10px" }}>
                                                         <div className="tableIcons" >
-                                                            <NavLink style={{ backgroundColor: "rgba(222, 222, 222,0.2)", width: "50px", justifyItems: "center", justifyContent: "center" }} to="#" onClick={() => { this.setState({ addSeniorPage: "addSenior" }) }} role="button">
-                                                                <FcPlus className="FcPlus" size={50} style={{ fontSize: "36px", marginLeft: "2px", paddingTop: "8px" }} />
-                                                            </NavLink>
+
+
+
+                                                            <BlueOnGreenTooltip title="add new senior" placement="top">
+                                                                <NavLink style={{ backgroundColor: "rgba(222, 222, 222,0.2)", width: "50px", justifyItems: "center", justifyContent: "center", paddingTop: "-20px" }} to="#" onClick={() => { this.setState({ addSeniorPage: "addSenior" }) }} role="button">
+                                                                    <FcPlus className="FcPlus" size={50} style={{ fontSize: "36px", marginLeft: "2px", paddingTop: "8px" }} />
+                                                                </NavLink>
+                                                            </BlueOnGreenTooltip >
+
                                                         </div>
                                                         <div className="tableIcons" style={{ paddingLeft: "20px" }}>
-                                                            <NavLink style={{ backgroundColor: "rgba(222, 222, 222,0.2)" }} to="#" onClick={() => { this.handleDialogDeleteCheckbox("Are you sure you want to delete selected seniors ?", true); }} role="button">
-                                                                <FcEmptyTrash className="iconss" size={50} style={{ fontSize: "36px", marginLeft: "2px", paddingTop: "8px" }} />
+                                                            <BlueOnGreenTooltip title="delete selected seniors" placement="top">
+                                                                <NavLink style={{ backgroundColor: "rgba(222, 222, 222,0.2)" }} to="#" onClick={() => { this.handleDialogDeleteCheckbox("Are you sure you want to delete selected seniors ?", true); }} role="button">
+                                                                    <FcEmptyTrash className="iconss" size={50} style={{ fontSize: "36px", marginLeft: "2px", paddingTop: "8px" }} />
 
 
-                                                            </NavLink>
+                                                                </NavLink>
+                                                            </BlueOnGreenTooltip>
                                                         </div>
 
 
@@ -665,7 +689,7 @@ class Senior extends Component {
                                                                                         </td>
 
                                                                                         <td >
-                                                                                            <div style={{ cursor: "pointer" }} className="relative-bottom" onClick={() => this.handleToggle(i,senior)}>
+                                                                                            <div style={{ cursor: "pointer" }} className="relative-bottom" onClick={() => this.handleToggle(i, senior)}>
                                                                                                 <h6>{this.state.expand === i ? <MdOutlineExpandLess size={30} /> : <MdOutlineExpandMore size={30} />}</h6>
                                                                                             </div>
 
@@ -673,553 +697,553 @@ class Senior extends Component {
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr style={this.state.expand === i ? { padding: "0.75rem 1.5rem", width: "100%", textTransform: "capitalize", letterSpacing: "0px", borderBottom: "1px solid #e9ecef" } : { display: "none", visibility: "hidden" }}>
-                                                                                            <th style={{padding: "0.75rem 6.5rem"}}>
-                                                                                            
-                                                                                            </th>
-                                                                                            
-                                                                                            <td >
-                                                                                            
-                                                                                            
-                                                                                     
-                                                                                    <div id="section1" style={{ position: "relative", height: "50px",paddingLeft:"80px" ,display: "flex", whiteSpace: "nowrap", width: "150px" }} >
-                                                                                    <label className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 my-3  text-start m-0">Food :</label>
-                                                                                        <input
-                                                                                            id={senior.id + "BREAKFAST"}
-                                                                                            checked={this.state.seniorArch.checkedBreakfast}
-                                                                                            value={senior.id}
-                                                                                            name="customCheckbox"
-                                                                                            type="checkbox"
-                                                                                            className="align-middle-input   "
+                                                                                        <th style={{ padding: "0.75rem 4.5rem" }}>
 
-                                                                                            onChange={(e) => {
+                                                                                        </th>
 
-                                                                                                this.setState({
-                                                                                                    seniors: this.state.seniors.map((data) => {
+                                                                                        <td >
 
-                                                                                                        if (data.id === senior.id) {
-                                                                                                            data.checkedBreakfast = e.target.checked;
+
+
+                                                                                            <div id="section1" style={{ position: "relative", height: "50px", paddingLeft: "80px", display: "flex", whiteSpace: "nowrap", width: "150px" }} >
+                                                                                                <label className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 my-3  text-start m-0">Food :</label>
+                                                                                                <input
+                                                                                                    id={senior.id + "BREAKFAST"}
+                                                                                                    checked={this.state.seniorArch.checkedBreakfast}
+                                                                                                    value={senior.id}
+                                                                                                    name="customCheckbox"
+                                                                                                    type="checkbox"
+                                                                                                    className="align-middle-input   "
+
+                                                                                                    onChange={(e) => {
+
+                                                                                                        this.setState({
+                                                                                                            seniors: this.state.seniors.map((data) => {
+
+                                                                                                                if (data.id === senior.id) {
+                                                                                                                    data.checkedBreakfast = e.target.checked;
+                                                                                                                }
+                                                                                                                return data;
+                                                                                                            }),
+                                                                                                        });
+
+
+
+                                                                                                        let arrayIds = [...this.state.selectListDIN];
+                                                                                                        if (e.target.checked) {
+                                                                                                            let senioret = {
+                                                                                                                name: senior.name,
+                                                                                                                lastname: senior.lastname,
+                                                                                                                dateOfBirth: senior.dateOfBirth,
+                                                                                                                sex: senior.sex,
+                                                                                                                cin: senior.cin,
+                                                                                                                telephone: senior.telephone,
+                                                                                                                file: senior.file,
+                                                                                                                checkedBreakfast: 1,
+                                                                                                                checkedLunch: senior.checkedLunch,
+                                                                                                                checkedDinner: senior.checkedDinner,
+                                                                                                            };
+
+
+                                                                                                            seniorService.update(
+                                                                                                                e.target.value,
+                                                                                                                senioret
+                                                                                                            );
+                                                                                                            arrayIds = [
+                                                                                                                ...this.state.selectListDIN,
+                                                                                                                e.target.value,
+                                                                                                            ];
+
+                                                                                                        } else {
+                                                                                                            let senioret = {
+                                                                                                                name: senior.name,
+                                                                                                                lastname: senior.lastname,
+                                                                                                                dateOfBirth: senior.dateOfBirth,
+                                                                                                                sex: senior.sex,
+                                                                                                                cin: senior.cin,
+                                                                                                                telephone: senior.telephone,
+                                                                                                                file: senior.file,
+                                                                                                                checkedBreakfast: 0,
+                                                                                                                checkedLunch: senior.checkedLunch,
+                                                                                                                checkedDinner: senior.checkedDinner,
+                                                                                                            };
+
+                                                                                                            seniorService.update(
+                                                                                                                e.target.value,
+                                                                                                                senioret
+                                                                                                            );
+                                                                                                            arrayIds.splice(
+                                                                                                                this.state.selectListDIN.indexOf(e.target.value),
+                                                                                                                1
+                                                                                                            );
                                                                                                         }
-                                                                                                        return data;
-                                                                                                    }),
-                                                                                                });
+                                                                                                        this.setState({
+                                                                                                            selectListDIN: arrayIds,
+                                                                                                        })
+                                                                                                        let senioret = {
+                                                                                                            name: senior.name,
+                                                                                                            lastname: senior.lastname,
+                                                                                                            dateOfBirth: senior.dateOfBirth,
+                                                                                                            sex: senior.sex,
+                                                                                                            cin: senior.cin,
+                                                                                                            telephone: senior.telephone,
+                                                                                                            file: senior.file,
+                                                                                                            checkedBreakfast: senior.checkedBreakfast,
+                                                                                                            checkedLunch: senior.checkedLunch,
+                                                                                                            checkedDinner: senior.checkedDinner,
+                                                                                                            menus: senior.menus,
+                                                                                                        };
+
+                                                                                                        seniorService.getMedicationBySenior(senior.id).then((res) => {
+                                                                                                            this.setState({ seniorMeds: res.data })
+                                                                                                        })
+
+                                                                                                        let archive = {
+                                                                                                            idArch: `arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
+                                                                                                            senior: senior,
+                                                                                                            date: new Date().toISOString().split("T")[0],
+                                                                                                            checkedBreakfast: senior.checkedBreakfast,
+                                                                                                            checkedLunch: senior.checkedLunch,
+                                                                                                            checkedDinner: senior.checkedDinner,
 
 
-
-                                                                                                let arrayIds = [...this.state.selectListDIN];
-                                                                                                if (e.target.checked) {
-                                                                                                    let senioret = {
-                                                                                                        name: senior.name,
-                                                                                                        lastname: senior.lastname,
-                                                                                                        dateOfBirth: senior.dateOfBirth,
-                                                                                                        sex: senior.sex,
-                                                                                                        cin: senior.cin,
-                                                                                                        telephone: senior.telephone,
-                                                                                                        file: senior.file,
-                                                                                                        checkedBreakfast: 1,
-                                                                                                        checkedLunch: senior.checkedLunch,
-                                                                                                        checkedDinner: senior.checkedDinner,
-                                                                                                    };
-
-
-                                                                                                    seniorService.update(
-                                                                                                        e.target.value,
-                                                                                                        senioret
-                                                                                                    );
-                                                                                                    arrayIds = [
-                                                                                                        ...this.state.selectListDIN,
-                                                                                                        e.target.value,
-                                                                                                    ];
-
-                                                                                                } else {
-                                                                                                    let senioret = {
-                                                                                                        name: senior.name,
-                                                                                                        lastname: senior.lastname,
-                                                                                                        dateOfBirth: senior.dateOfBirth,
-                                                                                                        sex: senior.sex,
-                                                                                                        cin: senior.cin,
-                                                                                                        telephone: senior.telephone,
-                                                                                                        file: senior.file,
-                                                                                                        checkedBreakfast: 0,
-                                                                                                        checkedLunch: senior.checkedLunch,
-                                                                                                        checkedDinner: senior.checkedDinner,
-                                                                                                    };
-
-                                                                                                    seniorService.update(
-                                                                                                        e.target.value,
-                                                                                                        senioret
-                                                                                                    );
-                                                                                                    arrayIds.splice(
-                                                                                                        this.state.selectListDIN.indexOf(e.target.value),
-                                                                                                        1
-                                                                                                    );
-                                                                                                }
-                                                                                                this.setState({
-                                                                                                    selectListDIN: arrayIds,
-                                                                                                })
-                                                                                                let senioret = {
-                                                                                                    name: senior.name,
-                                                                                                    lastname: senior.lastname,
-                                                                                                    dateOfBirth: senior.dateOfBirth,
-                                                                                                    sex: senior.sex,
-                                                                                                    cin: senior.cin,
-                                                                                                    telephone: senior.telephone,
-                                                                                                    file: senior.file,
-                                                                                                    checkedBreakfast: senior.checkedBreakfast,
-                                                                                                    checkedLunch: senior.checkedLunch,
-                                                                                                    checkedDinner: senior.checkedDinner,
-                                                                                                    menus: senior.menus,
-                                                                                                };
-
-                                                                                                seniorService.getMedicationBySenior(senior.id).then((res) => {
-                                                                                                    this.setState({ seniorMeds: res.data })
-                                                                                                })
-
-                                                                                                let archive = {
-                                                                                                    idArch: `arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
-                                                                                                    senior: senior,
-                                                                                                    date: new Date().toISOString().split("T")[0],
-                                                                                                    checkedBreakfast: senior.checkedBreakfast,
-                                                                                                    checkedLunch: senior.checkedLunch,
-                                                                                                    checkedDinner: senior.checkedDinner,
-                                                                                                    
-
-                                                                                                }
-
-
-                                                                                                seniorService.addToArchive(archive).then(console.log("Archive"))
-                                                                                                seniorService.update(senior.id, senioret).then(console.log("successs"))
-
-                                                                                            }
-                                                                                            }
-                                                                                        />
-                                                                                        <label htmlFor={senior.id + "BREAKFAST"} className="align-middle-label text-secondary">BREAKFAST </label>
-                                                                                        <input
-                                                                                            id={senior.id + "LUNCH"}
-                                                                                            checked={this.state.seniorArch.checkedLunch}
-                                                                                            value={senior.id}
-                                                                                            name="customCheckbox"
-                                                                                            type="checkbox"
-                                                                                            className="align-middle-input   "
-
-                                                                                            onChange={(e) => {
-
-                                                                                                this.setState({
-                                                                                                    seniors: this.state.seniors.map((data) => {
-
-                                                                                                        if (data.id === senior.id) {
-                                                                                                            data.checkedLunch = e.target.checked;
                                                                                                         }
-                                                                                                        return data;
-                                                                                                    }),
-                                                                                                });
 
 
-                                                                                                let arrayIds = [...this.state.selectListDIN];
-                                                                                                if (e.target.checked) {
-                                                                                                    let senioret = {
-                                                                                                        name: senior.name,
-                                                                                                        lastname: senior.lastname,
-                                                                                                        dateOfBirth: senior.dateOfBirth,
-                                                                                                        sex: senior.sex,
-                                                                                                        cin: senior.cin,
-                                                                                                        telephone: senior.telephone,
-                                                                                                        file: senior.file,
-                                                                                                        checkedBreakfast: senior.checkedBreakfast,
-                                                                                                        checkedLunch: 1,
-                                                                                                        checkedDinner: senior.checkedDinner,
-                                                                                                    };
+                                                                                                        seniorService.addToArchive(archive).then(console.log("Archive"))
+                                                                                                        seniorService.update(senior.id, senioret).then(console.log("successs"))
+
+                                                                                                    }
+                                                                                                    }
+                                                                                                />
+                                                                                                <label htmlFor={senior.id + "BREAKFAST"} className="align-middle-label text-secondary">BREAKFAST </label>
+                                                                                                <input
+                                                                                                    id={senior.id + "LUNCH"}
+                                                                                                    checked={this.state.seniorArch.checkedLunch}
+                                                                                                    value={senior.id}
+                                                                                                    name="customCheckbox"
+                                                                                                    type="checkbox"
+                                                                                                    className="align-middle-input   "
+
+                                                                                                    onChange={(e) => {
+
+                                                                                                        this.setState({
+                                                                                                            seniors: this.state.seniors.map((data) => {
+
+                                                                                                                if (data.id === senior.id) {
+                                                                                                                    data.checkedLunch = e.target.checked;
+                                                                                                                }
+                                                                                                                return data;
+                                                                                                            }),
+                                                                                                        });
+
+
+                                                                                                        let arrayIds = [...this.state.selectListDIN];
+                                                                                                        if (e.target.checked) {
+                                                                                                            let senioret = {
+                                                                                                                name: senior.name,
+                                                                                                                lastname: senior.lastname,
+                                                                                                                dateOfBirth: senior.dateOfBirth,
+                                                                                                                sex: senior.sex,
+                                                                                                                cin: senior.cin,
+                                                                                                                telephone: senior.telephone,
+                                                                                                                file: senior.file,
+                                                                                                                checkedBreakfast: senior.checkedBreakfast,
+                                                                                                                checkedLunch: 1,
+                                                                                                                checkedDinner: senior.checkedDinner,
+                                                                                                            };
 
 
 
-                                                                                                    seniorService.update(
-                                                                                                        e.target.value,
-                                                                                                        senioret
-                                                                                                    );
-                                                                                                    arrayIds = [
-                                                                                                        ...this.state.selectListDIN,
-                                                                                                        e.target.value,
-                                                                                                    ];
+                                                                                                            seniorService.update(
+                                                                                                                e.target.value,
+                                                                                                                senioret
+                                                                                                            );
+                                                                                                            arrayIds = [
+                                                                                                                ...this.state.selectListDIN,
+                                                                                                                e.target.value,
+                                                                                                            ];
 
-                                                                                                } else {
-                                                                                                    let senioret = {
-                                                                                                        name: senior.name,
-                                                                                                        lastname: senior.lastname,
-                                                                                                        dateOfBirth: senior.dateOfBirth,
-                                                                                                        sex: senior.sex,
-                                                                                                        cin: senior.cin,
-                                                                                                        telephone: senior.telephone,
-                                                                                                        file: senior.file,
-                                                                                                        checkedBreakfast: senior.checkedBreakfast,
-                                                                                                        checkedLunch: 0,
-                                                                                                        checkedDinner: senior.checkedDinner,
-                                                                                                    };
+                                                                                                        } else {
+                                                                                                            let senioret = {
+                                                                                                                name: senior.name,
+                                                                                                                lastname: senior.lastname,
+                                                                                                                dateOfBirth: senior.dateOfBirth,
+                                                                                                                sex: senior.sex,
+                                                                                                                cin: senior.cin,
+                                                                                                                telephone: senior.telephone,
+                                                                                                                file: senior.file,
+                                                                                                                checkedBreakfast: senior.checkedBreakfast,
+                                                                                                                checkedLunch: 0,
+                                                                                                                checkedDinner: senior.checkedDinner,
+                                                                                                            };
 
-                                                                                                    seniorService.update(
-                                                                                                        e.target.value,
-                                                                                                        senioret
-                                                                                                    );
-                                                                                                    arrayIds.splice(
-                                                                                                        this.state.selectListDIN.indexOf(e.target.value),
-                                                                                                        1
-                                                                                                    );
-                                                                                                }
-                                                                                                this.setState({
-                                                                                                    selectListDIN: arrayIds,
-                                                                                                })
-
-                                                                                                let senioret = {
-                                                                                                    name: senior.name,
-                                                                                                    lastname: senior.lastname,
-                                                                                                    dateOfBirth: senior.dateOfBirth,
-                                                                                                    sex: senior.sex,
-                                                                                                    cin: senior.cin,
-                                                                                                    telephone: senior.telephone,
-                                                                                                    file: senior.file,
-                                                                                                    checkedBreakfast: senior.checkedBreakfast,
-                                                                                                    checkedLunch: senior.checkedLunch,
-                                                                                                    checkedDinner: senior.checkedDinner,
-                                                                                                    menus: senior.menus,
-                                                                                                };
-
-
-                                                                                                let archive = {
-                                                                                                    idArch: `arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
-                                                                                                    senior: senior,
-                                                                                                    date: new Date().toISOString().split("T")[0],
-                                                                                                    checkedBreakfast: senior.checkedBreakfast,
-                                                                                                    checkedLunch: senior.checkedLunch,
-                                                                                                    checkedDinner: senior.checkedDinner,
-                                                                                                    
-
-                                                                                                }
-
-
-                                                                                                seniorService.addToArchive(archive).then(console.log("Archive"))
-                                                                                                seniorService.update(senior.id, senioret).then(console.log("successs"))
-                                                                                            }
-                                                                                            } />
-                                                                                        <label htmlFor={senior.id + "LUNCH"} className="align-middle-label text-secondary">LUNCH </label>
-                                                                                        <input id={senior.id + "DINNER"}
-                                                                                            checked={this.state.seniorArch.checkedDinner}
-                                                                                            value={senior.id}
-                                                                                            name="customCheckbox"
-                                                                                            type="checkbox"
-                                                                                            className="align-middle-input   "
-
-                                                                                            onChange={(e) => {
-
-                                                                                                this.setState({
-                                                                                                    seniors: this.state.seniors.map((data) => {
-
-                                                                                                        if (data.id === senior.id) {
-                                                                                                            data.checkedDinner = e.target.checked;
+                                                                                                            seniorService.update(
+                                                                                                                e.target.value,
+                                                                                                                senioret
+                                                                                                            );
+                                                                                                            arrayIds.splice(
+                                                                                                                this.state.selectListDIN.indexOf(e.target.value),
+                                                                                                                1
+                                                                                                            );
                                                                                                         }
-                                                                                                        return data;
-                                                                                                    }),
-                                                                                                });
+                                                                                                        this.setState({
+                                                                                                            selectListDIN: arrayIds,
+                                                                                                        })
+
+                                                                                                        let senioret = {
+                                                                                                            name: senior.name,
+                                                                                                            lastname: senior.lastname,
+                                                                                                            dateOfBirth: senior.dateOfBirth,
+                                                                                                            sex: senior.sex,
+                                                                                                            cin: senior.cin,
+                                                                                                            telephone: senior.telephone,
+                                                                                                            file: senior.file,
+                                                                                                            checkedBreakfast: senior.checkedBreakfast,
+                                                                                                            checkedLunch: senior.checkedLunch,
+                                                                                                            checkedDinner: senior.checkedDinner,
+                                                                                                            menus: senior.menus,
+                                                                                                        };
 
 
-                                                                                                let arrayIds = [...this.state.selectListDIN];
-                                                                                                if (e.target.checked) {
-                                                                                                    let senioret = {
-                                                                                                        name: senior.name,
-                                                                                                        lastname: senior.lastname,
-                                                                                                        dateOfBirth: senior.dateOfBirth,
-                                                                                                        sex: senior.sex,
-                                                                                                        cin: senior.cin,
-                                                                                                        telephone: senior.telephone,
-                                                                                                        file: senior.file,
-                                                                                                        checkedBreakfast: senior.checkedBreakfast,
-                                                                                                        checkedLunch: senior.checkedLunch,
-                                                                                                        checkedDinner: 1,
-                                                                                                    };
+                                                                                                        let archive = {
+                                                                                                            idArch: `arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
+                                                                                                            senior: senior,
+                                                                                                            date: new Date().toISOString().split("T")[0],
+                                                                                                            checkedBreakfast: senior.checkedBreakfast,
+                                                                                                            checkedLunch: senior.checkedLunch,
+                                                                                                            checkedDinner: senior.checkedDinner,
 
 
-
-                                                                                                    seniorService.update(
-                                                                                                        e.target.value,
-                                                                                                        senioret
-                                                                                                    );
-
-                                                                                                    arrayIds = [
-                                                                                                        ...this.state.selectListDIN,
-                                                                                                        e.target.value,
-                                                                                                    ];
-
-                                                                                                } else {
-                                                                                                    let senioret = {
-                                                                                                        name: senior.name,
-                                                                                                        lastname: senior.lastname,
-                                                                                                        dateOfBirth: senior.dateOfBirth,
-                                                                                                        sex: senior.sex,
-                                                                                                        cin: senior.cin,
-                                                                                                        telephone: senior.telephone,
-                                                                                                        file: senior.file,
-                                                                                                        checkedBreakfast: senior.checkedBreakfast,
-                                                                                                        checkedLunch: senior.checkedLunch,
-                                                                                                        checkedDinner: 0,
-                                                                                                    };
-
-                                                                                                    seniorService.update(
-                                                                                                        e.target.value,
-                                                                                                        senioret
-                                                                                                    );
-                                                                                                    arrayIds.splice(
-                                                                                                        this.state.selectListDIN.indexOf(e.target.value),
-                                                                                                        1
-                                                                                                    );
-                                                                                                }
-                                                                                                this.setState({
-                                                                                                    selectListDIN: arrayIds,
-                                                                                                })
-                                                                                                let senioret = {
-                                                                                                    name: senior.name,
-                                                                                                    lastname: senior.lastname,
-                                                                                                    dateOfBirth: senior.dateOfBirth,
-                                                                                                    sex: senior.sex,
-                                                                                                    cin: senior.cin,
-                                                                                                    telephone: senior.telephone,
-                                                                                                    file: senior.file,
-                                                                                                    checkedBreakfast: senior.checkedBreakfast,
-                                                                                                    checkedLunch: senior.checkedLunch,
-                                                                                                    checkedDinner: senior.checkedDinner,
-                                                                                                    menus: senior.menus,
-                                                                                                };
-
-                                                                                                let archive = {
-                                                                                                    idArch: `arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
-                                                                                                    senior: senior,
-                                                                                                    date: new Date().toISOString().split("T")[0],
-                                                                                                    checkedBreakfast: senior.checkedBreakfast,
-                                                                                                    checkedLunch: senior.checkedLunch,
-                                                                                                    checkedDinner: senior.checkedDinner,
-                                                                                                   
-
-                                                                                                }
+                                                                                                        }
 
 
-                                                                                                seniorService.addToArchive(archive).then(console.log("Archive"))
-                                                                                                seniorService.update(senior.id, senioret).then(console.log("successs"))
+                                                                                                        seniorService.addToArchive(archive).then(console.log("Archive"))
+                                                                                                        seniorService.update(senior.id, senioret).then(console.log("successs"))
+                                                                                                    }
+                                                                                                    } />
+                                                                                                <label htmlFor={senior.id + "LUNCH"} className="align-middle-label text-secondary">LUNCH </label>
+                                                                                                <input id={senior.id + "DINNER"}
+                                                                                                    checked={this.state.seniorArch.checkedDinner}
+                                                                                                    value={senior.id}
+                                                                                                    name="customCheckbox"
+                                                                                                    type="checkbox"
+                                                                                                    className="align-middle-input   "
+
+                                                                                                    onChange={(e) => {
+
+                                                                                                        this.setState({
+                                                                                                            seniors: this.state.seniors.map((data) => {
+
+                                                                                                                if (data.id === senior.id) {
+                                                                                                                    data.checkedDinner = e.target.checked;
+                                                                                                                }
+                                                                                                                return data;
+                                                                                                            }),
+                                                                                                        });
 
 
-                                                                                            }
-                                                                                            } />
-                                                                                        <label htmlFor={senior.id + "DINNER"} className="align-middle-label text-secondary">DINNER </label>
-
-
-                                                                                        
+                                                                                                        let arrayIds = [...this.state.selectListDIN];
+                                                                                                        if (e.target.checked) {
+                                                                                                            let senioret = {
+                                                                                                                name: senior.name,
+                                                                                                                lastname: senior.lastname,
+                                                                                                                dateOfBirth: senior.dateOfBirth,
+                                                                                                                sex: senior.sex,
+                                                                                                                cin: senior.cin,
+                                                                                                                telephone: senior.telephone,
+                                                                                                                file: senior.file,
+                                                                                                                checkedBreakfast: senior.checkedBreakfast,
+                                                                                                                checkedLunch: senior.checkedLunch,
+                                                                                                                checkedDinner: 1,
+                                                                                                            };
 
 
 
-                                                                                    </div>
-                                                                                    </td>
-                                                                                       
-                                                                                </tr>
+                                                                                                            seniorService.update(
+                                                                                                                e.target.value,
+                                                                                                                senioret
+                                                                                                            );
+
+                                                                                                            arrayIds = [
+                                                                                                                ...this.state.selectListDIN,
+                                                                                                                e.target.value,
+                                                                                                            ];
+
+                                                                                                        } else {
+                                                                                                            let senioret = {
+                                                                                                                name: senior.name,
+                                                                                                                lastname: senior.lastname,
+                                                                                                                dateOfBirth: senior.dateOfBirth,
+                                                                                                                sex: senior.sex,
+                                                                                                                cin: senior.cin,
+                                                                                                                telephone: senior.telephone,
+                                                                                                                file: senior.file,
+                                                                                                                checkedBreakfast: senior.checkedBreakfast,
+                                                                                                                checkedLunch: senior.checkedLunch,
+                                                                                                                checkedDinner: 0,
+                                                                                                            };
+
+                                                                                                            seniorService.update(
+                                                                                                                e.target.value,
+                                                                                                                senioret
+                                                                                                            );
+                                                                                                            arrayIds.splice(
+                                                                                                                this.state.selectListDIN.indexOf(e.target.value),
+                                                                                                                1
+                                                                                                            );
+                                                                                                        }
+                                                                                                        this.setState({
+                                                                                                            selectListDIN: arrayIds,
+                                                                                                        })
+                                                                                                        let senioret = {
+                                                                                                            name: senior.name,
+                                                                                                            lastname: senior.lastname,
+                                                                                                            dateOfBirth: senior.dateOfBirth,
+                                                                                                            sex: senior.sex,
+                                                                                                            cin: senior.cin,
+                                                                                                            telephone: senior.telephone,
+                                                                                                            file: senior.file,
+                                                                                                            checkedBreakfast: senior.checkedBreakfast,
+                                                                                                            checkedLunch: senior.checkedLunch,
+                                                                                                            checkedDinner: senior.checkedDinner,
+                                                                                                            menus: senior.menus,
+                                                                                                        };
+
+                                                                                                        let archive = {
+                                                                                                            idArch: `arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
+                                                                                                            senior: senior,
+                                                                                                            date: new Date().toISOString().split("T")[0],
+                                                                                                            checkedBreakfast: senior.checkedBreakfast,
+                                                                                                            checkedLunch: senior.checkedLunch,
+                                                                                                            checkedDinner: senior.checkedDinner,
+
+
+                                                                                                        }
+
+
+                                                                                                        seniorService.addToArchive(archive).then(console.log("Archive"))
+                                                                                                        seniorService.update(senior.id, senioret).then(console.log("successs"))
+
+
+                                                                                                    }
+                                                                                                    } />
+                                                                                                <label htmlFor={senior.id + "DINNER"} className="align-middle-label text-secondary">DINNER </label>
+
+
+
+
+
+
+                                                                                            </div>
+                                                                                        </td>
+
+                                                                                    </tr>
                                                                                 </>)
-                                                                }
-                                                            </>
+                                                                        }
+                                                                    </>
                                                                 )}
 
-                                                        </tbody>
-                                                        <Pagination
-                                                            currentPage={this.state.currentPage}
-                                                            mealsperpage={this.state.seniorsPerPage}
-                                                            totalmeals={this.state.seniors.length}
-                                                            paginate={paginate}
-                                                        />
-                                                    </table>
+                                                            </tbody>
+                                                            <Pagination
+                                                                currentPage={this.state.currentPage}
+                                                                mealsperpage={this.state.seniorsPerPage}
+                                                                totalmeals={this.state.seniors.length}
+                                                                paginate={paginate}
+                                                            />
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                </div>
-        )
+                            )
                             : this.state.addSeniorPage === "addSenior" ?
-            (
-                <AddSenior addSeniorPage={this.handleAddSenior}   />
-            ) : (
-                <SeniorDetails addSeniorPage={this.handleAddSenior} senior={this.myRef.current} />
-            )
-    }
+                                (
+                                    <AddSenior addSeniorPage={this.handleAddSenior} />
+                                ) : (
+                                    <SeniorDetails socket={socket} user={currentUser} addSeniorPage={this.handleAddSenior} senior={this.myRef.current} />
+                                )
+                    }
                 </main>
 
-    <Modal show={this.state.editDialog} onHide={this.handleClose} >
-        <Modal.Header closeButton>
-            <Modal.Title>
-                Edit Senior
-            </Modal.Title>
-        </Modal.Header>
-        <Modal.Body >
-            <Form style={{backgroundColor:"#dd"}} onSubmit={this.handleUpdate}>
-            <div className="form-header">
-										<div className="avartar">
-											<div className='image-preview text-center' >
-                                                {console.log("gimage",this.state.seniorPicture)}
-                                            {this.state.seniorPicture === null ?
-                                                                                                        <>
-                                                                                                            {this.state.sexOption === "male" ?
-                                                                                                                <img
-                                                                                                                    src="..\..\..\assets\img\images\avatarNoimage.jpg"
-                                                                                                                   
-                                                                                                                    alt="seniorPicture"
-                                                                                                                />
-                                                                                                                :
-                                                                                                                <img
-                                                                                                                    src="..\..\..\assets\img\images\avatarW.jpg"
-                                                                                                                   
-                                                                                                                    alt="seniorPicture"
-                                                                                                                />
+                <Modal show={this.state.editDialog} onHide={this.handleClose} >
+                    <Modal.Header closeButton>
+                        <Modal.Title>
+                            Edit Senior
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body >
+                        <Form style={{ backgroundColor: "#dd" }} onSubmit={this.handleUpdate}>
+                            <div className="form-header">
+                                <div className="avartar">
+                                    <div className='image-preview text-center' >
+                                        
+                                        {this.state.seniorPicture === null ?
+                                            <>
+                                                {this.state.sexOption === "male" ?
+                                                    <img
+                                                        src="..\..\..\assets\img\images\avatarNoimage.jpg"
 
-                                                                                                            }
+                                                        alt="seniorPicture"
+                                                    />
+                                                    :
+                                                    <img
+                                                        src="..\..\..\assets\img\images\avatarW.jpg"
 
-                                                                                                        </>
-                                                                                                        :
-                                                                                                        <>
-                                                                                                            <img
-                                                                                                                src={this.state.imgChange ? this.state.seniorPicture : `http://localhost:8080/files/${this.state.seniorPicture}`}
-                                                                                                                
-                                                                                                                alt="seniorPicture"
-                                                                                                            />
-                                                                                                        </>
+                                                        alt="seniorPicture"
+                                                    />
 
-                                                                                                    }
-											</div>
-											<div className="avartar-picker text-center">
-												<input type="file" name="file-1[]" id="file-1" className="inputfile" data-multiple-caption="{count} files selected"  accept="image/png, image/jpeg" onChange={this.onChangeImage} />
-												<label htmlFor="file-1">
-													<i className="zmdi zmdi-camera"></i>
-													<span>Choose Picture</span>
-												</label>
-											</div>
-										</div>
-									</div>
-                <Form.Group style={{ padding: "12px 12px 0" }}>
-                    <Form.Control
-                        type="text"
-                        placeholder="Name *"
-                        name="name"
-                        value={this.state.name}
-                        onChange={this.onChangeName}
+                                                }
 
-                        required
-                    />
-                </Form.Group>
-                <Form.Group style={{ padding: "12px 12px 0" }}>
-                    <Form.Control
-                        type="text"
-                        placeholder="Last Name *"
-                        name="lastName"
-                        value={this.state.lastName}
-                        onChange={this.onChangelastname}
-                        required
-                    />
-                </Form.Group>
-                <Form.Group style={{ padding: "12px 12px 0" }}>
-                    <Form.Control
-                        type="text"
-                        placeholder="Cin"
-                        name="cin"
-                        value={this.state.cin}
-                        onChange={this.onChangeCin}
-                    />
-                </Form.Group>
-                <Form.Group style={{ padding: "12px 12px 0" }}>
-                    <Form.Control
-                        type="text"
-                        placeholder="Phone"
-                        name="phone"
-                        value={this.state.telephone}
-                        onChange={this.onChangeTelephone}
-                    />
-                </Form.Group>
-                <div className="rowoo rowoo-space">
+                                            </>
+                                            :
+                                            <>
+                                                <img
+                                                    src={this.state.imgChange ? this.state.seniorPicture : `http://localhost:8080/files/${this.state.seniorPicture}`}
 
-                    <Form.Group style={{ padding: "12px 12px 0" }}>
-                        <Form.Control
-                            type="date"
-                            style={{ width: "40%" }}
-                            placeholder="BirthDate"
-                            name="birthday"
-                            value={this.state.birthDate}
-                            onChange={this.onChangeBirthDate}
-                            format="{0:yyyy-MM-dd}"
+                                                    alt="seniorPicture"
+                                                />
+                                            </>
+
+                                        }
+                                    </div>
+                                    <div className="avartar-picker text-center">
+                                        <input type="file" name="file-1[]" id="file-1" className="inputfile" data-multiple-caption="{count} files selected" accept="image/png, image/jpeg" onChange={this.onChangeImage} />
+                                        <label htmlFor="file-1">
+                                            <i className="zmdi zmdi-camera"></i>
+                                            <span>Choose Picture</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <Form.Group style={{ padding: "12px 12px 0" }}>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Name *"
+                                    name="name"
+                                    value={this.state.name}
+                                    onChange={this.onChangeName}
+
+                                    required
+                                />
+                            </Form.Group>
+                            <Form.Group style={{ padding: "12px 12px 0" }}>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Last Name *"
+                                    name="lastName"
+                                    value={this.state.lastName}
+                                    onChange={this.onChangelastname}
+                                    required
+                                />
+                            </Form.Group>
+                            <Form.Group style={{ padding: "12px 12px 0" }}>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Cin"
+                                    name="cin"
+                                    value={this.state.cin}
+                                    onChange={this.onChangeCin}
+                                />
+                            </Form.Group>
+                            <Form.Group style={{ padding: "12px 12px 0" }}>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Phone"
+                                    name="phone"
+                                    value={this.state.telephone}
+                                    onChange={this.onChangeTelephone}
+                                />
+                            </Form.Group>
+                            <div className="rowoo rowoo-space">
+
+                                <Form.Group style={{ padding: "12px 12px 0" }}>
+                                    <Form.Control
+                                        type="date"
+                                        style={{ width: "40%" }}
+                                        placeholder="BirthDate"
+                                        name="birthday"
+                                        value={this.state.birthDate}
+                                        onChange={this.onChangeBirthDate}
+                                        format="{0:yyyy-MM-dd}"
+
+                                    />
+
+                                </Form.Group>
+
+
+                                <Form.Group style={{ padding: "12px 18px 10px" }}>
+
+                                    <div className="p-t-10">
+                                        <label className="radio-container m-r-45">Male
+                                            <Form.Control checked={this.state.sexOption === "male"}
+                                                onChange={this.onChangeSex}
+                                                type="radio"
+                                                value="male" />
+                                            <span className="checkmark"></span>
+                                        </label>
+                                        <label className="radio-container">Female
+                                            <Form.Control
+                                                checked={this.state.sexOption === "female"}
+                                                onChange={this.onChangeSex}
+                                                type="radio"
+                                                value="female" />
+                                            <span className="checkmark"></span>
+                                        </label>
+                                    </div>
+
+                                </Form.Group>
+
+                            </div>
+
+                            <Button variant="success" type="submit" className="btn  btn-rounded"
+                                style={{
+                                    border: "2px solid ",
+                                    alignItems: "center",
+                                    margin: "10% 0 0 27%",
+                                    backgroundColor: "#D24548",
+                                    cursor: "pointer",
+
+                                }}>
+                                Edit Senior
+                            </Button>
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" className="btn  btn-rounded" style={{
+                            border: "2px solid ",
+                            alignItems: "center",
+                            margin: "0 31% 0 0",
+
+                            cursor: "pointer",
+                            left: "50%",
+                        }} onClick={this.handleClose}>
+                            Cancel
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+
+                {
+                    this.state.isLoading && (
+                        <Dialog
+                            onDialog={this.areUSureDelete}
+                            message={this.state.message}
 
                         />
+                    )
+                }
 
-                    </Form.Group>
+                {
+                    this.state.isLoadingDeleteCheckbox && (
+                        <Dialog
+                            onDialog={this.deleteSeniorsByIds}
+                            message={this.state.message}
 
-
-                    <Form.Group style={{ padding: "12px 18px 10px" }}>
-
-                        <div className="p-t-10">
-                            <label className="radio-container m-r-45">Male
-                                <Form.Control checked={this.state.sexOption === "male"}
-                                    onChange={this.onChangeSex}
-                                    type="radio"
-                                    value="male" />
-                                <span className="checkmark"></span>
-                            </label>
-                            <label className="radio-container">Female
-                                <Form.Control
-                                    checked={this.state.sexOption === "female"}
-                                    onChange={this.onChangeSex}
-                                    type="radio"
-                                    value="female" />
-                                <span className="checkmark"></span>
-                            </label>
-                        </div>
-
-                    </Form.Group>
-
-                </div>
-
-                <Button variant="success" type="submit" className="btn  btn-rounded"
-                    style={{
-                        border: "2px solid ",
-                        alignItems: "center",
-                        margin: "10% 0 0 27%",
-                        backgroundColor: "#D24548",
-                        cursor: "pointer",
-
-                    }}>
-                    Edit Senior
-                </Button>
-            </Form>
-        </Modal.Body>
-        <Modal.Footer>
-            <Button variant="secondary" className="btn  btn-rounded" style={{
-                border: "2px solid ",
-                alignItems: "center",
-                margin: "0 31% 0 0",
-
-                cursor: "pointer",
-                left: "50%",
-            }} onClick={this.handleClose}>
-                Cancel
-            </Button>
-        </Modal.Footer>
-    </Modal>
-
-{
-    this.state.isLoading && (
-        <Dialog
-            onDialog={this.areUSureDelete}
-            message={this.state.message}
-
-        />
-    )
-}
-
-{
-    this.state.isLoadingDeleteCheckbox && (
-        <Dialog
-            onDialog={this.deleteSeniorsByIds}
-            message={this.state.message}
-
-        />
-    )
-}
+                        />
+                    )
+                }
             </div >
         );
     }

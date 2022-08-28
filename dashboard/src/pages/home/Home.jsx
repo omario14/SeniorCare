@@ -2,7 +2,6 @@ import { Component } from 'react';
 import TopBar from '../../components/TopBar/TopBar';
 import { TabTitle } from '../../utils/GeneralFunctions';
 import { BsFillFileEarmarkPersonFill } from "react-icons/bs";
-import UserService from "../../services/user.service";
 import './home.css';
 import userService from '../../services/user.service';
 import seniorService from '../../services/senior.service';
@@ -46,8 +45,7 @@ class Home extends Component {
     return (
       <div className='home'>
         <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
-          <TopBar title={'Home'} />
-
+         
           <div className="container-fluid py-4">
             <div className="row ">
               <div className="col-xl-3 col-sm-6 mb-xl-0 mb-4">

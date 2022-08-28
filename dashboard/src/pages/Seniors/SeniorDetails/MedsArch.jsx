@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function MedsArch({ arch, myRef }) {
+export default function MedsArch({ arch, myRef,socket,user }) {
   const classes = useStyles();
   const [meds, setmeds] = useState([]);
   const [medDialog, setMedDialog] = useState(false);
@@ -141,7 +141,7 @@ export default function MedsArch({ arch, myRef }) {
                       </div>
                       <div className="d-flex flex-row mt-5 mb-4">
 
-                        <label class=" m-2">
+                        <label className=" m-2">
                           <div id="binCover">
                             <input className="binCheckbox" type="checkbox" id="checkbox" checked={myRef.current.isDone} />
                             <div id="bin-icon">
@@ -157,7 +157,7 @@ export default function MedsArch({ arch, myRef }) {
                           <span className="intro-2 text-uppercase text-white"> delete</span>
                         </label>
 
-                        <label class="toggleButton m-2">
+                        <label className="toggleButton m-2">
                           <div  >
                             <input value={myRef.current.archmedpk} type="checkbox" checked={myRef.current.done} onChange={(e) => {
                               setmeds(meds.map((data) => {
@@ -168,11 +168,16 @@ export default function MedsArch({ arch, myRef }) {
                               }));
                               
                               if (e.target.checked) {
-                                
+                                socket.emit("sendNotification",{
+                                  senderName:myRef.current.meds.label,
+                                  receiverName:user.username,
+                                 
+                                })
                                 seniorService.putMedsToArchive(myRef.current.archive.idArch, myRef.current.meds.idmed, true)
                               } else {
                                 seniorService.putMedsToArchive(myRef.current.archive.idArch, myRef.current.meds.idmed, false)
                               }
+                             
                               console.log(myRef.current.done)
                             }} />
                             <div>

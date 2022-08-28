@@ -1,11 +1,10 @@
 import './Health.css'
 import { TabTitle } from '../../utils/GeneralFunctions';
-import TopBar from '../../components/TopBar/TopBar';
 import { useState } from 'react';
 import Form from '../../components/MultiForm/Form';
 import Meds from './Meds/Meds';
 
-export default function Health({ title, setTitle }) {
+export default function Health() {
   TabTitle('Health');
   const [stepperLoading, setStepperLoading] = useState("health");
 
@@ -19,7 +18,7 @@ export default function Health({ title, setTitle }) {
     <div className='health'>
 
       <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
-        <TopBar title={'Health'} />
+       
         {
           stepperLoading==="health" ?
 
@@ -61,10 +60,10 @@ export default function Health({ title, setTitle }) {
             </div>
             : stepperLoading==="symptomChecker" ?
             <div className="mb-5">
-              <Form  onChangeStepperLoading={onChangeStepperLoading} title={"health"} setTitle={title} />
+              <Form  onChangeStepperLoading={onChangeStepperLoading}  />
             </div>
             :
-            <Meds onChangeStepperLoading={onChangeStepperLoading} title={"health"} setTitle={title}/>
+            <Meds onChangeStepperLoading={onChangeStepperLoading} />
         }
       </main>
 

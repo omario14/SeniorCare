@@ -53,7 +53,7 @@ export const login = (username, password) => (dispatch) => {
   return AuthService.login(username, password).then(
     (data) => {
       console.log(data,"ddd")
-      runLogoutTimer(dispatch,data.expiresIn);
+     
       dispatch({
         type: LOGIN_SUCCESS,
         payload: { user: data },

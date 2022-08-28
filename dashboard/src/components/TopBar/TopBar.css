@@ -8,9 +8,11 @@
 .topbar{
     
     background-color: rgb(247, 247, 247);
-    position: relative;
+    position: absolute;
+    right: 0px;
+    width: 82%;
     top: 0;
-    z-index: 1;
+    z-index: 999;
     
     
 }
