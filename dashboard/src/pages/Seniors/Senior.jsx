@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Navigate, NavLink } from "react-router-dom";
-import { FcEmptyTrash, FcPlus } from "react-icons/fc";
+import { FcEmptyTrash, FcPlus, FcSearch } from "react-icons/fc";
 import seniorService from "../../services/senior.service";
 import { TabTitle } from "../../utils/GeneralFunctions";
 import { Modal, Button, Form } from 'react-bootstrap';
@@ -17,7 +17,7 @@ import { BiDetail } from "react-icons/bi";
 import Pagination from "../Chef/Pagination";
 import SeniorDetails from "./SeniorDetails/SeniorDetails";
 import './Senior.scss';
-import { CircularProgress, Tooltip } from "@mui/material";
+import { Alert, CircularProgress, Snackbar, Tooltip } from "@mui/material";
 import {
     withStyles
 } from "@material-ui/core/styles";
@@ -55,6 +55,8 @@ class Senior extends Component {
             section: "section1",
             editDialog: false,
             expand: false,
+            toastDelete: false,
+            toasUpdate: false,
             senior: null,
             sArch: null,
             name: "",
@@ -78,6 +80,7 @@ class Senior extends Component {
             seniorsPerPage: 4,
             seniorArch: null,
             loadingFood: false,
+            searchTerm: "",
 
 
 
@@ -101,10 +104,10 @@ class Senior extends Component {
 
             this.retrieveSeniors();
             this.setState({
-                expand:false
+                expand: false
             })
 
-            
+
 
         }
         if (prevState.seniors.length < this.state.seniors.length) {
@@ -290,7 +293,9 @@ class Senior extends Component {
 
                     }
                     this.setState({
-                        seniors
+                        seniors,
+                        toastDelete: true,
+
                     })
 
                 });
@@ -323,6 +328,9 @@ class Senior extends Component {
 
                     })
             }
+            this.setState({
+                toastDelete: true
+            })
 
             this.handleDialogDeleteCheckbox("", false);
         } else {
@@ -438,6 +446,9 @@ class Senior extends Component {
             seniorService.update(id, senior).then(() => {
                 this.retrieveSeniors();
                 this.handleClose();
+                this.setState({
+                    toasUpdate: true,
+                })
             })
         }
     }
@@ -530,7 +541,43 @@ class Senior extends Component {
                                                     <div className="text-uppercase " ><h6 className="text-light ">Senior table</h6></div>
 
                                                     <div style={{ display: "flex", paddingBottom: "10px" }}>
-                                                        <div className="tableIcons" >
+                                                        <div className="tableIcons" style={{ paddingLeft: "20px" }} >
+
+
+
+                                                            <div className="searchh-box" >
+                                                                <BlueOnGreenTooltip title="search" placement="top">
+                                                                    <NavLink  className="btn-searchh" to="#" role="button" 
+                                                                    style={this.state.searchTerm!==""? { backgroundColor: "rgba(255, 165, 0,0.5)", width: "50px", justifyItems: "center", justifyContent: "center", paddingTop: "-20px" }:
+                                                                { backgroundColor: "rgba(222, 222, 222,0.2)", width: "50px", justifyItems: "center", justifyContent: "center", paddingTop: "-20px" }} >
+                                                                        <FcSearch className="FcPlus" size={50} style={{ fontSize: "36px", marginLeft: "2px", paddingTop: "8px" }} />
+                                                                    </NavLink>
+                                                                </BlueOnGreenTooltip >
+
+
+                                                                <input type="search" value={this.state.searchTerm}  className="input-searchh" placeholder="Type to Search..." onChange={(event) => {
+                                                                    this.setState({
+                                                                        searchTerm: event.target.value
+                                                                    })
+                                                                    if (event.target.value !== "") {
+                                                                        event.preventDefault();
+                                                                        this.setState({
+                                                                            currentPage: 1,
+                                                                            seniorsPerPage:20
+                                                                        })
+
+                                                                    } else {
+                                                                        this.setState({
+
+                                                                            seniorsPerPage: 4
+                                                                        })
+                                                                    }
+                                                                }} />
+                                                                
+                                                            </div>
+
+                                                        </div>
+                                                        <div className="tableIcons" style={{ paddingLeft: "20px" }}>
 
 
 
@@ -607,7 +654,29 @@ class Senior extends Component {
                                                                     </tr>
                                                                 ) : (
                                                                     <>
-                                                                        {currentSeniors
+                                                                        {currentSeniors.filter((s) => {
+                                                                            if (this.state.searchTerm === "") {
+                                                                                return s;
+                                                                            } else if (
+                                                                                s.name
+                                                                                    .toLowerCase()
+                                                                                    .includes(this.state.searchTerm.toLowerCase()) ||
+                                                                                s.lastname
+                                                                                    .toLowerCase()
+                                                                                    .includes(this.state.searchTerm.toLowerCase()) ||
+                                                                                s.cin
+                                                                                    .toLowerCase()
+                                                                                    .includes(this.state.searchTerm.toLowerCase()) ||
+                                                                                s.telephone
+                                                                                    .toLowerCase()
+                                                                                    .includes(this.state.searchTerm.toLowerCase()) ||
+                                                                                s.adress
+                                                                                    .toLowerCase()
+                                                                                    .includes(this.state.searchTerm.toLowerCase())
+                                                                            ) {
+                                                                                return s;
+                                                                            }
+                                                                        })
                                                                             .map((senior, i) =>
                                                                                 <>
                                                                                     <tr key={i}>
@@ -830,9 +899,9 @@ class Senior extends Component {
                                                                                                                 idArch: `arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
                                                                                                                 senior: senior,
                                                                                                                 date: new Date().toISOString().split("T")[0],
-                                                                                                                checkedBreakfast: senior.checkedBreakfast,
-                                                                                                                checkedLunch: senior.checkedLunch,
-                                                                                                                checkedDinner: senior.checkedDinner,
+                                                                                                                checkedBreakfast: this.state.seniorArch[0].checkedBreakfast,
+                                                                                                                checkedLunch: this.state.seniorArch[0].checkedLunch,
+                                                                                                                checkedDinner: this.state.seniorArch[0].checkedDinner,
 
 
                                                                                                             }
@@ -944,9 +1013,9 @@ class Senior extends Component {
                                                                                                                 idArch: `arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
                                                                                                                 senior: senior,
                                                                                                                 date: new Date().toISOString().split("T")[0],
-                                                                                                                checkedBreakfast: senior.checkedBreakfast,
-                                                                                                                checkedLunch: senior.checkedLunch,
-                                                                                                                checkedDinner: senior.checkedDinner,
+                                                                                                                checkedBreakfast: this.state.seniorArch[0].checkedBreakfast,
+                                                                                                                checkedLunch: this.state.seniorArch[0].checkedLunch,
+                                                                                                                checkedDinner: this.state.seniorArch[0].checkedDinner,
 
 
                                                                                                             }
@@ -1054,9 +1123,9 @@ class Senior extends Component {
                                                                                                                 idArch: `arch-${senior.id}-${new Date().toISOString().split("T")[0]}`,
                                                                                                                 senior: senior,
                                                                                                                 date: new Date().toISOString().split("T")[0],
-                                                                                                                checkedBreakfast: senior.checkedBreakfast,
-                                                                                                                checkedLunch: senior.checkedLunch,
-                                                                                                                checkedDinner: senior.checkedDinner,
+                                                                                                                checkedBreakfast: this.state.seniorArch[0].checkedBreakfast,
+                                                                                                                checkedLunch: this.state.seniorArch[0].checkedLunch,
+                                                                                                                checkedDinner: this.state.seniorArch[0].checkedDinner,
 
 
                                                                                                             }
@@ -1084,19 +1153,32 @@ class Senior extends Component {
                                                                 )}
 
                                                             </tbody>
+                                                            {this.state.searchTerm==="" &&
                                                             <Pagination
                                                                 currentPage={this.state.currentPage}
                                                                 mealsperpage={this.state.seniorsPerPage}
                                                                 totalmeals={this.state.seniors.length}
                                                                 paginate={paginate}
                                                             />
+                                                        }
                                                         </table>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <Snackbar open={this.state.toastDelete} autoHideDuration={6000} onClose={() => this.setState({ toastDelete: false })}>
+                                        <Alert onClose={() => this.setState({ toastDelete: false })} severity="info" sx={{ padding: "15px", height: "70px", width: '100%' }}>
+                                            Senior is deleted successfully
+                                        </Alert>
+                                    </Snackbar>
+                                    <Snackbar open={this.state.toasUpdate} autoHideDuration={6000} onClose={() => this.setState({ toasUpdate: false })}>
+                                        <Alert onClose={() => this.setState({ toasUpdate: false })} severity="info" sx={{ padding: "15px", height: "70px", width: '100%' }}>
+                                            Senior is updated successfully
+                                        </Alert>
+                                    </Snackbar>
                                 </div>
+
                             )
                             : this.state.addSeniorPage === "addSenior" ?
                                 (

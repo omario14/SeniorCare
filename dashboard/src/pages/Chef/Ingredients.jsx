@@ -94,10 +94,8 @@ class Ingredients extends Component {
         });
     };
 
-    handleClose = (e, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
+    handleClose = () => {
+      
 
         this.setState({
             toast: false
@@ -369,7 +367,7 @@ class Ingredients extends Component {
 
                                                     <div key={i} onClick={(e) => this.CatIngredients(category, e)} className="columnIng">
                                                         <div className="cardIng">
-                                                            <img src={`http://localhost:8080/files/${category.ingCategoryImage.id}`} />
+                                                            <img src={`http://localhost:8080/files/${category.ingCategoryImage.id}`} alt="ingCatImage" />
                                                             <div className="img-container">
                                                                 <h3 style={{ fontSize: "50px", paddingTop: "20%" }}>{category.id}</h3>
                                                             </div>
@@ -418,7 +416,7 @@ class Ingredients extends Component {
                                         <div className="addIngRow">
                                             <div className="addIngRowImage">
                                                 <figure className="image-containeer">
-                                                    <img src={this.state.ingredientImg} id="chosen-image" />
+                                                    <img src={this.state.ingredientImg} id="chosen-image" alt='ingImage' />
                                                     <figcaption id="file-name"></figcaption>
                                                 </figure>
 

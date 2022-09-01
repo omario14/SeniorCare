@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Navigate } from "react-router-dom";
 import { connect } from "react-redux";
-import TopBar from "../../components/TopBar/TopBar";
 import { TabTitle } from "../../utils/GeneralFunctions";
 import "./Profile.css";
 import userService from "../../services/user.service";
@@ -10,7 +9,7 @@ import { FaUserEdit } from "react-icons/fa";
 import seniorService from "../../services/senior.service";
 import { MdOutlinePhotoCameraFront } from "react-icons/md";
 import { TextField } from "@material-ui/core";
-import { Tooltip } from "@mui/material";
+import { Alert, Snackbar, Tooltip } from "@mui/material";
 class Profile extends Component {
   constructor(props) {
     super(props);
@@ -43,27 +42,28 @@ class Profile extends Component {
       fileId: null,
       picture: "",
       edit: false,
+      toasUpdate:false,
     };
   }
 
-  componentDidMount=()=>{
-    if(this.props.user){
+  componentDidMount = () => {
+    if (this.props.user) {
 
-   
-    this.setState({
-      username: this.props.user.username,
-      email: this.props.user.email,
-      password: this.props.user.password,
-      name: this.props.user.name,
-      lastName: this.props.user.lastName,
-      gender: this.props.user.gender,
-      adress: this.props.user.adress,
-      mobile: this.props.user.mobile,
-      roles: this.props.user.roles,
-      picture: this.props.user.picture,
-      user: this.props.user,
-    })
-  }
+
+      this.setState({
+        username: this.props.user.username,
+        email: this.props.user.email,
+        password: this.props.user.password,
+        name: this.props.user.name,
+        lastName: this.props.user.lastName,
+        gender: this.props.user.gender,
+        adress: this.props.user.adress,
+        mobile: this.props.user.mobile,
+        roles: this.props.user.roles,
+        picture: this.props.user.picture,
+        user: this.props.user,
+      })
+    }
   }
   componentDidUpdate = (prevProps, prevState) => {
 
@@ -198,6 +198,7 @@ class Profile extends Component {
             if (response.data.accessToken) {
               this.setState({
                 edit: false,
+                toasUpdate:true,
                 user: response.data,
                 username: response.data.username,
                 email: response.data.email,
@@ -239,6 +240,7 @@ class Profile extends Component {
         if (response.data.accessToken) {
           this.setState({
             edit: false,
+            toasUpdate:true,
             user: response.data,
             username: response.data.username,
             email: response.data.email,
@@ -268,7 +270,7 @@ class Profile extends Component {
     return (
       <div className="profile ">
         <main className="main-content  position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
-         
+
           <div className="container-fluid py-4">
             <div
               className="page-header min-height-300 border-radius-xl mt-4"
@@ -284,7 +286,7 @@ class Profile extends Component {
                   <div className="avatar avatar-xl position-relative">
                     {this.state.edit === false ?
                       <>
-                        {this.state.user.picture===null  ?
+                        {this.state.user.picture === null ?
                           <>
 
                             <img
@@ -544,16 +546,16 @@ class Profile extends Component {
                             <li className="list-group-item border-0 ps-0 pt-0 text-sm">
                               <strong className="text-dark">Username :</strong> &nbsp;{" "}
                               <Tooltip title="You don't have permission to change this" placement="top-end">
-  <span>
-                                <TextField
-                                  
-                                  disabled={true}
-                                  style={{ width: "60%" }}
-                                  className="input--style-4 "
-                                  type="text"
-                                  name="username"
-                                  defaultValue={this.state.username}
-                                />
+                                <span>
+                                  <TextField
+
+                                    disabled={true}
+                                    style={{ width: "60%" }}
+                                    className="input--style-4 "
+                                    type="text"
+                                    name="username"
+                                    defaultValue={this.state.username}
+                                  />
                                 </span>
                               </Tooltip>
                             </li>
@@ -724,7 +726,7 @@ class Profile extends Component {
                 </div>
               </div>
 
-
+             
             </div>
             <footer className="footer pt-3  ">
               <div className="container-fluid">
@@ -732,7 +734,11 @@ class Profile extends Component {
               </div>
             </footer>
           </div>
-
+          <Snackbar open={this.state.toasUpdate} autoHideDuration={6000} onClose={() => this.setState({ toasUpdate: false })}>
+                <Alert onClose={() => this.setState({ toasUpdate: false })} severity="info" sx={{textTransform:"uppercase", padding: "15px", height: "70px", width: '100%' }}>
+                  Your informations are up to date 
+                </Alert>
+          </Snackbar>
         </main>
       </div>
     );
