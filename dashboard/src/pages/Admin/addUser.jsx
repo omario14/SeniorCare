@@ -9,6 +9,8 @@ import { register } from "../../actions/auth";
 import roleService from "../../services/role.service";
 import seniorService from "../../services/senior.service";
 import { Navigate } from "react-router-dom";
+import { Button, ButtonGroup } from "@mui/material";
+import { GiReturnArrow } from "react-icons/gi";
 
 const required = (value) => {
   if (!value) {
@@ -82,7 +84,7 @@ class Register extends Component {
       lastName: "",
       gender: "male",
       mobile: null,
-      adress:"eeeeeee",
+      adress: "eeeeeee",
       roleuser: ["ROLE_ADMIN"],
       roles: [],
       userImg: "../../../assets/img/images/avartarU.png",
@@ -147,7 +149,6 @@ class Register extends Component {
     this.setState({
       roleuser: [e.target.value]
     })
-    console.log(JSON.stringify(this.state.roleuser))
 
   }
   onChangeEmail(e) {
@@ -166,6 +167,7 @@ class Register extends Component {
     e.preventDefault();
     // Create an object of formData
     const formData = new FormData();
+    const { isAddStaff,toastAddShow } = this.props;
     // Update the formData object
     formData.append(
       "file",
@@ -188,24 +190,27 @@ class Register extends Component {
         this.form.validateAll();
 
         if (this.checkBtn.context._errors.length === 0) {
-
+         
           this.props
             .dispatch(
 
-              register(this.state.name, this.state.lastName, this.state.username, this.state.email, this.state.password,this.state.mobile,this.state.gender,this.state.adress,this.state.picture ,this.state.roleuser)
+              register(this.state.name, this.state.lastName, this.state.username, this.state.email, this.state.password, this.state.mobile, this.state.gender, this.state.adress, this.state.picture, this.state.roleuser)
             )
             .then(() => {
-              console.log("aaaaaaaaaaaaaa", this.state.roleuser)
               this.setState({
                 successful: true,
               });
+              
             })
             .catch(() => {
               this.setState({
                 successful: false,
               });
             });
+           isAddStaff();
+          toastAddShow();
         }
+
 
       })
     } else {
@@ -217,25 +222,28 @@ class Register extends Component {
       this.form.validateAll();
 
       if (this.checkBtn.context._errors.length === 0) {
-
+        
         this.props
           .dispatch(
-            register(this.state.name, this.state.lastName, this.state.username, this.state.email, this.state.password,this.state.mobile,this.state.gender,this.state.adress,this.state.picture ,this.state.roleuser)
+            register(this.state.name, this.state.lastName, this.state.username, this.state.email, this.state.password, this.state.mobile, this.state.gender, this.state.adress, this.state.picture, this.state.roleuser)
           )
           .then(() => {
             this.setState({
               successful: true,
             });
+          
           })
           .catch(() => {
             this.setState({
               successful: false,
             });
           });
+          isAddStaff();
+          toastAddShow();
       }
     }
 
-
+   
 
   }
 
@@ -244,31 +252,47 @@ class Register extends Component {
   render() {
     const { message } = this.props;
     const { user: currentUser } = this.props;
-    if (!currentUser ) {
+    if (!currentUser) {
       return <Navigate to="/notFound" />;
 
-  }
+    }
     return (
       <div className='sign'>
+        
 
-        <section className="min-vh-100 mb-8">
-          <div className="page-header  bg-gradient-dark opacity-9 align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg" style={{ backgroundImage: "url('../../../assets/img/curved-images/curved14.jpg')" }}>
-           
+        <section className="min-vh-100 mb-8 mt-4">
+      
+          <div className="page-header mt-5  bg-gradient-dark opacity-9 align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg" style={{ backgroundImage: "url('../../../assets/img/curved-images/curved14.jpg')" }}>
+
             <div className="container ">
-          
+
               <div className="row justify-content-center ">
                 <div className="col-lg-5 text-center mx-auto">
                   <h1 className="text-white mb-2 mt-5 text-uppercase">Add new Member</h1>
-                 
+
                 </div>
               </div>
             </div>
           </div>
+          <div
+					style={{
+						position: "absolute",
+						top: "0px",
+						left: "28px",
+					}}
+				>
+					<ButtonGroup variant="text" aria-label="text button group">
+						<Button onClick={()=>this.props.isAddStaff()} >
+							<GiReturnArrow  /> &nbsp;&nbsp; Return
+						</Button>
+
+					</ButtonGroup>
+				</div>
           <div className="container">
             <div className="row mt-lg-n10 mt-md-n11 mt-n10">
               <div className="col-xl-6 col-lg-5 col-md-7 mx-auto">
                 <div className="card z-index-0" >
-                 
+
                   <div className="form-header text-center  pt-4 " >
                     <div className="avartar" >
                       <div className='image-preview' >
@@ -295,7 +319,7 @@ class Register extends Component {
                           <div style={{ display: "flex", justifyContent: "space-between" }}>
 
                             <div className="mb-3" style={{ width: "45%" }}>
-                              <label htmlFor="name">Name</label>
+                              <label htmlFor="name">Name<span className="text-primary">*</span></label>
                               <Input
 
                                 type="text"
@@ -306,7 +330,7 @@ class Register extends Component {
                               />
                             </div>
                             <div className="mb-3" style={{ width: "45%" }}>
-                              <label htmlFor="lastName">LastName</label>
+                              <label htmlFor="lastName">LastName<span className="text-primary">*</span></label>
                               <Input
                                 type="text"
                                 className="form-control"
@@ -320,7 +344,7 @@ class Register extends Component {
                           <div style={{ display: "flex", justifyContent: "space-between" }}>
 
                             <div className="mb-3" style={{ width: "45%" }}>
-                              <label htmlFor="username">Username</label>
+                              <label htmlFor="username">Username<span className="text-primary">*</span></label>
                               <Input
                                 type="text"
                                 className="form-control"
@@ -329,50 +353,58 @@ class Register extends Component {
                                 validations={[required, vusername]}
                               />
                             </div>
+                            <div className="mb-3 " style={{ width: "45%" }}>
+                             
+                                <label htmlFor="gender">Gender</label>
+                                <div className="p-t-10">
+                                  <label className="radio-container m-r-45">Male
+                                    <input checked={this.state.gender === "male"}
+                                      onChange={this.onChangeGender}
+                                      type="radio"
+                                      value="male"
+                                      name='male' />
+                                    <span className="checkmark"></span>
+                                  </label>
+                                  <label className="radio-container">Female
+                                    <input
+                                      checked={this.state.gender === "female"}
+                                      onChange={this.onChangeGender}
+                                      type="radio"
+                                      value="female"
+                                      name="female" />
+                                    <span className="checkmark"></span>
+                                  </label>
+                                </div>
+                              
+                            </div>
+                          </div>
+                          <div className="mb-3" >
+                            <label htmlFor="username">Mobile<span className="text-primary">*</span></label>
+                            <Input
+                              type="number"
+                              className="form-control"
+                              value={this.state.mobile}
+                              onChange={this.onChangeMobile}
+                              validations={[required, vmobile]}
+                            />
+                          </div>
+
+                          <div className="mb-3" >
+                            <label htmlFor="inputState">Role</label>
+
+                            <select id="inputState" className="form-control" value={this.state.roles.name} onChange={this.onChangeRole}  >
+                              {
+                                this.state.roles
+                                  .map(role => (
+                                    <option key={role.id} >{role.name}</option>))
+                              }
+
+                            </select>
+                          </div>
+                          <div style={{ display: "flex", justifyContent: "space-between" }}>
+
                             <div className="mb-3" style={{ width: "45%" }}>
-                            <label htmlFor="gender">Gender</label>
-                              <div className="genderBox">
-                                
-                                <input type="radio" value="male"   id="option-1" onChange={this.onChangeGender}  checked={this.state.gender==="male"} />
-                                  <input type="radio" value="female"  id="option-2" onChange={this.onChangeGender}  checked={this.state.gender==="female"}/>
-                                    <label htmlFor="option-1"  className="option option-1">
-                                      <div className="dot"></div>
-                                      <span>Male</span>
-                                    </label>
-                                    <label htmlFor="option-2"  className="option option-2">
-                                      <div className="dot"></div>
-                                      <span>Female</span>
-                                    </label>
-                                  </div>
-                              </div>
-                            </div>
-                            <div className="mb-3" >
-                              <label htmlFor="username">Mobile</label>
-                              <Input
-                                type="number"
-                                className="form-control"
-                                value={this.state.mobile}
-                                onChange={this.onChangeMobile}
-                                validations={[required, vmobile]}
-                              />
-                            </div>
-
-                            <div className="mb-3" >
-                              <label htmlFor="inputState">Role</label>
-
-                              <select id="inputState" className="form-control" value={this.state.roles.name} onChange={this.onChangeRole}  >
-                                {
-                                  this.state.roles
-                                    .map(role => (
-                                      <option key={role.id} >{role.name}</option>))
-                                }
-
-                              </select>
-                            </div>
-                            <div style={{ display: "flex", justifyContent: "space-between" }}>
-
-                            <div className="mb-3" style={{ width: "45%" }}>
-                              <label htmlFor="email">Email</label>
+                              <label htmlFor="email">Email<span className="text-primary">*</span></label>
                               <Input
                                 type="email"
                                 className="form-control"
@@ -381,38 +413,38 @@ class Register extends Component {
                                 validations={[required, email]}
                               />
                             </div>
-                              <div className="mb-3" style={{ width: "45%" }}>
-                                <label htmlFor="password">Password</label>
-                                <Input
-                                  type="password"
-                                  className="form-control"
-                                  value={this.state.password}
-                                  onChange={this.onChangePassword}
-                                  validations={[required, vpassword]}
-                                />
-                              </div>
-                            </div>
-                            
-                            <div className="text-center">
-                              <button className="btn bg-gradient-dark w-100 my-4 mb-2">Add</button>
+                            <div className="mb-3" style={{ width: "45%" }}>
+                              <label htmlFor="password">Password</label>
+                              <Input
+                                type="text"
+                                className="form-control passwordStyle"
+                                value={this.state.password}
+                                onChange={this.onChangePassword}
+                                validations={[required, vpassword]}
+                              />
                             </div>
                           </div>
+
+                          <div className="text-center">
+                            <button className="btn bg-gradient-dark w-100 my-4 mb-2">Add</button>
+                          </div>
+                        </div>
                       )}
-                          {message && (
-                            <div className="form-group">
-                              <div className={this.state.successful ? "alert alert-success" : "alert alert-danger"} role="alert">
-                                {message}
-                              </div>
-                            </div>
-                          )}
-                          <CheckButton
-                            style={{ display: "none" }}
-                            ref={c => {
-                              this.checkBtn = c;
-                            }}
-                          />
-                        
-                        </Form>
+                      {message && (
+                        <div className="form-group">
+                          <div className={this.state.successful ? "alert alert-success" : "alert alert-danger"} role="alert">
+                            {message}
+                          </div>
+                        </div>
+                      )}
+                      <CheckButton
+                        style={{ display: "none" }}
+                        ref={c => {
+                          this.checkBtn = c;
+                        }}
+                      />
+
+                    </Form>
                   </div>
                 </div>
               </div>

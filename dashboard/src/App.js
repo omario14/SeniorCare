@@ -12,9 +12,6 @@ import { clearMessage } from "./actions/message";
 import { history } from './helpers/history';
 
 
-import { BrowserRouter as Router } from 'react-router-dom';
-
-
 
 
 
@@ -35,7 +32,7 @@ class App extends Component {
     });
   }
 
-  logOut() {
+  logOut=()=> {
     this.props.dispatch(logout());
     this.setState({
       showModeratorBoard: false,
@@ -51,7 +48,7 @@ class App extends Component {
   
   return (
     
-    <Routing/>
+    <Routing logOut={this.logOut}/>
     
     
   );

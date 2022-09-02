@@ -1,20 +1,19 @@
+import { Alert, Snackbar } from '@mui/material';
 import React from 'react'
 import { Component } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap';
-import { BiDetail } from 'react-icons/bi';
 import { FcEmptyTrash, FcPlus } from "react-icons/fc";
 import { IoTrashOutline } from 'react-icons/io5';
 import { MdEditNote } from 'react-icons/md';
 import { SiCodechef, SiOpsgenie, SiRedhat } from "react-icons/si";
 import Skeleton from 'react-loading-skeleton'
 import { connect } from 'react-redux'
-import { Navigate, NavLink } from 'react-router-dom'
-import TopBar from '../../components/TopBar/TopBar'
+import { Navigate, NavLink } from 'react-router-dom';
 import seniorService from '../../services/senior.service'
 import userService from '../../services/user.service'
 import { TabTitle } from '../../utils/GeneralFunctions'
 import Dialog from '../Seniors/dialogDelete';
-import RegisterComponent from '../Sign up&in/register.component'
+import RegisterComponent from './addUser'
 import './staff.css'
 
 class Staff extends Component {
@@ -48,6 +47,9 @@ class Staff extends Component {
             mobile: "",
             adress: "",
             roles: null,
+            toastDelete: false,
+            toastUpdate: false,
+            toastAdd: false,
 
         }
 
@@ -135,6 +137,9 @@ class Staff extends Component {
 
         userService.updateUser(user.id, user).then(() => {
             this.handleClose();
+            this.setState({
+                toastUpdate:true,
+            })
         })
     }
 
@@ -176,8 +181,14 @@ class Staff extends Component {
     };
 
 
-
-    deleteSenior(user) {
+    ChangeisAddStaff = () => {
+        this.getAllUsers();
+        this.setState({   isAddStaff: true })
+    }
+    toastAddShow = () => {
+        this.setState({ toastAdd: true })
+    }
+    deleteSenior=(user)=> {
         this.handleDialog("Are you sure you want to delete?", true)
         this.myRef.current = user;
     }
@@ -187,15 +198,14 @@ class Staff extends Component {
             const users = this.state.users.filter(item => item.id !== this.myRef.current.id);
             userService.delete(this.myRef.current.id)
                 .then(res => {
-                    console.log(res);
-                    console.log(res.data);
                     if (this.myRef.current.picture) {
                         seniorService.removeFileById(this.myRef.current.picture.id);
 
                         console.log("this is file delete", this.myRef.current.picture.id)
                     }
                     this.setState({
-                        users
+                        users,
+                        toastDelete:true,
                     })
 
                 });
@@ -218,7 +228,7 @@ class Staff extends Component {
         return (
             <div className='staff'>
                 <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
-                    <TopBar title={"Staff"} />
+
                     {this.state.isAddStaff ?
                         <div className="container-fluid py-4">
                             <div className="row">
@@ -389,10 +399,25 @@ class Staff extends Component {
                                     </div>
                                 </div>
                             </div>
+                            <Snackbar open={this.state.toastDelete} autoHideDuration={6000} onClose={() => this.setState({ toastDelete: false })}>
+                                <Alert onClose={() => this.setState({ toastDelete: false })} severity="info" sx={{ padding: "15px", height: "70px", width: '100%' }}>
+                                    User is deleted successfully
+                                </Alert>
+                            </Snackbar>
+                            <Snackbar open={this.state.toastUpdate} autoHideDuration={6000} onClose={() => this.setState({ toastUpdate: false })}>
+                                <Alert onClose={() => this.setState({ toastUpdate: false })} severity="info" sx={{ padding: "15px", height: "70px", width: '100%' }}>
+                                User is updated successfully
+                                </Alert>
+                            </Snackbar>
+                            <Snackbar open={this.state.toastAdd} autoHideDuration={6000} onClose={() => this.setState({ toastAdd: false })}>
+                                <Alert onClose={() => this.setState({ toastAdd: false })} severity="success" sx={{ padding: "15px", height: "70px", width: '100%' }}>
+                                User added successfully
+                                </Alert>
+                            </Snackbar>
                         </div>
                         :
                         <>
-                            <RegisterComponent />
+                            <RegisterComponent toastAddShow={this.toastAddShow} isAddStaff={this.ChangeisAddStaff} />
                         </>
                     }
 

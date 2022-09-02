@@ -11,7 +11,6 @@ import AuthService from "../services/auth.service";
 
 
 export const register = (name,lastName,username, email, password,mobile,gender,adress,picture,roles) => (dispatch) => {
-  console.log(roles,"/br  ",username,"azae   ", email,"pass",password,"mobl",mobile,"gender",gender,"address",adress,"pic",picture);
   return AuthService.register(name,lastName,username, email, password,mobile,gender,adress,picture,roles).then(
   
     (response) => {
@@ -52,7 +51,6 @@ export const register = (name,lastName,username, email, password,mobile,gender,a
 export const login = (username, password) => (dispatch) => {
   return AuthService.login(username, password).then(
     (data) => {
-      console.log(data,"ddd")
      
       dispatch({
         type: LOGIN_SUCCESS,

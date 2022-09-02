@@ -30,6 +30,9 @@ class UserService {
   getUserNumber(){
     return http.get('/user-numbers',{headers: authHeader()})
   }
+  isConnected(){
+    return http.get('/currentUser',{headers: authHeader()})
+  }
 }
 
 export default new UserService();
