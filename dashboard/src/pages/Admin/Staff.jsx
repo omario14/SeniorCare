@@ -104,7 +104,7 @@ class Staff extends Component {
     }
 
     handleClose = () => {
-        this.getAllUsers();
+       
         this.setState({
             editDialog: false,
         })
@@ -136,6 +136,7 @@ class Staff extends Component {
 
 
         userService.updateUser(user.id, user).then(() => {
+            this.getAllUsers();
             this.handleClose();
             this.setState({
                 toastUpdate:true,
@@ -182,7 +183,7 @@ class Staff extends Component {
 
 
     ChangeisAddStaff = () => {
-        this.getAllUsers();
+       
         this.setState({   isAddStaff: true })
     }
     toastAddShow = () => {
@@ -209,7 +210,6 @@ class Staff extends Component {
                     })
 
                 });
-            console.log(users);
             this.handleDialog("", false);
         } else {
             this.handleDialog("", false);
@@ -290,6 +290,7 @@ class Staff extends Component {
                                                         ) : (
                                                             <>
                                                                 {this.state.users
+                                                                .filter(item=>item.roles[0].name!=="ROLE_ADMIN")
                                                                     .map((user, i) =>
                                                                         <tr key={i}>
                                                                             <td style={{ paddingLeft: "40px", width: "12px" }}>
@@ -417,7 +418,7 @@ class Staff extends Component {
                         </div>
                         :
                         <>
-                            <RegisterComponent toastAddShow={this.toastAddShow} isAddStaff={this.ChangeisAddStaff} />
+                            <RegisterComponent toastAddShow={this.toastAddShow} getAllUsers={this.getAllUsers} isAddStaff={this.ChangeisAddStaff} />
                         </>
                     }
 

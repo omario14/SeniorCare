@@ -167,7 +167,7 @@ class Register extends Component {
     e.preventDefault();
     // Create an object of formData
     const formData = new FormData();
-    const { isAddStaff,toastAddShow } = this.props;
+    const { isAddStaff,toastAddShow ,getAllUsers} = this.props;
     // Update the formData object
     formData.append(
       "file",
@@ -201,6 +201,8 @@ class Register extends Component {
                 successful: true,
               });
               
+              getAllUsers();
+              
             })
             .catch(() => {
               this.setState({
@@ -208,6 +210,7 @@ class Register extends Component {
               });
             });
            isAddStaff();
+
           toastAddShow();
         }
 
@@ -231,6 +234,8 @@ class Register extends Component {
             this.setState({
               successful: true,
             });
+            
+            getAllUsers();
           
           })
           .catch(() => {
