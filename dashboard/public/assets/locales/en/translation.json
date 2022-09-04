@@ -1,0 +1,31 @@
+{
+  "app_title": "WeCare",
+  "homepage": {
+    "phrase1": "We ",
+    "phrase2": "care,",
+    "phrase3": "We ",
+    "phrase4": "listen.",
+    "phrase5": "You will never be alone.",
+    "button": "Consult"
+  },
+  "aboutpage": {
+    "phrase1": "A platform that links students with mental health professionals.",
+    "phrase2": "sommes attentifs,",
+    "phrase3": "Nous ",
+    "phrase4": "écoutons.",
+    "phrase5": "Vous ne serez jamais seuls.",
+    "button": "Consultez"
+  },
+  "language": "Language",
+  "dashboard": "Dashboard",
+  "seniors": "Seniors",
+  "health": "Health",
+  "food": "Food",
+  "calendar": "Calendar",
+  "profile": "Profile",
+  "staff":"staff",
+  "meal": "meal",
+  "ingredients": "Ingredients",
+  "account_pages": "ACCOUNT PAGES",
+  "senior_table": "Senior Table"
+}

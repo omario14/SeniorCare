@@ -8,11 +8,43 @@ import { RiUser2Fill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import cookies from "js-cookie";
+import { TabTitle } from "../../utils/GeneralFunctions";
+
+const languages = [
+  {
+    code: "fr",
+    name: "Français",
+    country_code: "fr",
+  },
+  {
+    code: "en",
+    name: "English",
+    country_code: "gb",
+  },
+  {
+    code: "ar",
+    name: "العربية",
+    dir: "rtl",
+    country_code: "sa",
+  },
+];
+
 export default function SideBar({setTitle}) {
   const [showAccompagnantBoard, setShowAccompagnantBoard] = useState(false);
   const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [showChefBoard, setShowChefBoard] = useState(false);
   const { user: currentUser } = useSelector((state) => state.auth);
+
+  const currentLanguageCode = cookies.get("i18next") || "en";
+  const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    document.body.dir = currentLanguage.dir || "ltr";
+    
+  }, [currentLanguage, t]);
 
 
   useEffect(() => {
@@ -25,6 +57,9 @@ export default function SideBar({setTitle}) {
 
 
   const onButtonClick=(title)=>{
+    console.log(title,"title")
+    
+    TabTitle(title);
     setTitle(title); 
   }
 
@@ -81,64 +116,64 @@ function toggleSidenav() {
             
             <li className="nav-item">
               
-            <NavLink  to="/" onClick={()=>onButtonClick('Home')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+            <NavLink  to="/" onClick={()=>onButtonClick(`${t("dashboard")}`)}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                  <div> <FaHome className="color-backgroundIcon" size="1.5em" /></div>
                 </div>
-                <span className="nav-link-text ms-1 text-uppercase">Dashboard</span>
+                <span className="nav-link-text ms-1 text-uppercase">    &nbsp; &nbsp;&nbsp;    {t("dashboard")}</span>
             </NavLink>
               
             </li>             
             <li className="nav-item">
             
               
-              <NavLink to="/senior"  onClick={()=>onButtonClick('Senior')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+              <NavLink to="/senior"  onClick={()=>onButtonClick(`${t("seniors")}`)}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 
                 <div><MdElderly className="color-backgroundIcon" size="1.5em" /></div>
                 
                 </div>
                 
-                <span className="nav-link-text ms-1 text-uppercase">Seniors</span>
+                <span className="nav-link-text ms-1 text-uppercase">   &nbsp; &nbsp;&nbsp;   {t("seniors")}</span>
                 
             </NavLink>
               
               
             </li>     
             <li className="nav-item">
-            <NavLink to="/health" onClick={()=>onButtonClick('Health')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+            <NavLink to="/health" onClick={()=>onButtonClick(`${t("health")}`)}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                   
                 <div  ><BiHealth className="color-backgroundIcon" size="1.5em" /></div>
                 
                 </div>
-                <span className="nav-link-text ms-1 text-uppercase">Health</span>
+                <span className="nav-link-text ms-1 text-uppercase">   &nbsp; &nbsp;&nbsp;  {t("health")}</span>
             </NavLink>
             </li>
             <li className="nav-item">
-            <NavLink to="/food"  onClick={()=>onButtonClick('Food')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+            <NavLink to="/food" onClick={()=>onButtonClick(`${t("food")}`)} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                   
                 <div  ><MdNoFood className="color-backgroundIcon" size="1.5em" /></div>
                 </div>
-                <span className="nav-link-text ms-1 text-uppercase">Food</span>
+                <span className="nav-link-text ms-1 text-uppercase">  &nbsp; &nbsp;&nbsp; {t("food")}</span>
             </NavLink>
             </li>
             <li className="nav-item">
-            <NavLink to="/calendar" onClick={()=>onButtonClick('Calendar')} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+            <NavLink to="/calendar" onClick={()=>onButtonClick(`${t("calendar")}`)} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <div> <BiCalendar className="color-backgroundIcon" size="1.5em"/></div>
                 </div>
-                <span className="nav-link-text ms-1 text-uppercase">Calendar</span>
+                <span className="nav-link-text ms-1 text-uppercase"> &nbsp; &nbsp;&nbsp; {t("calendar")}</span>
             </NavLink>
             </li>
             <li className="nav-item mt-3">
               <h6 className="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">
-                Account pages
+              {t("account_pages")}
               </h6>
             </li>
             <li className="nav-item">
-            <NavLink to="/profile" onClick={()=>onButtonClick('Profile')} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+            <NavLink to="/profile" onClick={()=>onButtonClick(`${t("profile")}`)} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                   <svg
                     width="12px"
@@ -179,7 +214,7 @@ function toggleSidenav() {
                     </g>
                   </svg>
                 </div>
-                <span className="nav-link-text ms-1 ">Profile</span>
+                <span className="nav-link-text ms-1 "> &nbsp; &nbsp;&nbsp; {t("profile")}</span>
             </NavLink>
             </li>
           
@@ -194,7 +229,7 @@ function toggleSidenav() {
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                  <div> <FaHome className="color-backgroundIcon" size="1.5em" /></div>
                 </div>
-                <span className="nav-link-text ms-1 text-uppercase">Dashboard</span>
+                <span className="nav-link-text ms-1 text-uppercase">{t("dashboard")}</span>
             </NavLink>
               
             </li>             
@@ -208,7 +243,7 @@ function toggleSidenav() {
                 
                 </div>
                 
-                <span className="nav-link-text ms-1 text-uppercase">Staff</span>
+                <span className="nav-link-text ms-1 text-uppercase">{t("staff")}</span>
                 
             </NavLink>
               
@@ -220,12 +255,12 @@ function toggleSidenav() {
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 <div> <BiCalendar className="color-backgroundIcon" size="1.5em"/></div>
                 </div>
-                <span className="nav-link-text ms-1 text-uppercase">Calendar</span>
+                <span className="nav-link-text ms-1 text-uppercase">{t("calendar")}</span>
             </NavLink>
             </li>
             <li className="nav-item mt-3">
               <h6 className="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">
-                Account pages
+              {t("account_pages")}
               </h6>
             </li>
             <li className="nav-item">
@@ -270,7 +305,7 @@ function toggleSidenav() {
                     </g>
                   </svg>
                 </div>
-                <span className="nav-link-text ms-1 ">Profile</span>
+                <span className="nav-link-text ms-1 ">{t("profile")}</span>
             </NavLink>
             </li>
             
@@ -285,7 +320,7 @@ function toggleSidenav() {
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                  <div> <FaHome className="color-backgroundIcon" size="1.5em" /></div>
                 </div>
-                <span className="nav-link-text ms-1 text-uppercase">Dashboard</span>
+                <span className="nav-link-text ms-1 text-uppercase">{t("dashboard")}</span>
             </NavLink>
               
             </li>             
@@ -299,7 +334,7 @@ function toggleSidenav() {
                 
                 </div>
                 
-                <span className="nav-link-text ms-1 text-uppercase">Meal</span>
+                <span className="nav-link-text ms-1 text-uppercase">{t("meal")}</span>
                 
             </NavLink>
             
@@ -315,7 +350,7 @@ function toggleSidenav() {
               
               </div>
               
-              <span className="nav-link-text ms-1 text-uppercase">Ingredients</span>
+              <span className="nav-link-text ms-1 text-uppercase">{t("ingredients")}</span>
               
           </NavLink>
           
@@ -325,7 +360,7 @@ function toggleSidenav() {
          
             <li className="nav-item mt-3">
               <h6 className="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">
-                Account pages
+              {t("account_pages")}
               </h6>
             </li>
             <li className="nav-item">
@@ -370,7 +405,7 @@ function toggleSidenav() {
                     </g>
                   </svg>
                 </div>
-                <span className="nav-link-text ms-1 ">Profile</span>
+                <span className="nav-link-text ms-1 ">{t("profile")}</span>
             </NavLink>
             </li>
            

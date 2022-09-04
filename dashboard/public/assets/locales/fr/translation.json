@@ -1,0 +1,31 @@
+{
+    "app_title": "WeCare",
+    "homepage": {
+        "phrase1": "Nous ",
+        "phrase2": "sommes attentifs,",
+        "phrase3": "Nous ",
+        "phrase4": "écoutons.",
+        "phrase5": "Vous ne serez jamais seuls.",
+        "button": "Consultez"
+    },
+    "aboutpage": {
+        "phrase1": "Une plateforme qui fait le lien entre les étudiants et des professionnels de la santé mentale.",
+        "phrase2": "sommes attentifs,",
+        "phrase3": "Nous ",
+        "phrase4": "écoutons.",
+        "phrase5": "Vous ne serez jamais seuls.",
+        "button": "Consultez"
+    },
+  "language": "Langue",
+  "dashboard": "Dashboard",
+  "seniors": "Personnes âgées",
+  "health": "santé",
+  "food": "nourriture",
+  "calendar": "calendrier",
+  "profile": "Profile",
+  "staff": "Personnel",
+  "meal": "repas",
+  "ingredients": "Ingrédients",
+  "account_pages": "PAGES DE COMPTE",
+  "senior_table": "Table des aînés"
+}

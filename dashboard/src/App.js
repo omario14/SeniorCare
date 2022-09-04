@@ -10,6 +10,7 @@ import { logout } from "./actions/auth";
 import { clearMessage } from "./actions/message";
 
 import { history } from './helpers/history';
+import { BrowserRouter as Router } from "react-router-dom";
 
 
 
@@ -47,9 +48,9 @@ class App extends Component {
 
   
   return (
-    
+    <Router history={history}>
     <Routing logOut={this.logOut}/>
-    
+    </Router>
     
   );
 }

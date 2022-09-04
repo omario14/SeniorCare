@@ -1,24 +1,49 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import store from './store';
+import React, { Suspense } from "react";
+import ReactDOM from "react-dom";
+import i18next from "i18next";
+import { initReactI18next } from "react-i18next";
+import HttpApi from "i18next-http-backend";
+import LanguageDetector from "i18next-browser-languagedetector";
+
+import store from "./store";
+
 import "./index.css";
+import App from "./App";
 
-import { history } from './helpers/history';
+import "flag-icon-css/css/flag-icon.min.css";
+import { Provider } from "react-redux";
+i18next
+  .use(HttpApi)
+  .use(LanguageDetector)
+  .use(initReactI18next) 
+  .init({
+    supportedLngs: ["en", "ar", "fr"],
+    fallbackLng: "en",
+    debug: false,
+    // Options for language detector
+    detection: {
+      order: ["path", "cookie", "htmlTag"],
+      caches: ["cookie"],
+    },
+    // react: { useSuspense: false },
+    backend: {
+      loadPath: "/assets/locales/{{lng}}/translation.json",
+    },
+  });
 
-
-import { BrowserRouter as Router } from 'react-router-dom';
-
-import App from './App';
+const loadingMarkup = (
+  <div className="py-4 text-center">
+    <h3>Loading..</h3>
+  </div>
+);
 
 ReactDOM.render(
-  
-    <Provider store={store}>
-  
-      <Router history={history}>
-    <App />
-    </Router>
-    </Provider>
-  ,
+  <Suspense fallback={loadingMarkup}>
+    <React.StrictMode>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </React.StrictMode>
+  </Suspense>,
   document.getElementById('root')
 );

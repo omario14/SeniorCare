@@ -241,6 +241,7 @@ class Meal extends Component {
             <div className="addIng ">
               <div style={{
                 position: "absolute",
+                marginTop:"15px",
                 top: "4px",
                 left: "4px"
               }}>
@@ -307,12 +308,12 @@ class Meal extends Component {
 
                 <div className="addIngRow">
                   <div className="column">
-                    <label htmlFor="issue">Describe your Meal</label>
+                    <label htmlFor="issue">More informations about meal</label>
                     <textarea
                       id="issue"
                       value={this.state.description}
                       onChange={this.onChangeDescription}
-                      placeholder="Describe your issue in detail here"
+                      placeholder="Describe your meal..."
                       rows="3"
                     ></textarea>
                   </div>

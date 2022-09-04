@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Form from '../../components/MultiForm/Form';
 import Meds from './Meds/Meds';
 
-export default function Health() {
-  TabTitle('Health');
+export default function Health({title}) {
+  TabTitle(title);
   const [stepperLoading, setStepperLoading] = useState("health");
 
   const onChangeStepperLoading = (pageName) => {

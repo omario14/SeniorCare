@@ -8,6 +8,8 @@ import { clearMessage } from "../../actions/message";
 import { history } from '../../helpers/history';
 
 import Notifications from "./Notifications";
+import SelectLanguage from "./SelectLanguage";
+
 class TopBar extends Component {
 
   
@@ -84,10 +86,10 @@ function toggleSidenav() {
                       </a>
                     </li>
                     <li
-                      className="breadcrumb-item text-sm text-dark active font-weight-bolder mb-0"
+                      className="breadcrumb-item text-sm text-dark active font-weight-bolder mb-0 text-capitalize"
                       aria-current="page"
                     >
-                      {document.title}
+                      {this.props.title}
                     </li>
                   </ol>
                 </nav>
@@ -96,7 +98,7 @@ function toggleSidenav() {
                   id="navbar"
                 >
                   <div className="ms-md-auto pe-md-3 d-flex align-items-center">
-                    
+                    <SelectLanguage/>
                   </div>
                   <ul className="navbar-nav  justify-content-end">
                   {currentUser ? (

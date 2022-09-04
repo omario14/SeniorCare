@@ -1,0 +1,34 @@
+{
+  
+  "homepage": {
+      "phrase1": "نهتم ",
+      "phrase2": "بك،",
+      "phrase3": "نستمع ",
+      "phrase4": "اليك.",
+      "phrase5": "لن تكون وحيدا أبدا.",
+      "button": "اطلب استشارة"
+  },
+  "aboutpage": {
+    "phrase1": "منصة تربط الطلاب والمتخصصين في الصحة النفسية.",
+    "phrase2": "sommes attentifs,",
+    "phrase3": "Nous ",
+    "phrase4": "écoutons.",
+    "phrase5": "Vous ne serez jamais seuls.",
+    "button": "Consultez"
+}, 
+    "language": "اللغة",
+    "dashboard": "الصفحة الرئيسية",
+    "seniors": "كبار السن",
+    "health": "الصحة",
+    "food": "غذاء",
+    "calendar": "تقويم",
+    "profile":"الملف الشخصي",
+    "staff":"الموظفين",
+    "meal": "وجبة",
+    "ingredients":"مكونات",
+    "santer":"على صحتك",
+    "soin":"اعتن بنفسك.",
+    "account_pages":"صفحات الحساب",
+    "senior_table":"جدول كبار السن" 
+
+  }

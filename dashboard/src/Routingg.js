@@ -27,10 +27,34 @@ import TopBar from "./components/TopBar/TopBar";
 import AddUser from "./pages/Admin/addUser";
 
 import userService from './services/user.service';
-import { logout } from "./actions/auth";
+import { useTranslation } from "react-i18next";
+// import { useNavigate } from 'react-router-dom';
+
+
+import cookies from "js-cookie";
+
+const languages = [
+  {
+    code: "fr",
+    name: "Français",
+    country_code: "fr",
+  },
+  {
+    code: "en",
+    name: "English",
+    country_code: "gb",
+  },
+  {
+    code: "ar",
+    name: "العربية",
+    dir: "rtl",
+    country_code: "sa",
+  },
+];
+
 
 export default function Routingg({logOut}) {
-    const [title,setTitle]= useState('Home');
+    const [title,setTitle]= useState('SeniGuard');
     const [loading,setLoading]=useState(false);
     const [showAccompagnantBoard, setShowAccompagnantBoard] = useState(false);
     const [showAdminBoard, setShowAdminBoard] = useState(false);
@@ -39,6 +63,15 @@ export default function Routingg({logOut}) {
 
     
     const [socket, setSocket] = useState(null);
+  
+    const currentLanguageCode = cookies.get("i18next") || "en";
+    const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
+    const { t } = useTranslation();
+  
+    useEffect(() => {
+      document.body.dir = currentLanguage.dir || "ltr";
+      
+    }, [currentLanguage, t]);
   
   
     useEffect(() => {
@@ -49,7 +82,7 @@ export default function Routingg({logOut}) {
         userService.isConnected().then((res)=>{
        
           if(res.data.connected===false){
-            console.log(!res.data.connected,"logaout")
+            
             logOut();
     
           }
@@ -72,7 +105,7 @@ export default function Routingg({logOut}) {
 const SidebarLayout = () => (
   <>
   
-    <SideBar />
+    <SideBar setTitle={setTitle} />
    
   </>
 );
@@ -81,27 +114,27 @@ const SidebarLayout = () => (
   
    
       <div>
-      {currentUser && <TopBar socket={socket}/>}
+      {currentUser && <TopBar title={title} socket={socket}/>}
       <div className="container g-sidenav-show mt-5  bg-gray-100 " id='containerr'>
       {currentUser && <SidebarLayout/>}
         <Routes>
 
             <Route      index element={<Home />} />
-            <Route      path="/senior" element={<Senior socket={socket} />} />
-            <Route      path="/health" element={<Health />} />
-            <Route      path="/food" element={<Food />} />
-            <Route      path='/calendar' element={<Calendar />}/>
-            <Route      path='/profile' element={<Profile/>}/>
-            <Route      path='/newSenior' element={<AddSenior />}/>
-            <Route      path='/staff' element={<Staff />}/>
-            <Route      path='/meal' element={<Meal />}/>
-            <Route      path='/ingredients' element={<Ingredients />}/>
-            <Route      path='/register' element={<AddUser/>} />
+            <Route      path="/senior" element={<Senior socket={socket} title={title} tableSenior={t("senior_table")}/>} />
+            <Route      path="/health" element={<Health  title={title} />} />
+            <Route      path="/food" element={<Food  title={title} />} />
+            <Route      path='/calendar' element={<Calendar title={title}  />}/>
+            <Route      path='/profile' element={<Profile title={title} />}/>
+            <Route      path='/newSenior' element={<AddSenior title={title} />}/>
+            <Route      path='/staff' element={<Staff title={title} />}/>
+            <Route      path='/meal' element={<Meal title={title} />}/>
+            <Route      path='/ingredients' element={<Ingredients title={title} />}/>
+            <Route      path='/register' element={<AddUser title={title} />} />
 
         </Routes>
       </div>
       <Routes>
-      <Route  setTitle={setTitle} path='/login' element={<LoginComponent/>} />
+      <Route  setTitle={setTitle} path='/login' element={<LoginComponent title={title} />} />
       
       <Route  path='/notfound' element={<NotFound/>}/>
       </Routes>

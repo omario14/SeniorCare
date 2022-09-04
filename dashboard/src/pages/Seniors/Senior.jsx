@@ -515,7 +515,7 @@ class Senior extends Component {
         });
 
 
-        TabTitle('Senior');
+        TabTitle(this.props.title);
 
         const { user: currentUser } = this.props;
         const { socket: socket } = this.props;
@@ -538,7 +538,7 @@ class Senior extends Component {
                                         <div className="col-12">
                                             <div className="card mb-4">
                                                 <div className="card-header pb-0 tableBG" >
-                                                    <div className="text-uppercase " ><h6 className="text-light ">Senior table</h6></div>
+                                                    <div className="text-uppercase " ><h6 className="text-light ">{this.props.tableSenior}</h6></div>
 
                                                     <div style={{ display: "flex", paddingBottom: "10px" }}>
                                                         <div className="tableIcons" style={{ paddingLeft: "20px" }} >

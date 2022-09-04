@@ -35,7 +35,7 @@ class Food extends Component {
    
     
     render() {
-        TabTitle("Food");
+        TabTitle(this.props.title);
         const { user: currentUser } = this.props;
         if (!currentUser ) {
             return <Navigate to="/login"/>
@@ -46,7 +46,7 @@ class Food extends Component {
         return (
             <div className="food">
                 <main className="main-content  position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
-                    <TopBar title={"Food"} />
+                   
                     <div className="container-fluid py-4">
                         <section id="menu" className="menu section-bg">
                             <div className="container" data-aos="fade-up">

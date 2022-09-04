@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import TopBar from '../../components/TopBar/TopBar';
 import { GiHealthNormal, GiReturnArrow } from "react-icons/gi";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -15,7 +14,6 @@ import { TabTitle } from '../../utils/GeneralFunctions';
 import './Chef.css';
 import { Box } from '@mui/system';
 import CustomizedMenus from './MenuActions';
-
 import MuiAlert from '@mui/material/Alert';
 import Dialog from '../Seniors/dialogDelete';
 
@@ -256,7 +254,7 @@ class Ingredients extends Component {
         return (
             <div className="ingredients">
                 <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
-                    <TopBar title={"Ingredients"} />
+                   
                     {
                         this.state.addIngredients ?
 
