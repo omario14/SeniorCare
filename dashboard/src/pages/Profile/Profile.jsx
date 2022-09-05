@@ -262,8 +262,9 @@ class Profile extends Component {
   }
 
   render() {
-    TabTitle("Profile");
-    const { user: currentUser } = this.props;
+   
+    const { user: currentUser,t,dir } = this.props;
+    TabTitle(t("profile"));
     if (!currentUser) {
       return <Navigate to="/login" />;
     }
@@ -504,7 +505,7 @@ class Profile extends Component {
               </div>
             </div>
           </div>
-          <div className="container-fluid py-4">
+          <div className="container-fluid py-4" dir={dir}>
             <div className="row mx-1">
 
               <div className="col-12 col-xl-12">
@@ -512,7 +513,7 @@ class Profile extends Component {
                   <div className="card-header pb-0 p-3">
                     <div className="row">
                       <div className="col-md-8 d-flex align-items-center">
-                        <h6 className="mb-0">Profile Information</h6>
+                        <h6 className="mb-0">{t("profilePage.profile_information")}</h6>
                       </div>
                       <div className="col-md-4 text-end">
                         <a href="#">
@@ -544,7 +545,7 @@ class Profile extends Component {
 
                           <ul className="list-group">
                             <li className="list-group-item border-0 ps-0 pt-0 text-sm">
-                              <strong className="text-dark">Username :</strong> &nbsp;{" "}
+                              <strong className="text-dark">{t("profilePage.username")} :</strong> &nbsp;{" "}
                               <Tooltip title="You don't have permission to change this" placement="top-end">
                                 <span>
                                   <TextField
@@ -560,7 +561,7 @@ class Profile extends Component {
                               </Tooltip>
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">Email :</strong> &nbsp;{" "}
+                              <strong className="text-dark">{t("profilePage.email")} :</strong> &nbsp;{" "}
                               <TextField
                                 style={{ width: "60%" }}
                                 className="input--style-4"
@@ -571,7 +572,7 @@ class Profile extends Component {
 
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">Mobile :</strong> &nbsp;
+                              <strong className="text-dark">{t("profilePage.phone")} :</strong> &nbsp;
                               <TextField
                                 style={{ width: "60%" }}
                                 className="input--style-4"
@@ -583,7 +584,7 @@ class Profile extends Component {
                             </li>
 
                             <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">Roles :</strong> &nbsp;{" "}
+                              <strong className="text-dark">{t("profilePage.roles")} :</strong> &nbsp;{" "}
                               <ul>
                                 {this.state.roles &&
                                   this.state.roles.map((role, index) => (
@@ -599,7 +600,7 @@ class Profile extends Component {
 
                           <ul className="list-group">
                             <li className="list-group-item border-0 ps-0 pt-0 text-sm">
-                              <strong className="text-dark">Name :</strong> &nbsp;{" "}
+                              <strong className="text-dark">{t("profilePage.name")} :</strong> &nbsp;{" "}
                               <TextField
                                 style={{ width: "60%" }}
                                 className="input--style-4 "
@@ -610,7 +611,7 @@ class Profile extends Component {
 
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">LastName :</strong> &nbsp; {" "}
+                              <strong className="text-dark">{t("profilePage.lastname")} :</strong> &nbsp; {" "}
                               <TextField
                                 style={{ width: "60%" }}
                                 className="input--style-4 "
@@ -621,7 +622,7 @@ class Profile extends Component {
 
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">Adress :</strong> &nbsp; {" "}
+                              <strong className="text-dark">{t("profilePage.address")} :</strong> &nbsp; {" "}
                               <TextField
                                 style={{ width: "60%" }}
                                 className="input--style-4 "
@@ -637,15 +638,15 @@ class Profile extends Component {
 
 
 
-                              <strong className="text-dark">Gender :</strong> &nbsp;{" "}
+                              <strong className="text-dark">{t("profilePage.gender")} :</strong> &nbsp;{" "}
                               <div className="p-t-5" style={{ marginLeft: "10px", width: "60%" }}>
-                                <label className="radio-container m-r-45">Male
+                                <label className="radio-container m-r-45">{t("profilePage.male")}
                                   <input onChange={this.onChangeGender} checked={this.state.gender === "male"}
                                     type="radio"
                                     value="male" />
                                   <span className="checkmark"></span>
                                 </label>
-                                <label className="radio-container">Female
+                                <label className="radio-container">{t("profilePage.female")}
                                   <input
                                     onChange={this.onChangeGender} checked={this.state.gender === "female"}
                                     type="radio"
@@ -671,20 +672,20 @@ class Profile extends Component {
 
                           <ul className="list-group">
                             <li className="list-group-item border-0 ps-0 pt-0 text-sm text-capitalize">
-                              <strong className="text-dark">Username :</strong> &nbsp;{" "}
+                              <strong className="text-dark">{t("profilePage.username")} :</strong> &nbsp;{" "}
                               {this.state.user.username}
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
-                              <strong className="text-dark">Email :</strong> &nbsp;{" "}
+                              <strong className="text-dark">{t("profilePage.email")} :</strong> &nbsp;{" "}
                               {this.state.email}
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm ">
-                              <strong className="text-dark">Mobile :</strong> &nbsp;
+                              <strong className="text-dark">{t("profilePage.phone")} :</strong> &nbsp;
                               {this.state.mobile}
                             </li>
 
                             <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">Roles :</strong> &nbsp;{" "}
+                              <strong className="text-dark">{t("profilePage.roles")} :</strong> &nbsp;{" "}
                               <ul>
                                 {this.state.roles &&
                                   this.state.roles.map((role, index) => (
@@ -700,19 +701,19 @@ class Profile extends Component {
 
                           <ul className="list-group">
                             <li className="list-group-item border-0 ps-0 pt-0 text-sm text-capitalize">
-                              <strong className="text-dark">Name :</strong> &nbsp;{" "}
+                              <strong className="text-dark">{t("profilePage.name")} :</strong> &nbsp;{" "}
                               {this.state.name}
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
-                              <strong className="text-dark">LastName :</strong> &nbsp; {" "}
+                              <strong className="text-dark">{t("profilePage.lastname")} :</strong> &nbsp; {" "}
                               {this.state.lastName}
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
-                              <strong className="text-dark">Adress :</strong> &nbsp;{" "}
+                              <strong className="text-dark">{t("profilePage.address")} :</strong> &nbsp;{" "}
                               {this.state.adress}
                             </li>
                             <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
-                              <strong className="text-dark">Gender :</strong> &nbsp;{" "}
+                              <strong className="text-dark">{t("profilePage.gender")} :</strong> &nbsp;{" "}
                               {this.state.gender}
                             </li>
 
@@ -734,9 +735,9 @@ class Profile extends Component {
               </div>
             </footer>
           </div>
-          <Snackbar open={this.state.toasUpdate} autoHideDuration={6000} onClose={() => this.setState({ toasUpdate: false })}>
+          <Snackbar  open={this.state.toasUpdate} autoHideDuration={6000} onClose={() => this.setState({ toasUpdate: false })}>
                 <Alert onClose={() => this.setState({ toasUpdate: false })} severity="info" sx={{textTransform:"uppercase", padding: "15px", height: "70px", width: '100%' }}>
-                  Your informations are up to date 
+                {t("alerts.profile_update")}
                 </Alert>
           </Snackbar>
         </main>

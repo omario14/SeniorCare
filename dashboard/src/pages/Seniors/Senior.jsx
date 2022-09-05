@@ -517,7 +517,7 @@ class Senior extends Component {
 
         TabTitle(this.props.title);
 
-        const { user: currentUser } = this.props;
+        const { user: currentUser,t,dir } = this.props;
         const { socket: socket } = this.props;
         if (!currentUser) {
             return <Navigate to="/notFound" />;
@@ -527,7 +527,7 @@ class Senior extends Component {
 
 
         return (
-            <div className="seniorList">
+            <div className="seniorList" >
                 <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
 
                     {
@@ -537,8 +537,8 @@ class Senior extends Component {
                                     <div className="row">
                                         <div className="col-12">
                                             <div className="card mb-4">
-                                                <div className="card-header pb-0 tableBG" >
-                                                    <div className="text-uppercase " ><h6 className="text-light ">{this.props.tableSenior}</h6></div>
+                                                <div className="card-header pb-0 tableBG" dir={dir} >
+                                                    <div className="text-uppercase " ><h6 className="text-light ">  {t("seniorPage.senior_table")}</h6></div>
 
                                                     <div style={{ display: "flex", paddingBottom: "10px" }}>
                                                         <div className="tableIcons" style={{ paddingLeft: "20px" }} >
@@ -546,7 +546,7 @@ class Senior extends Component {
 
 
                                                             <div className="searchh-box" >
-                                                                <BlueOnGreenTooltip title="search" placement="top">
+                                                                <BlueOnGreenTooltip title={t("seniorPage.search")} placement="top">
                                                                     <NavLink  className="btn-searchh" to="#" role="button" 
                                                                     style={this.state.searchTerm!==""? { backgroundColor: "rgba(255, 165, 0,0.5)", width: "50px", justifyItems: "center", justifyContent: "center", paddingTop: "-20px" }:
                                                                 { backgroundColor: "rgba(222, 222, 222,0.2)", width: "50px", justifyItems: "center", justifyContent: "center", paddingTop: "-20px" }} >
@@ -581,7 +581,7 @@ class Senior extends Component {
 
 
 
-                                                            <BlueOnGreenTooltip title="add new senior" placement="top">
+                                                            <BlueOnGreenTooltip title={t("seniorPage.add_senior")} placement="top">
                                                                 <NavLink style={{ backgroundColor: "rgba(222, 222, 222,0.2)", width: "50px", justifyItems: "center", justifyContent: "center", paddingTop: "-20px" }} to="#" onClick={() => { this.setState({ addSeniorPage: "addSenior" }) }} role="button">
                                                                     <FcPlus className="FcPlus" size={50} style={{ fontSize: "36px", marginLeft: "2px", paddingTop: "8px" }} />
                                                                 </NavLink>
@@ -589,7 +589,7 @@ class Senior extends Component {
 
                                                         </div>
                                                         <div className="tableIcons" style={{ paddingLeft: "20px" }}>
-                                                            <BlueOnGreenTooltip title="delete selected seniors" placement="top">
+                                                            <BlueOnGreenTooltip title={t("seniorPage.delete_seniors")} placement="top">
                                                                 <NavLink style={{ backgroundColor: "rgba(222, 222, 222,0.2)" }} to="#" onClick={() => { this.handleDialogDeleteCheckbox("Are you sure you want to delete selected seniors ?", true); }} role="button">
                                                                     <FcEmptyTrash className="iconss" size={50} style={{ fontSize: "36px", marginLeft: "2px", paddingTop: "8px" }} />
 
@@ -601,7 +601,7 @@ class Senior extends Component {
 
                                                     </div>
                                                 </div>
-                                                <div className="card-body px-0 pt-0 pb-2">
+                                                <div className="card-body px-0 pt-0 pb-2" dir={dir}>
                                                     <div className="table-responsive p-0">
 
                                                         <table className="table align-items-center mb-0" id="table-to-xls" style={{ overflow: "hidden" }}>
@@ -626,19 +626,19 @@ class Senior extends Component {
                                                                         </div>
 
                                                                     </th>
-                                                                    <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                                        Senior
+                                                                    <th  className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                                        {t("seniors")}
                                                                     </th>
                                                                     <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ">
-                                                                        CIN
+                                                                    {t("seniorPage.cin")+" / "+t("profilePage.phone")}
                                                                     </th>
                                                                     <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                                        Sex
+                                                                        {t("profilePage.gender")}
                                                                     </th>
                                                                     <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                                        Birth Date
+                                                                    {t("seniorPage.birth_date")}
                                                                     </th>
-                                                                    <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"> Actions</th>
+                                                                    <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"> {t("seniorPage.actions")}</th>
                                                                     <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"> </th>
 
                                                                     <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"> </th>
@@ -686,13 +686,11 @@ class Senior extends Component {
                                                                                                 <input className="form-check-input" value={senior.id} type="checkbox" checked={this.state.selected} onChange={this.handleCheck} />
 
                                                                                             </div>
-                                                                                            <div>
-                                                                                                {senior.id}
-                                                                                            </div>
+                                                                                            
 
                                                                                         </td>
                                                                                         <td>
-                                                                                            <div className="d-flex px-2 py-1">
+                                                                                            <div className="d-flex px-2 py-1" >
 
 
                                                                                                 <div  >
@@ -725,7 +723,8 @@ class Senior extends Component {
 
                                                                                                     }
                                                                                                 </div>
-                                                                                                <div className="d-flex flex-column justify-content-center">
+                                                                                                &nbsp;&nbsp;
+                                                                                                <div className="d-flex flex-column justify-content-center" >
                                                                                                     <h6 className="mb-0 text-sm">{senior.name}</h6>
                                                                                                     <p className="text-xs text-secondary mb-0">
                                                                                                         {senior.lastname}
@@ -761,9 +760,9 @@ class Senior extends Component {
                                                                                                         <i className="fa fa-ellipsis-v text-secondary"></i>
                                                                                                     </a>
                                                                                                     <ul className="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                                                                                                        <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#/" onClick={(e) => this.handleShow(senior, true)}> Edit <MdEditNote /></a></li>
-                                                                                                        <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#/" onClick={() => this.handleDetails(senior)} >Details <BiDetail /></a></li>
-                                                                                                        <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#/" onClick={(e) => this.deleteSenior(senior, e)}>Delete <IoTrashOutline />  </a></li>
+                                                                                                        <li><a className="dropdown-item border-radius-md text-capitalize" style={{ color: "black" }} href="#/" onClick={(e) => this.handleShow(senior, true)}> {t("seniorPage.edit")} <MdEditNote /></a></li>
+                                                                                                        <li><a className="dropdown-item border-radius-md text-capitalize" style={{ color: "black" }} href="#/" onClick={() => this.handleDetails(senior)} >{t("seniorPage.details")} <BiDetail /></a></li>
+                                                                                                        <li><a className="dropdown-item border-radius-md text-capitalize" style={{ color: "black" }} href="#/" onClick={(e) => this.deleteSenior(senior, e)}>{t("seniorPage.delete")} <IoTrashOutline />  </a></li>
                                                                                                     </ul>
                                                                                                 </div>
                                                                                             </div>
@@ -793,7 +792,11 @@ class Senior extends Component {
 
 
                                                                                                 <div id="section1" style={{ position: "relative", height: "50px", paddingLeft: "80px", display: "flex", whiteSpace: "nowrap", width: "150px" }} >
-                                                                                                    <label className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 my-3  text-start m-0">Food :</label>
+                                                                                                    <label style={{fontSize:"1.2em"}} className="text-uppercase text-secondary text-center font-weight-bolder opacity-7 mt-1  text-start m-0">{t("food")} :</label>
+                                                                                                    &nbsp;&nbsp;
+                                                                                                    &nbsp;&nbsp;
+                                                                                                    &nbsp;&nbsp;
+                                                                                                    
                                                                                                     <input
                                                                                                         id={senior.id + "BREAKFAST"}
                                                                                                         checked={this.state.seniorArch && this.state.seniorArch[0].checkedBreakfast}
@@ -813,11 +816,11 @@ class Senior extends Component {
                                                                                                                     return data;
                                                                                                                 }),
                                                                                                                 seniorArch: this.state.seniorArch.map((data) => {
-                                                                                                                    console.log(data, "dt")
+                                                                                                                   
                                                                                                                     if (data.senior.id === senior.id) {
                                                                                                                         data.checkedBreakfast = e.target.checked;
                                                                                                                     }
-                                                                                                                    console.log(data, "df")
+                                                                                                                   
                                                                                                                     return data;
                                                                                                                 }),
                                                                                                             });
@@ -912,7 +915,7 @@ class Senior extends Component {
                                                                                                         }
                                                                                                         }
                                                                                                     />
-                                                                                                    <label htmlFor={senior.id + "BREAKFAST"} className="align-middle-label text-secondary">BREAKFAST </label>
+                                                                                                    <label htmlFor={senior.id + "BREAKFAST"} className="align-middle-label text-secondary text-uppercase">{t("seniorPage.breakfast")} </label>
                                                                                                     <input
                                                                                                         id={senior.id + "LUNCH"}
                                                                                                         checked={this.state.seniorArch ? this.state.seniorArch[0].checkedLunch : false}
@@ -1024,7 +1027,7 @@ class Senior extends Component {
                                                                                                             seniorService.update(senior.id, senioret).then(console.log("successs"))
                                                                                                         }
                                                                                                         } />
-                                                                                                    <label htmlFor={senior.id + "LUNCH"} className="align-middle-label text-secondary">LUNCH </label>
+                                                                                                    <label htmlFor={senior.id + "LUNCH"} className="align-middle-label text-secondary">{t("seniorPage.lunch")} </label>
                                                                                                     <input id={senior.id + "DINNER"}
                                                                                                         checked={this.state.seniorArch ? this.state.seniorArch[0].checkedDinner : false}
                                                                                                         value={senior.id}
@@ -1136,11 +1139,11 @@ class Senior extends Component {
 
                                                                                                         }
                                                                                                         } />
-                                                                                                    <label htmlFor={senior.id + "DINNER"} className="align-middle-label text-secondary">DINNER </label>
+                                                                                                    <label htmlFor={senior.id + "DINNER"} className="align-middle-label text-secondary">{t("seniorPage.dinner")} </label>
 
 
 
-
+                                                                                                    
 
 
                                                                                                 </div>
@@ -1169,12 +1172,12 @@ class Senior extends Component {
                                     </div>
                                     <Snackbar open={this.state.toastDelete} autoHideDuration={6000} onClose={() => this.setState({ toastDelete: false })}>
                                         <Alert onClose={() => this.setState({ toastDelete: false })} severity="info" sx={{ padding: "15px", height: "70px", width: '100%' }}>
-                                            Senior is deleted successfully
+                                            {t("alerts.senior_delete")}
                                         </Alert>
                                     </Snackbar>
                                     <Snackbar open={this.state.toasUpdate} autoHideDuration={6000} onClose={() => this.setState({ toasUpdate: false })}>
                                         <Alert onClose={() => this.setState({ toasUpdate: false })} severity="info" sx={{ padding: "15px", height: "70px", width: '100%' }}>
-                                            Senior is updated successfully
+                                        {t("alerts.senior_update")}
                                         </Alert>
                                     </Snackbar>
                                 </div>

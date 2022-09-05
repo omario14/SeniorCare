@@ -54,12 +54,13 @@ const languages = [
 
 
 export default function Routingg({logOut}) {
-    const [title,setTitle]= useState('SeniGuard');
+    const [title,setTitle]= useState(document.title);
     const [loading,setLoading]=useState(false);
     const [showAccompagnantBoard, setShowAccompagnantBoard] = useState(false);
     const [showAdminBoard, setShowAdminBoard] = useState(false);
     const [showChefBoard, setShowChefBoard] = useState(false);
     const { user: currentUser } = useSelector((state) => state.auth);
+    const [dir,setDir] = useState("ltr");
 
     
     const [socket, setSocket] = useState(null);
@@ -69,8 +70,8 @@ export default function Routingg({logOut}) {
     const { t } = useTranslation();
   
     useEffect(() => {
-      document.body.dir = currentLanguage.dir || "ltr";
       
+      setDir(currentLanguage.dir || "ltr");
     }, [currentLanguage, t]);
   
   
@@ -114,17 +115,17 @@ const SidebarLayout = () => (
   
    
       <div>
-      {currentUser && <TopBar title={title} socket={socket}/>}
+      {currentUser && <TopBar title={title} socket={socket} t={t} dir={dir}/>}
       <div className="container g-sidenav-show mt-5  bg-gray-100 " id='containerr'>
       {currentUser && <SidebarLayout/>}
         <Routes>
 
-            <Route      index element={<Home />} />
-            <Route      path="/senior" element={<Senior socket={socket} title={title} tableSenior={t("senior_table")}/>} />
+            <Route      index element={<Home t={t} dir={dir}/>} />
+            <Route      path="/senior" element={<Senior socket={socket} title={title} t={t} dir={dir}/>} />
             <Route      path="/health" element={<Health  title={title} />} />
             <Route      path="/food" element={<Food  title={title} />} />
             <Route      path='/calendar' element={<Calendar title={title}  />}/>
-            <Route      path='/profile' element={<Profile title={title} />}/>
+            <Route      path='/profile' element={<Profile title={title} t={t} dir={dir} />}/>
             <Route      path='/newSenior' element={<AddSenior title={title} />}/>
             <Route      path='/staff' element={<Staff title={title} />}/>
             <Route      path='/meal' element={<Meal title={title} />}/>

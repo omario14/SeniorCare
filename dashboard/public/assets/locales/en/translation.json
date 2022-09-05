@@ -8,13 +8,38 @@
     "phrase5": "You will never be alone.",
     "button": "Consult"
   },
-  "aboutpage": {
-    "phrase1": "A platform that links students with mental health professionals.",
-    "phrase2": "sommes attentifs,",
-    "phrase3": "Nous ",
-    "phrase4": "écoutons.",
-    "phrase5": "Vous ne serez jamais seuls.",
-    "button": "Consultez"
+  "profilePage": {
+    "profile_information": "Profile Information",
+    "username": "username",
+    "email": "Email ",
+    "phone": "Phone ",
+    "roles": "Roles",
+    "name": "Name",
+    "lastname": "Lastname",
+    "address": "Address",
+    "gender": "Gender",
+    "male":"Male",
+    "female":"Female"
+  },
+  "seniorPage": {
+    "senior_table": "Senior Table",
+    "add_senior": "add new senior",
+    "delete_seniors": "delete seniors ",
+    "search": "search ",
+    "cin": "cin",
+    "birth_date": "birth date",
+    "actions": "actions",
+    "edit": "edit",
+    "details": "details",
+    "delete":"Delete",
+    "breakfast":"breakfast",
+    "lunch":"lunch",
+    "dinner":"dinner"
+  },
+  "alerts":{
+    "profile_update":"Your informations are up to date " ,
+    "senior_delete":"Senior is deleted successfully" ,
+    "senior_update":" Senior is updated successfully" 
   },
   "language": "Language",
   "dashboard": "Dashboard",
@@ -23,9 +48,11 @@
   "food": "Food",
   "calendar": "Calendar",
   "profile": "Profile",
-  "staff":"staff",
-  "meal": "meal",
+  "staff":"Staff",
+  "meal": "Meal",
   "ingredients": "Ingredients",
   "account_pages": "ACCOUNT PAGES",
-  "senior_table": "Senior Table"
+  "pages":"Pages",
+  "logout":"logout"
+  
 }

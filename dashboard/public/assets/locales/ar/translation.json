@@ -8,14 +8,41 @@
       "phrase5": "لن تكون وحيدا أبدا.",
       "button": "اطلب استشارة"
   },
-  "aboutpage": {
-    "phrase1": "منصة تربط الطلاب والمتخصصين في الصحة النفسية.",
-    "phrase2": "sommes attentifs,",
-    "phrase3": "Nous ",
-    "phrase4": "écoutons.",
-    "phrase5": "Vous ne serez jamais seuls.",
-    "button": "Consultez"
+  "profilePage": {
+    "profile_information": " معلومات الملف الشخصي",
+    "username": "اسم االمستخدم ",
+    "email": "البريد الإلكتروني ",
+    "phone": "الهاتف ",
+    "roles": " الأدوار ",
+    "name": " اسم ",
+    "lastname": " اللقب ",
+    "address": " عنوان ",
+    "gender": " جنس ",
+    "male":"ذكر",
+    "female":"أنثى"
+},
+"seniorPage": {
+  "senior_table":"جدول كبار السن" ,
+  "add_senior": "إضافة كبار السن الجدد  ",
+  "delete_seniors": "حذف كبار السن ",
+  "search": "بحث ",
+  "cin": "بطاقة تعريف",
+  "birth_date": "تاريخ الميلاد",
+  "actions": " أجراءات ",
+  "edit":"تعديل",
+  "details": "تفاصيل",
+  "delete": "حذف",
+  "breakfast":"فطور الصباح",
+  "lunch":"وجبة غداء",
+  "dinner":"وجبة عشاء"
+  
+  
 }, 
+"alerts":{
+  "profile_update":" تم تحديث معلوماتك الخاصة بنجاح " ,
+  "senior_delete":"تم حذف المسن بنجاح"  ,
+  "senior_update":" تم تحديث كبير السن بنجاح" 
+},
     "language": "اللغة",
     "dashboard": "الصفحة الرئيسية",
     "seniors": "كبار السن",
@@ -29,6 +56,8 @@
     "santer":"على صحتك",
     "soin":"اعتن بنفسك.",
     "account_pages":"صفحات الحساب",
-    "senior_table":"جدول كبار السن" 
+    "pages":"صفحة",
+    "logout":"تسجيل خروج"
+    
 
   }

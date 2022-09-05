@@ -41,10 +41,7 @@ export default function SelectLanguage() {
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
     const { t } = useTranslation();
   
-    useEffect(() => {
-      document.body.dir = currentLanguage.dir || "ltr";
-     
-    }, [currentLanguage, t]);
+ 
   
   return (
     <div>

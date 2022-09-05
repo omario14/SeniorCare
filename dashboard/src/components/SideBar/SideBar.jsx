@@ -26,7 +26,7 @@ const languages = [
   {
     code: "ar",
     name: "العربية",
-    dir: "rtl",
+   
     country_code: "sa",
   },
 ];

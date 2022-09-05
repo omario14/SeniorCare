@@ -5676,6 +5676,14 @@ fieldset:disabled .btn {
     /* rtl: var(--bs-breadcrumb-divider, "/") */
   ;
 }
+.breadcrumb-itemrtl+.breadcrumb-itemrtl::before {
+  float: right;
+  padding-left: 0.5rem;
+  color: #6c757d;
+  content: var(--bs-breadcrumb-divider, "/")
+    /* rtl: var(--bs-breadcrumb-divider, "/") */
+  ;
+}
 
 .breadcrumb-item.active {
   color: #6c757d;

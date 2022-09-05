@@ -66,6 +66,7 @@ function toggleSidenav() {
 
   }
   const { currentUser } = this.state;
+  const {t,dir}=this.props;
   const socket = this.props.socket;
   return (
     
@@ -76,19 +77,22 @@ function toggleSidenav() {
               className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl"
               id="navbarBlur"
               navbar-scroll="true"
+
             >
-              <div className="container-fluid py-1 px-3">
-                <nav aria-label="breadcrumb">
-                  <ol className="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                    <li className="breadcrumb-item text-sm">
+              <div className="container-fluid py-1 px-3" >
+                <nav aria-label="breadcrumb" >
+                  <ol className="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5"  dir={dir}>
+                    <li className={dir==="rtl"?"breadcrumb-itemrtl text-sm mx-2":"breadcrumb-item text-sm"}>
                       <a className="opacity-5 text-dark" href="/">
-                        Pages
+                      {t("pages")}
                       </a>
                     </li>
                     <li
-                      className="breadcrumb-item text-sm text-dark active font-weight-bolder mb-0 text-capitalize"
+                      className={dir==="rtl"?"breadcrumb-itemrtl text-sm text-dark active font-weight-bolder mb-0 text-capitalize":"breadcrumb-item text-sm text-dark active font-weight-bolder mb-0 text-capitalize" }
                       aria-current="page"
+                      
                     >
+                      
                       {this.props.title}
                     </li>
                   </ol>
@@ -109,7 +113,7 @@ function toggleSidenav() {
                         className="nav-link text-body font-weight-bold px-0"
                       >
                         <i className="fa fa-user me-sm-1"></i>
-                        <span className="d-sm-inline d-none">Logout</span>
+                        <span className="d-sm-inline d-none">{t("logout")}</span>
                       </NavLink>
                     </li>
                     ) : (

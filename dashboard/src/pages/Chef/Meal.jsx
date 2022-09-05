@@ -232,7 +232,7 @@ class Meal extends Component {
     ];
     return (
       <div className="ingredients">
-        <TopBar title={"Meal"} />
+       
 
         {this.state.addMeal === "addMeal" ? (
           <>

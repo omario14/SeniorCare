@@ -8,13 +8,38 @@
         "phrase5": "Vous ne serez jamais seuls.",
         "button": "Consultez"
     },
-    "aboutpage": {
-        "phrase1": "Une plateforme qui fait le lien entre les étudiants et des professionnels de la santé mentale.",
-        "phrase2": "sommes attentifs,",
-        "phrase3": "Nous ",
-        "phrase4": "écoutons.",
-        "phrase5": "Vous ne serez jamais seuls.",
-        "button": "Consultez"
+    "profilePage": {
+        "profile_information": "Informations sur le profil",
+        "username": "Nom de utilisateur",
+        "email": "Email ",
+        "phone": "Téléphone ",
+        "roles": "Rôles",
+        "name": "Nom",
+        "lastname": "Prenom",
+        "address": "Adresse",
+        "gender": "Genre",
+        "male":"Masculin",
+        "female":"Féminin"
+    },
+    "seniorPage": {
+        "senior_table": "Table des aînés",
+        "add_senior": "ajouter un nouveau senior",
+        "delete_seniors": "supprimer les personnes âgées ",
+        "search": "chercher ",
+        "cin": "cin",
+        "birth_date": "Date de naissance",
+        "actions": "actions",
+        "edit": "Éditer",
+        "details": "détails",
+        "delete":"supprimer",
+        "breakfast":"petit-déjeuner",
+        "lunch":"déjeuner",
+        "dinner":"dîner"
+      },
+    "alerts":{
+      "profile_update":"Vos informations sont à jour"  ,
+      "senior_delete":"Senior a été supprimé avec succès",
+      "senior_update":" Senior est mis à jour avec succès " 
     },
   "language": "Langue",
   "dashboard": "Dashboard",
@@ -27,5 +52,7 @@
   "meal": "repas",
   "ingredients": "Ingrédients",
   "account_pages": "PAGES DE COMPTE",
-  "senior_table": "Table des aînés"
+  "pages":"Pages",
+  "logout":"Se déconnecter"
+  
 }

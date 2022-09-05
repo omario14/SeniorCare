@@ -35,8 +35,9 @@ class Home extends Component {
     })
   }
   render() {
-    TabTitle('Home');
-    const { user: currentUser } = this.props;
+    
+    const { user: currentUser,t } = this.props;
+    TabTitle(t("dashboard"));
     if (!currentUser) {
       return <Navigate  to="/login" />;
     }
