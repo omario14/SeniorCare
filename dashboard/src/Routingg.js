@@ -128,7 +128,7 @@ const SidebarLayout = () => (
             <Route      path='/profile' element={<Profile title={title} t={t} dir={dir} />}/>
             <Route      path='/newSenior' element={<AddSenior title={title} />}/>
             <Route      path='/staff' element={<Staff title={title} />}/>
-            <Route      path='/meal' element={<Meal title={title} />}/>
+            <Route      path='/meal' element={<Meal title={title}  t={t} dir={dir}/>}/>
             <Route      path='/ingredients' element={<Ingredients title={title} />}/>
             <Route      path='/register' element={<AddUser title={title} />} />
 

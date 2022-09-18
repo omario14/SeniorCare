@@ -223,19 +223,12 @@ export default function Meds({ onChangeStepperLoading }) {
 
     const archiveAdd=(meds)=>{
       const dates = getDatesInRange(new Date(startDate),new Date(endDate));
-       
       dates.forEach(d=>{
         let archive = {
           idArch: `arch-${senior.id}-${d}`,
           senior: senior,
           date: new Date(d).toISOString().split("T")[0],
-         
-          
-          
-  
       }
-  
-  
       seniorService.addToArchive(archive).then(()=>{
         seniorService.putMedsToArchive(archive.idArch,meds.idmed,false);
       })
@@ -243,6 +236,7 @@ export default function Meds({ onChangeStepperLoading }) {
       })
       
     }
+
     const saveMedication = (e) => {
        
       
@@ -254,7 +248,6 @@ export default function Meds({ onChangeStepperLoading }) {
             startDate: startDate,
             endDate: endDate,
             senior: senior,
-
         }
         seniorService.addMedication(medic).then(
             (res) => {

@@ -175,8 +175,9 @@ class Meal extends Component {
     }
   };
   render() {
-    TabTitle("Meal");
-    const { user: currentUser } = this.props;
+    
+    const { user: currentUser,t } = this.props;
+    TabTitle(t("meal"));
     if (!currentUser ) {
       return <Navigate to="/notFound" />;
     }

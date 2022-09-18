@@ -75,7 +75,7 @@ class SeniorService {
 
 
 
-  /********************Medication ************************/
+  /******************** Medication ************************/
 
   addMedication(medication) {
     return http.post("/addMedication", medication, { headers: authHeader() });
@@ -85,6 +85,12 @@ class SeniorService {
   }
   removeMedById(id) {
     return http.delete(`/deleteMedicationById/${id}`, { headers: authHeader() })
+  }
+
+
+  /********************* Calendar *************************/
+  getCalendarEvents() {
+    return http.get(`/getCalendar`, { headers: authHeader() })
   }
 
 }
