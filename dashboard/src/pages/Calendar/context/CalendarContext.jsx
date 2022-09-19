@@ -8,27 +8,31 @@ const SAVE_TASK = "SAVE_TASK";
 const DELETE_TASK = "DELETE_TASK";
 
 const getDatabase = ()=> {
-     seniorService.getCalendarEvents().then((res)=>{
+   seniorService.getCalendarEvents().then((res)=>{
         db=res.data;
-        console.log("db",db)
+        
         setDatabase(db);
     })
   let db = localStorage.getItem("$calendar_db");
+  
   if(!db) {
     db = [];
    
     setDatabase(db);
     
   } else {
+   
+    db = JSON.parse(db); 
     
-    db = JSON.parse(db);    
     db.map(task=> task.date = new Date(task.date));
   }
   return db;
 }
 
 const setDatabase = (db)=> {
+   
   localStorage.setItem("$calendar_db", JSON.stringify(db));
+ 
 }
 
 export const CalendarContext = createContext();
@@ -61,6 +65,7 @@ function CalendarState(props) {
         if(d2.getDay() !== 0) d2.setDate(d2.getDate() + (7 - d2.getDay()));
         
         const db = getDatabase();
+        
   
         const days = [];
         do { // Obtain tasks
@@ -84,15 +89,22 @@ function CalendarState(props) {
       case SAVE_TASK: {
         let db = getDatabase();
         const task = action.payload;
+       
         if(!task.id) { // new Task
           task.id = uuidv4();
           db.push(task);
+          
         } else {
           db = db.map(t=> {
             return t.id === task.id ? task : t;
           })
+          
         }
+        
+       
+        
         setDatabase(db);
+       
         return {
           ...state
         }

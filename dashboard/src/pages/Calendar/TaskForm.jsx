@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Modal from "react-modal";
 import { CalendarContext } from "./context/CalendarContext";
 import { CirclePicker } from "react-color";
+import seniorService from "../../services/senior.service";
 
 const customStyles = {
   content: {
@@ -41,20 +42,33 @@ function TaskForm() {
         return;
     }
     setError(false);
-
+   console.log("deee",task)
+    let event = {
+      id:task.id,
+      date:date,
+      name:name,
+      color:color,
+      type:name,
+      senior:10
+    }
+    
+    seniorService.addToCalendar(event)
     saveTask({
       ...task,
       date: date,
       name: name,
       color: color,
     });
+    
     setDate(date);
+    
     closeModal();
 
   };
 
   const _deleteTask = ()=> {
     deleteTask(task.id);
+    seniorService.removeEvent(task.id);
     setDate(date);
     closeModal();
     setError(false);
@@ -82,6 +96,7 @@ function TaskForm() {
 
         <div>
           <CirclePicker
+             
             color={color}
             onChange={(color) => {
               setColor(color.hex);

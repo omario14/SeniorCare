@@ -1,12 +1,13 @@
 import React, { useContext } from 'react'
+import {MdOutlineMenuBook } from 'react-icons/md';
 import { CalendarContext } from './context/CalendarContext';
 
 function Task({task, style}) {
 
     const {setTask} = useContext(CalendarContext);
-
+    
     return (
-        <p style={style} onClick={()=> {setTask(task)}}>{task.name} {task.senior && task.senior.id}</p>
+        <p style={style} onClick={()=> {setTask(task)}}>{task.name} {task.senior && task.senior.id} {task.type==="MdOutlineMenuBook" && <MdOutlineMenuBook color='#fffaa'/>}</p>
     )
 }
 

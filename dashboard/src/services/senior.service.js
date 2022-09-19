@@ -92,6 +92,12 @@ class SeniorService {
   getCalendarEvents() {
     return http.get(`/getCalendar`, { headers: authHeader() })
   }
+  addToCalendar(data){
+    return http.put(`/updateCalendar`,data,{headers: authHeader()})
+  }
+  removeEvent(idEvent){
+    return http.delete(`/deleteEvent/${idEvent}`,{headers: authHeader()})
+  }
 
 }
 export default new SeniorService();

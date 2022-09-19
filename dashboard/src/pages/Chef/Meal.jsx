@@ -334,8 +334,8 @@ class Meal extends Component {
                   {this.state.loadingIngredients ?
                     (
 
-                      <div class="spinner-box">
-                        <div class="three-quarter-spinner"></div>
+                      <div className="spinner-box">
+                        <div className="three-quarter-spinner"></div>
                       </div>
 
                     )
@@ -349,7 +349,7 @@ class Meal extends Component {
                             style={{ whiteSpace: "nowrap" }}
                           >
                             <input
-                              class="plus-minus"
+                              className="plus-minus"
                               type="checkbox"
                               id="flexSwitchCheckDefault"
                               checked={ingredient.select}

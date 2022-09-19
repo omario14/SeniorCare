@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import seniorService from "../../services/senior.service";
 import { CalendarContext } from "./context/CalendarContext";
 import Day from "./Day";
 
@@ -6,9 +7,12 @@ function CalendarContent() {
 
   const { date, days, setDate } = useContext(CalendarContext);
 
+ 
   useEffect(() => {
     setDate(new Date());
     // eslint-disable-next-line
+
+  
   }, []);
 
   if (days.length < 1) return null;
