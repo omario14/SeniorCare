@@ -54,6 +54,10 @@ class ChefService {
     return http.get(`/get-all-Menus`, { headers: authHeader() });
   }
 
+  getMenuByDate(date){
+    return http.get(`/get-Menu-ByDate/${date}`, { headers: authHeader() });
+  }
+
   removeMenu(id) {
     return http.delete(`/remove-Menu/${id}`, { headers: authHeader() });
   }

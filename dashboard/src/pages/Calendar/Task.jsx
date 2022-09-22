@@ -7,7 +7,7 @@ function Task({task, style}) {
     const {setTask} = useContext(CalendarContext);
     
     return (
-        <p style={style} onClick={()=> {setTask(task)}}>{task.name} {task.senior && task.senior.id} {task.type==="MdOutlineMenuBook" && <MdOutlineMenuBook color='#fffaa'/>}</p>
+        <p style={style} onClick={()=> {setTask(task)}}>{task.name} {task.senior && task.senior.id} {task.type==="menu" && <MdOutlineMenuBook color='#fffaa'/>}</p>
     )
 }
 

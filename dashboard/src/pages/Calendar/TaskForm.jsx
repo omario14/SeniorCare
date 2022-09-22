@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import { CalendarContext } from "./context/CalendarContext";
 import { CirclePicker } from "react-color";
 import seniorService from "../../services/senior.service";
+import chefService from "../../services/chef.service";
 
 const customStyles = {
   content: {
@@ -17,18 +18,31 @@ const customStyles = {
 
 function TaskForm() {
 
-  const { date, task, setTask, saveTask, setDate, deleteTask } =  useContext(CalendarContext);
+  const { date, task, setTask, saveTask, setDate, deleteTask } = useContext(CalendarContext);
 
   const [name, setName] = useState("");
   const [color, setColor] = useState("#f44336");
   const [error, setError] = useState(false);
+  const [menu,setMenu]=useState([]);
 
   useEffect(() => {
     if (task) {
       setName(task.name || "");
       setColor(task.color || "#f44336");
+      console.log(JSON.stringify(task.date))
+      if(task.type==="menu"){
+        chefService.getMenuByDate(JSON.stringify(task.date))
+        .then((result)=>{
+          setMenu(result.data)
+          console.log(result)
+        })
+      }
     }
+
+
+
   }, [task]);
+
 
   const closeModal = () => {
     setTask(null);
@@ -36,22 +50,22 @@ function TaskForm() {
   };
 
   const _saveTask = () => {
- 
-    if(name.trim().length < 1) {
-        setError(true);
-        return;
+
+    if (name.trim().length < 1) {
+      setError(true);
+      return;
     }
     setError(false);
-   console.log("deee",task)
+
     let event = {
-      id:task.id,
-      date:date,
-      name:name,
-      color:color,
-      type:name,
-      senior:10
+      id: task.id,
+      date: date,
+      name: name,
+      color: color,
+      type: name,
+      senior: 10
     }
-    
+
     seniorService.addToCalendar(event)
     saveTask({
       ...task,
@@ -59,14 +73,14 @@ function TaskForm() {
       name: name,
       color: color,
     });
-    
+
     setDate(date);
-    
+
     closeModal();
 
   };
 
-  const _deleteTask = ()=> {
+  const _deleteTask = () => {
     deleteTask(task.id);
     seniorService.removeEvent(task.id);
     setDate(date);
@@ -83,9 +97,10 @@ function TaskForm() {
       contentLabel="Task Form"
     >
       <div className="task-form">
-        
+
         <label>Name</label>
         <input
+          disabled={name === "Menu" ? true : false}
           name="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -96,14 +111,28 @@ function TaskForm() {
 
         <div>
           <CirclePicker
-             
+
             color={color}
-            onChange={(color) => {
+            onChange={(color, e) => {
               setColor(color.hex);
+
+              if (color.hex === "#2196f3") {
+                setName("Menu")
+              } else {
+                e.preventDefault();
+                setName("")
+              }
             }}
           />
         </div>
-
+        {task && task.type==="menu" &&
+        <>
+        <label>Menu</label>
+        <div>
+            Breakfgast
+        </div>
+        </>
+        }
         <div>
           <button className="button button-red" onClick={closeModal}>
             Cancel

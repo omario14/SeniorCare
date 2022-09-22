@@ -112,7 +112,7 @@ export default function AddMealstoMenu(props) {
                   type="date"
                   name="Date"
                   format="{yyyy-MM-dd}"
-                  min={date}
+                  min={new Date().toISOString().split("T")[0]}
                 />
               </div>
             </div>

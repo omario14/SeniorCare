@@ -11,7 +11,11 @@ function CalendarContent() {
   useEffect(() => {
     setDate(new Date());
     // eslint-disable-next-line
-
+    seniorService.getCalendarEvents().then((res)=>{
+      let db=res.data;
+      console.log("res",res.data)
+      localStorage.setItem("$calendar_db", JSON.stringify(db));
+  })
   
   }, []);
 
