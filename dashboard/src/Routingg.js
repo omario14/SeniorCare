@@ -32,6 +32,7 @@ import { useTranslation } from "react-i18next";
 
 
 import cookies from "js-cookie";
+import CalendarState from "./pages/Calendar/context/CalendarContext";
 
 const languages = [
   {
@@ -91,7 +92,7 @@ export default function Routingg({logOut}) {
       }
     }, [currentUser]);
 
-    useEffect(() => { 
+   useEffect(() => { 
       if (currentUser) {
       socket?.emit("newUser", currentUser.username);
       
@@ -124,7 +125,7 @@ const SidebarLayout = () => (
             <Route      path="/senior" element={<Senior socket={socket} title={title} t={t} dir={dir}/>} />
             <Route      path="/health" element={<Health  title={title} />} />
             <Route      path="/food" element={<Food  title={title} />} />
-            <Route      path='/calendar' element={<Calendar title={title}  />}/>
+            <Route      path='/calendar' element={  <CalendarState><Calendar title={title}  />  </CalendarState>}/>
             <Route      path='/profile' element={<Profile title={title} t={t} dir={dir} />}/>
             <Route      path='/newSenior' element={<AddSenior title={title} />}/>
             <Route      path='/staff' element={<Staff title={title} />}/>

@@ -98,6 +98,10 @@ class SeniorService {
   removeEvent(idEvent){
     return http.delete(`/deleteEvent/${idEvent}`,{headers: authHeader()})
   }
+  getEventsBySenior(idSenior){
+    return http.get(`getCalendar-bysenior/${idSenior}`,{headers: authHeader()})
+  }
+
 
 }
 export default new SeniorService();

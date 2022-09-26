@@ -1,86 +1,93 @@
-import React from 'react'
-import "./Accordion.scss"
-export default function Accordion() {
-    return (
+import * as React from 'react';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { ListItem, ListItemAvatar, ListItemIcon, ListItemText } from '@mui/material';
+import { useEffect } from 'react';
 
 
-        <div class="accordion-wrap">
-            <a class="accordion" data-toggle="collapse" href="#collapseOne" role="button" aria-expanded="false" >
-                <div class="teaser">
-                    <div class="time">
-                        <h5>10:15 – 11:00 Uhr</h5>
-                    </div>
+export default function CustomizedAccordions({menu}) {
 
-                    <div class="title">
-                        <h3>Unterthema Y</h3>
-                        <h6 class="theme">Themenblock 4</h6>
-                    </div>
-                </div>
+  
+  return (
+    <div style={{width:"150%"}}>
+    <Accordion  >
+    <AccordionSummary
+      expandIcon={<ExpandMoreIcon />}
+      aria-controls="panel1a-content"
+      id="panel1a-header"
+    >
+      <ListItemIcon>
+        <img width="40px"  height="40px" src="../../../../assets/img/small-logos/icons-lunchbox-64Breakfast.png" alt='breakfastIcon'/>
+        </ListItemIcon>
+      <ListItemText>  Breakfast</ListItemText>
+    </AccordionSummary>
+    <AccordionDetails>
+     
+       {menu.breakfastMenu && menu.breakfastMenu.map((breakfast)=>(
+        <ListItem>
+        <ListItemAvatar >
+        <img style={{borderRadius: "50%"}} width="40px"  height="40px" src={`http://localhost:8080/files/${breakfast.image.id}`} alt='mealImage'/>
+        </ListItemAvatar>
+ 
+       <ListItemText> {breakfast.label}</ListItemText>
+    </ListItem>
+       ))}
+      
+    </AccordionDetails>
+  </Accordion>
+    <Accordion>
+    <AccordionSummary
+      expandIcon={<ExpandMoreIcon />}
+      aria-controls="panel1a-content"
+      id="panel1a-header"
+    > <ListItemIcon>
+        <img width="40px"  height="40px" src="../../../../assets/img/small-logos/icons-lunchbox-64Lunch.png" alt='lunchIcon'/>
+        </ListItemIcon>
+      <ListItemText>  Lunch</ListItemText>
+    </AccordionSummary>
+    <AccordionDetails>
+     
+       {menu.lunchMenu && menu.lunchMenu.map((lunch)=>(
+       <ListItem>
+       <ListItemAvatar >
+       <img style={{borderRadius: "50%"}} width="40px"  height="40px" src={`http://localhost:8080/files/${lunch.image.id}`} alt='mealImage'/>
+       </ListItemAvatar>
 
-                <div class="collapse" id="collapseOne">
-                    <div class="content">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                    </div>
-                </div>
+      <ListItemText> {lunch.label}</ListItemText>
+   </ListItem>
+       ))}
+      
+    </AccordionDetails>
+  </Accordion>
+    <Accordion>
+    <AccordionSummary
+      expandIcon={<ExpandMoreIcon />}
+      aria-controls="panel1a-content"
+      id="panel1a-header"
+    >
+     <ListItemIcon>
+        <img width="40px"  height="40px" src="../../../../assets/img/small-logos/icons-lunchbox-64Dinner.png" alt='DinnerIcon'/>
+        </ListItemIcon>
+      <ListItemText>  Dinner</ListItemText>
+    </AccordionSummary>
+    <AccordionDetails>
+     
+       {menu.dinnerMenu && menu.dinnerMenu.map((dinner)=>(
+        <ListItem>
+            <ListItemAvatar >
+            <img style={{borderRadius: "50%"}} width="40px"  height="40px" src={`http://localhost:8080/files/${dinner.image.id}`} alt='mealImage'/>
+            </ListItemAvatar>
 
-                <div class="accordion-toggle">
-                    <span class="one"></span>
-                    <span class="two"></span>
-                </div>
-            </a>
-
-
-
-            <a class="accordion" data-toggle="collapse" href="#collapseTwo" role="button" aria-expanded="false" >
-                <div class="teaser">
-                    <div class="time">
-                        <h5>10:15 – 11:00 Uhr</h5>
-                    </div>
-
-                    <div class="title">
-                        <h3>Unterthema Y</h3>
-                        <h6 class="theme">Themenblock 4</h6>
-                    </div>
-                </div>
-
-                <div class="collapse" id="collapseTwo">
-                    <div class="content">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                    </div>
-                </div>
-
-                <div class="accordion-toggle">
-                    <span class="one"></span>
-                    <span class="two"></span>
-                </div>
-            </a>
-
-
-
-            <a class="accordion" data-toggle="collapse" href="#collapseThree" role="button" aria-expanded="false" >
-                <div class="teaser">
-                    <div class="time">
-                        <h5>10:15 – 11:00 Uhr</h5>
-                    </div>
-
-                    <div class="title">
-                        <h3>Unterthema Y</h3>
-                        <h6 class="theme">Themenblock 4</h6>
-                    </div>
-                </div>
-
-                <div class="collapse" id="collapseThree">
-                    <div class="content">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                    </div>
-                </div>
-
-                <div class="accordion-toggle">
-                    <span class="one"></span>
-                    <span class="two"></span>
-                </div>
-            </a>
-        </div>
-
-    )
+           <ListItemText> {dinner.label}</ListItemText>
+        </ListItem>
+       ))}
+      
+    </AccordionDetails>
+  </Accordion>
+   
+  </div>
+    
+  );
 }

@@ -4,6 +4,7 @@ import { CalendarContext } from "./context/CalendarContext";
 import { CirclePicker } from "react-color";
 import seniorService from "../../services/senior.service";
 import chefService from "../../services/chef.service";
+import CustomizedAccordions from "./utils/Accordion";
 
 const customStyles = {
   content: {
@@ -18,28 +19,44 @@ const customStyles = {
 
 function TaskForm() {
 
-  const { date, task, setTask, saveTask, setDate, deleteTask } = useContext(CalendarContext);
+  const { select,date, task, setTask, saveTask, setDate, deleteTask } = useContext(CalendarContext);
 
   const [name, setName] = useState("");
+  const [type, setType] = useState("all");
   const [color, setColor] = useState("#f44336");
   const [error, setError] = useState(false);
-  const [menu,setMenu]=useState([]);
+  const [menu, setMenu] = useState([]);
+  const [archive, setArchive] = useState([]);
 
   useEffect(() => {
     if (task) {
       setName(task.name || "");
       setColor(task.color || "#f44336");
-      console.log(JSON.stringify(task.date))
-      if(task.type==="menu"){
+
+
+      if (task.color  === "#FFB85F") {
         chefService.getMenuByDate(JSON.stringify(task.date))
-        .then((result)=>{
-          setMenu(result.data)
-          console.log(result)
-        })
+          .then((result) => {
+            setMenu(result.data)
+
+          })
       }
+      if (task.name  === "food") {
+        retrieveArch(task.senior, JSON.stringify(task.date).substring(1, 11))
+       
+      }
+     
+
+
     }
 
-
+    if(select==='0'){
+      setType("all")
+      
+     }else{
+     
+      setType("senior")
+     }
 
   }, [task]);
 
@@ -49,24 +66,26 @@ function TaskForm() {
     setError(false);
   };
 
-  const _saveTask = () => {
-
+  const _saveTask = (e) => {
+e.preventDefault();
     if (name.trim().length < 1) {
       setError(true);
       return;
     }
     setError(false);
 
+  
+   
     let event = {
       id: task.id,
       date: date,
       name: name,
       color: color,
-      type: name,
-      senior: 10
+      type: type,
+      senior: select
     }
 
-    seniorService.addToCalendar(event)
+    seniorService.addToCalendar(event).then(()=>{setDate(new Date())})
     saveTask({
       ...task,
       date: date,
@@ -74,18 +93,57 @@ function TaskForm() {
       color: color,
     });
 
-    setDate(date);
+    
 
     closeModal();
 
   };
 
-  const _deleteTask = () => {
+  const _deleteTask = (e) => {
+    e.preventDefault();
     deleteTask(task.id);
     seniorService.removeEvent(task.id);
     setDate(date);
     closeModal();
     setError(false);
+  }
+
+  const disableName = (task) => {
+    if (task) {
+      if (task.color  === "#FFB85F" || task.color  === "#565656") {
+        return true;
+      } else {
+        return false;
+      }
+
+    } else {
+      return false;
+    }
+  }
+
+  const retrieveArch = (senior, date) => {
+    seniorService.getArchiveBySenior(senior.id)
+      .then((res) => {
+        setArchive(res.data.filter((arch) => {
+          let arg;
+         
+          if (arch.date === date) {
+            let archive = {
+              idArch: arch.idArch,
+              date: arch.date,
+              checkedLunch: arch.checkedLunch,
+              checkedDinner: arch.checkedDinner,
+              checkedBreakfast: arch.checkedBreakfast,
+
+
+            }
+            arg = archive;
+          }
+          return arg
+        })
+
+        )
+      });
   }
 
   return (
@@ -100,58 +158,112 @@ function TaskForm() {
 
         <label>Name</label>
         <input
-          disabled={name === "Menu" ? true : false}
+          disabled={disableName(task)}
           name="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           type="text"
           placeholder="Task Name"
         />
-        <label>Color</label>
+        {task && task.color === "#FFB85F" ?
+          (
+            <>
+              <label>Menu</label>
+              <div style={{ justifyContent: "flex-start" }} >
+                <CustomizedAccordions menu={menu} />
+              </div>
+            </>
+          )
+          : task && task.color  === "#565656" ?
+            (
+              <>
+                <label>Food</label>
+                <div style={{ justifyContent: "flex-start" }} >
+                  {archive.map((archive,index)=>(
 
-        <div>
-          <CirclePicker
+                  
+                  <div key={index} className="align-middle text-center text-sm d-flex    justify-content-center" style={{ alignItems: "center" }} >
 
-            color={color}
-            onChange={(color, e) => {
-              setColor(color.hex);
 
-              if (color.hex === "#2196f3") {
-                setName("Menu")
-              } else {
-                e.preventDefault();
-                setName("")
-              }
-            }}
-          />
-        </div>
-        {task && task.type==="menu" &&
-        <>
-        <label>Menu</label>
-        <div>
-            Breakfgast
-        </div>
-        </>
+                    <input
+                      id={archive.idArch + "BREAKFAST"}
+                      checked={archive.checkedBreakfast}
+                      value={archive.idArch}
+                      name="customCheckbox"
+                      type="checkbox"
+                      className="align-middle-inputDetails   "
+
+
+
+
+                    />
+                    <label htmlFor={archive.idArch + "BREAKFAST"} className="align-middle-labelDetails text-secondary">BREAKFAST </label>
+                    <input
+                      id={archive.idArch + "LUNCH"}
+                      checked={archive.checkedLunch}
+                      value={archive.idArch}
+                      name="customCheckbox"
+                      type="checkbox"
+                      className="align-middle-inputDetails   "
+
+
+                    />
+                    <label htmlFor={archive.idArch + "LUNCH"} className="align-middle-labelDetails text-secondary">LUNCH </label>
+                    <input
+                      id={archive.idArch + "DINNER"}
+                      checked={archive.checkedDinner}
+                      value={archive.idArch}
+                      name="customCheckbox"
+                      type="checkbox"
+                      className="align-middle-inputDetails   "
+
+
+                    />
+                    <label htmlFor={archive.idArch + "DINNER"} className="align-middle-labelDetails text-secondary">DINNER </label>
+                  </div>
+                  ))}
+                </div>
+              </>
+            )
+            :
+            (
+              <>
+                <label>Color</label>
+
+                <div>
+                  <CirclePicker
+
+                    color={color}
+                    onChange={(color, e) => {
+                      setColor(color.hex);
+
+                      
+                    }}
+                  />
+                </div>
+                <div>
+                  <button className="button button-red" onClick={closeModal}>
+                    Cancel
+                  </button>
+                  {task && task.id ? (
+                    <button
+                      className="button button-orange"
+                      onClick={_deleteTask}
+                    >
+                      Delete
+                    </button>
+                  ) : null}
+                  <button
+                    className="button button-green"
+                    onClick={_saveTask}
+                  >
+                    Save
+                  </button>
+                </div>
+              </>
+            )
         }
-        <div>
-          <button className="button button-red" onClick={closeModal}>
-            Cancel
-          </button>
-          {task && task.id ? (
-            <button
-              className="button button-orange"
-              onClick={_deleteTask}
-            >
-              Delete
-            </button>
-          ) : null}
-          <button
-            className="button button-green"
-            onClick={_saveTask}
-          >
-            Save
-          </button>
-        </div>
+
         {error ? <p className="error">The name of the task is required</p> : null}
       </div>
     </Modal>

@@ -3,19 +3,20 @@ import seniorService from "../../services/senior.service";
 import { CalendarContext } from "./context/CalendarContext";
 import Day from "./Day";
 
-function CalendarContent() {
+function CalendarContent({events}) {
 
-  const { date, days, setDate } = useContext(CalendarContext);
-
+  const { date, days, setDate,setEvents } = useContext(CalendarContext);
+  
  
   useEffect(() => {
     setDate(new Date());
     // eslint-disable-next-line
-    seniorService.getCalendarEvents().then((res)=>{
+    setEvents(events)
+   /*seniorService.getCalendarEvents().then((res)=>{
       let db=res.data;
-      console.log("res",res.data)
-      localStorage.setItem("$calendar_db", JSON.stringify(db));
-  })
+      
+      setEvents(db);
+  })*/
   
   }, []);
 

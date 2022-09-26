@@ -25,6 +25,7 @@
   }
   
   .calendarDiv .calendar {  
+   
     background-color: #ffffff;
     box-sizing: border-box;
     display: grid;
@@ -60,6 +61,7 @@
   .task-day {
     display: flex;
     gap: 10px;
+    
   }
   
   .task-day h3 {
@@ -88,6 +90,7 @@
     flex-direction: column;
     gap: 10px;
     padding: 10px;
+    
   }
   
   .task-form label{

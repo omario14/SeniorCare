@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from "react";
+import React, { createContext, useEffect, useReducer, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import seniorService from "../../../services/senior.service";
 
@@ -7,25 +7,20 @@ const SET_TASK = "SET_TASK";
 const SAVE_TASK = "SAVE_TASK";
 const DELETE_TASK = "DELETE_TASK";
 
-const getDatabase = ()=> {
-   seniorService.getCalendarEvents().then((res)=>{
-        db=res.data;
-        
-        setDatabase(db);
-    })
-  let db = localStorage.getItem("$calendar_db");
+const getDatabase = (event,setEvent)=> {
+  /*seniorService.getCalendarEvents().then((res)=>{
+    setEvent(res.data)
+ 
+    })*/
+   
+  let db ;
   
-  if(!db) {
-    db = [];
-   
-    setDatabase(db);
+ 
+    db = event; 
     
-  } else {
-   
-    db = JSON.parse(db); 
+    db.map(task=> {task.date = new Date(task.date)});
+  
     
-    db.map(task=> task.date = new Date(task.date));
-  }
   return db;
 }
 
@@ -48,9 +43,12 @@ function CalendarState(props) {
   const initialState = {
     date: new Date(),
     days: [],
-    task: null
+    task: null,
+    select:'0'
   };
+  const [event,setEvent]=useState([]);
 
+ 
   // Dispatch 
   const [state, dispatch] = useReducer((state, action) => {
     switch (action.type) {
@@ -64,7 +62,8 @@ function CalendarState(props) {
         const d2 = new Date(date.getFullYear(), date.getMonth() + 1, 0);
         if(d2.getDay() !== 0) d2.setDate(d2.getDate() + (7 - d2.getDay()));
         
-        const db = getDatabase();
+        
+        const db = getDatabase(event,setEvent);
         
   
         const days = [];
@@ -87,13 +86,13 @@ function CalendarState(props) {
           task: action.payload
         }
       case SAVE_TASK: {
-        let db = getDatabase();
+        let db =getDatabase(event,setEvent);
         const task = action.payload;
-       
+        
         if(!task.id) { // new Task
           task.id = uuidv4();
           db.push(task);
-          
+         
         } else {
           db = db.map(t=> {
             return t.id === task.id ? task : t;
@@ -102,19 +101,20 @@ function CalendarState(props) {
         }
         
        
-        
-        setDatabase(db);
+        setEvent(db)
+        //setDatabase(db);
        
         return {
           ...state
         }
       }
       case DELETE_TASK : {
-        let db = getDatabase();
+        let db = getDatabase(event,setEvent);
         db = db.filter((task)=> {
           return task.id !== action.payload;
         });
-        setDatabase(db);
+        setEvent(db)
+        //setDatabase(db);
         return {
           ...state,
         }
@@ -125,6 +125,10 @@ function CalendarState(props) {
   }, initialState);
 
   // CRUD
+  const setEvents = (event)=> {
+    setEvent(event)
+  }
+
   const setDate = (date)=> {
     dispatch({
       type: SET_DATE,
@@ -152,6 +156,22 @@ function CalendarState(props) {
       payload: taskId
     })
   }
+
+  const _select = (v)=>{
+    state.select=v;
+    seniorService.getEventsBySenior(state.select)
+    .then((resultat)=>{
+      setEvents(resultat.data)
+      setDate(new Date())
+    })
+    
+  }
+
+ 
+  
+
+
+  
   
   return (
     <CalendarContext.Provider
@@ -160,7 +180,10 @@ function CalendarState(props) {
         date: state.date,
         days: state.days,
         task: state.task,
+        select:state.select,
 
+        _select,
+        setEvents,
         setDate,
         setTask,
         saveTask,
