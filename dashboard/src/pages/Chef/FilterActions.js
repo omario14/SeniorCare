@@ -11,7 +11,7 @@ function Filter({currentPage,setActiveType,activeType,setFiltered,meals}) {
         const filtered =meals.filter((meal)=>meal.type.name===activeType);
         setFiltered(filtered);
         currentPage(1);
-        console.log("data",filtered)
+        
     },[activeType]);
     return ( 
         <div className="row" data-aos="fade-up" data-aos-delay="100">

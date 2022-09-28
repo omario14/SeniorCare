@@ -169,8 +169,9 @@ export default function MedsArch({ arch, myRef,socket,user }) {
                               
                               if (e.target.checked) {
                                 socket.emit("sendNotification",{
-                                  senderName:myRef.current.meds.label,
-                                  receiverName:user.username,
+                                  senderName:user.username,
+                                  content:myRef.current.meds.label,
+                                  type:"Meds"
                                  
                                 })
                                 seniorService.putMedsToArchive(myRef.current.archive.idArch, myRef.current.meds.idmed, true)
@@ -178,7 +179,7 @@ export default function MedsArch({ arch, myRef,socket,user }) {
                                 seniorService.putMedsToArchive(myRef.current.archive.idArch, myRef.current.meds.idmed, false)
                               }
                              
-                              console.log(myRef.current.done)
+                              
                             }} />
                             <div>
                               <svg viewBox="0 0 44 44">

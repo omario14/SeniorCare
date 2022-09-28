@@ -299,7 +299,7 @@ export default function MenuFood(props) {
                 :
 
 
-                <AddMealstoMenu setMenu={setMenus} menus={menus} meals={meal} setMealSelect={setMealSelect} />
+                <AddMealstoMenu socket={props.socket} user={props.user} setMenu={setMenus} menus={menus} meals={meal} setMealSelect={setMealSelect} />
 
 
 

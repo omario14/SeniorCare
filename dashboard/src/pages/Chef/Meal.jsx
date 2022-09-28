@@ -176,7 +176,7 @@ class Meal extends Component {
   };
   render() {
     
-    const { user: currentUser,t } = this.props;
+    const { user: currentUser,t ,socket } = this.props;
     TabTitle(t("meal"));
     if (!currentUser ) {
       return <Navigate to="/notFound" />;
@@ -425,7 +425,7 @@ class Meal extends Component {
           </>
         ) : (
           <>
-            <MenuFood addMeal={this.onPageChange} />
+            <MenuFood socket={socket} user={currentUser} addMeal={this.onPageChange} />
           </>
         )
         }

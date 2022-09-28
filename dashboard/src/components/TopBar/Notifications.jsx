@@ -5,7 +5,7 @@ export default function Notifications({ socket }) {
     const [notifications, setNotifications] = useState([]);
 
     useEffect(() => {
-        console.log("nottif", notifications)
+        
         if (socket) {
             socket.on("getNotification", (data) => {
                 setNotifications((prev) => [...prev, data]);
@@ -33,7 +33,7 @@ export default function Notifications({ socket }) {
                     </Badge>
                 
             </a>
-
+ 
             <ul
                 className="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4"
                 aria-labelledby="dropdownMenuButton"
@@ -50,7 +50,7 @@ export default function Notifications({ socket }) {
                             <div className="d-flex py-1">
                                 <div className="my-auto">
                                     <img
-                                        src="../assets/img/team-2.jpg"
+                                        src={`../assets/img/${n.type}.png`}
                                         className="avatar avatar-sm  me-3 "
                                         alt="img11"
                                     />
@@ -58,9 +58,9 @@ export default function Notifications({ socket }) {
                                 <div className="d-flex flex-column justify-content-center">
                                     <h6 className="text-sm font-weight-normal mb-1">
                                         <span className="font-weight-bold">
-                                        {n.senderName}
+                                        {n.content}
                                         </span>{" "}
-                                        from {n.receiverName}
+                                        from {n.senderName}
                                     </h6>
                                     <p className="text-xs text-secondary mb-0">
                                         <i className="fa fa-clock me-1"></i>

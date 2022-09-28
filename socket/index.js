@@ -7,10 +7,10 @@ const io = new Server({
  });
 
  let onlineUsers = []
- const addNewUser =(username,socketId)=>{
-    onlineUsers.some((user)=> console.log('userrr',user.username))
+ const addNewUser =(username,socketId,roles)=>{
+    
     !onlineUsers.some((user)=>user.username===username) &&
-    onlineUsers.push({username,socketId});
+    onlineUsers.push({username,socketId,roles});
  }
 
  const removeUser = (socketId) =>{
@@ -21,22 +21,33 @@ const io = new Server({
  {
     return onlineUsers.find((user)=>user.username===username);
  };
+ const getAccompagnant = (socket)=>
+ {
+    return onlineUsers.filter((user)=>user.roles==="ROLE_ACCOMPAGNANT" && user.socketId!==socket.id);
+ };
 
 io.on("connection", (socket) => {
-   socket.on("newUser",(username)=>{
-    addNewUser(username,socket.id);
+   socket.on("newUser",(username,roles)=>{
+    addNewUser(username,socket.id,roles);
+   
     
    });
 
-   socket.on("sendNotification",({senderName,receiverName})=>{
-   
-    const receiver = getUser(receiverName);
-    
-     io.emit("getNotification",{
-        senderName,
-        receiverName
-     });
+   socket.on("sendNotification",({senderName,content,type})=>{
+      console.log("receisver",onlineUsers)
+    const receiver = getAccompagnant(socket);
+    console.log("receiver",senderName)
+    if (receiver){
 
+    receiver.map((rec)=>{
+      io.to(rec.socketId).emit("getNotification",{
+         senderName,
+         content,
+         type
+      });
+    } )
+   }
+    
    });
 
   socket.on('disconnect',()=>{

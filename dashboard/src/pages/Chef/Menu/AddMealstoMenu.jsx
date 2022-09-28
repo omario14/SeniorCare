@@ -45,6 +45,12 @@ export default function AddMealstoMenu(props) {
     chefService.addNewMenu(menu).then((data) => {
       props.setMenu(data.data);
       props.setMealSelect(true);
+      props.socket.emit("sendNotification",{ 
+        senderName:props.user.username,
+        content:menu.date,
+        type:"Menu"
+       
+      })
     });
   };
 

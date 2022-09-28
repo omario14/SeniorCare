@@ -93,21 +93,26 @@ export default function Routingg({logOut}) {
     }, [currentUser]);
 
    useEffect(() => { 
-      if (currentUser) {
-      socket?.emit("newUser", currentUser.username);
+      if (currentUser ) {
+      socket?.emit("newUser", currentUser.username,currentUser.roles[0].name);
+      console.log("socketsssssssss",socket)
       
       }
     }, [socket, currentUser]);
 
     useEffect(()=>{
+      if (currentUser ) {
+        
       setSocket(io("http://localhost:5000"));
-   
+      console.log("socket",socket)
+    }
     },[])
+    
   
 const SidebarLayout = () => (
   <>
   
-    <SideBar setTitle={setTitle} />
+    <SideBar socket={socket} setTitle={setTitle} />
    
   </>
 );
@@ -129,7 +134,7 @@ const SidebarLayout = () => (
             <Route      path='/profile' element={<Profile title={title} t={t} dir={dir} />}/>
             <Route      path='/newSenior' element={<AddSenior title={title} />}/>
             <Route      path='/staff' element={<Staff title={title} />}/>
-            <Route      path='/meal' element={<Meal title={title}  t={t} dir={dir}/>}/>
+            <Route      path='/meal' element={<Meal title={title} socket={socket}  t={t} dir={dir}/>}/>
             <Route      path='/ingredients' element={<Ingredients title={title} />}/>
             <Route      path='/register' element={<AddUser title={title} />} />
 

@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import cookies from "js-cookie";
 import { TabTitle } from "../../utils/GeneralFunctions";
+import { Badge } from "@mui/material";
 
 const languages = [
   {
@@ -31,16 +32,35 @@ const languages = [
   },
 ];
 
-export default function SideBar({setTitle}) {
+export default function SideBar({setTitle,socket}) {
   const [showAccompagnantBoard, setShowAccompagnantBoard] = useState(false);
   const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [showChefBoard, setShowChefBoard] = useState(false);
   const { user: currentUser } = useSelector((state) => state.auth);
+  const [notifications, setNotifications] = useState([]);
 
   const currentLanguageCode = cookies.get("i18next") || "en";
   const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
   const { t } = useTranslation();
 
+
+
+    useEffect(() => {
+        
+        if (socket) {
+            socket.on("getNotification", (data) => {
+              console.log(data.type,"type")
+              if (data.type==="Menu"){
+                setNotifications((prev) => [...prev, data]);
+              }
+            });
+        }
+    }, [socket]); 
+
+    const handleRead = () => {
+        setNotifications([]);
+       
+      };
   useEffect(() => {
     document.body.dir = currentLanguage.dir || "ltr";
     
@@ -151,13 +171,22 @@ function toggleSidenav() {
             </NavLink>
             </li>
             <li className="nav-item">
-            <NavLink to="/food" onClick={()=>onButtonClick(`${t("food")}`)} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+            
+                       
+                   
+            <NavLink to="/food" onClick={()=>{onButtonClick(`${t("food")}`);handleRead()}} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+            <Badge color="warning" invisible={notifications.length>0  ? false:true}  variant="dot">
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                   
+              
                 <div  ><MdNoFood className="color-backgroundIcon" size="1.5em" /></div>
+                
                 </div>
+                </Badge>
                 <span className="nav-link-text ms-1 text-uppercase">  &nbsp; &nbsp;&nbsp; {t("food")}</span>
+                
             </NavLink>
+           
             </li>
             <li className="nav-item">
             <NavLink to="/calendar" onClick={()=>onButtonClick(`${t("calendar")}`)} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
