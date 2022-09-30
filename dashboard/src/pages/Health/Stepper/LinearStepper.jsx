@@ -173,7 +173,7 @@ function getStepContent(step) {
     }
 }
 
-const LinaerStepper = ({onChangeStepperLoading}) => {
+const LinaerStepper = ({ onChangeStepperLoading }) => {
     const classes = useStyles();
 
     const [activeStep, setActiveStep] = useState(0);
@@ -184,11 +184,11 @@ const LinaerStepper = ({onChangeStepperLoading}) => {
             note: "",
             symptoms: [],
             symptomss: [],
-            allSymps:[]
+            allSymps: []
         }
-        
+
     });
-    
+
     const [allsymptoms, setAllSymptoms] = useState();
     const [acccordion, setAcordion] = useState(null);
     const [results, setResults] = useState([]);
@@ -196,42 +196,41 @@ const LinaerStepper = ({onChangeStepperLoading}) => {
     const [buttonPrint, setButtonPrint] = useState(false);
     const ref = useRef();
     const section = useRef(null);
-    
-   
+
+
     const handlePrint = useReactToPrint({
         content: () => ref.current,
     });
 
 
     useEffect(() => {
-        if(activeStep === steps.length){
+        if (activeStep === steps.length) {
             setTimeout(() => {
                 window.scrollTo({
                     top: section.current.offsetTop,
                     behavior: 'smooth',
                 });
                 handleConfirm();
-               
+
             }, 10000);
-            
+
         }
     }, [activeStep])
-    
+
     const handleNext = () => {
-        if (activeStep===1 && methods.control._formValues.senior===null ){
-            
-        setActiveStep(1);
-        }else if(activeStep===2 && methods.control._formValues.symptoms.length===0 && methods.control._formValues.symptomss.length===0){
+        if (activeStep === 1 && methods.control._formValues.senior === null) {
+
+            setActiveStep(1);
+        } else if (activeStep === 2 && methods.control._formValues.symptoms.length === 0 && methods.control._formValues.symptomss.length === 0) {
 
             setActiveStep(2);
-        }else
-        {
+        } else {
             setActiveStep(activeStep + 1);
         }
 
-      
-       
-       
+
+
+
     };
 
     const handleBack = () => {
@@ -241,19 +240,19 @@ const LinaerStepper = ({onChangeStepperLoading}) => {
 
     useEffect(() => {
         let arrayIds = [];
-           allsymptoms&& allsymptoms.map(s=>{
-                arrayIds=[...arrayIds,s.id]
-            })
-                    symptomsService.updateSymptoms(arrayIds).then((result) => {
-                        console.log("Symptoms updated successfully")
-                    })
-          
-                   
-        
-    
-     
+        allsymptoms && allsymptoms.map(s => {
+            arrayIds = [...arrayIds, s.id]
+        })
+        symptomsService.updateSymptoms(arrayIds).then((result) => {
+            console.log("Symptoms updated successfully")
+        })
+
+
+
+
+
     }, [allsymptoms])
-    
+
 
     const onSubmit = (data) => {
 
@@ -265,10 +264,10 @@ const LinaerStepper = ({onChangeStepperLoading}) => {
             return res;
         }, [])
 
-        
+
         methods.setValue('allSymps', newState)
 
-       
+
         setAllSymptoms(newState)
 
     }
@@ -319,21 +318,21 @@ const LinaerStepper = ({onChangeStepperLoading}) => {
 
 
                     {buttonPrint ?
-                    < div style={{display:"flex",flexDirection:"column" ,alignItems:"center",justifyContent:"center",marginTop:"40px",marginBottom:"-15px"}}>
-                        <Button onClick={handlePrint}  style={{ width:"50%",marginBottom:"23px"}} filename="Hello" variant="contained" >
-                           <FaPrint/> &nbsp;  Print
-                        </Button>
-                        <Button
-                           
-                            
-                            variant="contained"
-                            color="primary"
-                            onClick={()=>setActiveStep(0)}
-                            style={{ width:"50%"}}>
-                            Start new checkup
-                        </Button>
+                        < div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginTop: "40px", marginBottom: "-15px" }}>
+                            <Button onClick={handlePrint} style={{ width: "50%", marginBottom: "23px" }} filename="Hello" variant="contained" >
+                                <FaPrint /> &nbsp;  Print
+                            </Button>
+                            <Button
+
+
+                                variant="contained"
+                                color="primary"
+                                onClick={() => setActiveStep(0)}
+                                style={{ width: "50%" }}>
+                                Start new checkup
+                            </Button>
                         </div>
-                        
+
                         :
                         <Button
                             onClick={handleConfirm}
@@ -341,14 +340,166 @@ const LinaerStepper = ({onChangeStepperLoading}) => {
                             variant="contained"
                             color="primary"
 
-                            style={{ width:"60%"}}>
+                            style={{ width: "60%" }}>
                             Result
                         </Button>
 
 
                     }
+                    <>
+                    <div ref={ref} className="mt-0" id="printOnly">
+                        <div className="page-content page-container" id="page-content" >
+                            <div className="py-5">
+                                <div className="row container d-flex justify-content-center">
+                                    <div className="col-lg-11 grid-margin stretch-card">
+                                        <div className="cardSymptom">
+                                            <div className="card-body">
+                                                <div style={{ display: "flex", justifyItems: "center", justifyContent: "space-between", marginRight: "25px" }}>
+                                                    <div className="text-dark" style={{ color: "black", fontSize: "25px" }} >Informations </div>
+                                                    
+                                                </div>
+                                                <div className="mt-4 collapse show ">
+                                                    <div className="accordion" id="accordion" role="tablist">
 
-                    <div ref={ref} className="mt-0">
+
+
+                                                        <div className="row mb-5" >
+                                                            <h5 >Senior Info </h5>
+                                                            <div className="col-3">
+                                                                <p className="card-description center" >Name</p>
+                                                                <span className="text-capitalize">{methods.control._formValues.senior.name}</span>
+                                                            </div>
+                                                            <div className="col-3">
+                                                                <h6 className="card-description center" >Lastname</h6>
+                                                                <span className="text-capitalize">{methods.control._formValues.senior.lastname}</span>
+                                                            </div>
+                                                            <div className="col-3">
+                                                                <h6 className="card-description center">Date of birth</h6>
+                                                                <p className="text-capitalize">{methods.control._formValues.senior.dateOfBirth}</p>
+                                                            </div>
+                                                            <div className="col-3">
+                                                                <h6 className="card-description center">Sex</h6>
+                                                                <span className="text-capitalize">{methods.control._formValues.senior.sex}</span>
+                                                            </div>
+                                                            {methods.control._formValues.note &&
+                                                                <div className="col-3 " style={{ width: "100%" }}>
+                                                                    <h6 className="card-description center">Note </h6>
+                                                                    <span className="text-capitalize" >
+                                                                        {methods.control._formValues.note}
+                                                                    </span>
+
+
+                                                                </div>
+                                                            }
+                                                        </div>
+
+
+
+
+                                                        <div className="row" >
+                                                            <h5 >Symptoms</h5>
+
+                                                            <ul className="o-vertical-spacing " style={{ margin: "5px 0 0 12px" }} >
+
+
+                                                                {allsymptoms.map((symptom, i) => (
+                                                                    <li key={i} style={{ listStyleType: "circle" }} >
+
+                                                                        <span className="text-capitalize">{symptom.label}</span>
+
+
+                                                                    </li>
+
+                                                                ))}
+                                                            </ul>
+
+
+
+                                                        </div>
+
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="page-content page-container" id="page-content" >
+                            <div className="py-5">
+                                <div className="row container d-flex justify-content-center">
+                                    <div className="col-lg-11 grid-margin stretch-card">
+                                        <div className="cardSymptom">
+                                            <div className="card-body">
+                                                <h4>Results</h4>
+                                                <p className="card-description center">Possible conditions</p>
+                                                <div className="mt-4">
+                                                    <div className="accordion" id="accordion" role="tablist">
+                                                        {results.filter(result => result.rate !== 0).map((res, index) => (
+
+
+                                                            <div key={index} ref={section} className="cardSymptom mb-7">
+                                                                <div className="card-header" role="tab" id="heading-1">
+                                                                    <h6 className="mb-0">
+                                                                        <a onClick={() => toggleAccordion(res.id)} className="collapsed" data-toggle="collapse" href="#collapse-2" aria-expanded="false" aria-controls="collapse-2" data-abc="true">
+                                                                            {res.label}
+                                                                        </a>
+                                                                    </h6>
+                                                                </div>
+                                                                <div id="collapse-1" className="collapse show " role="tabpanel" aria-labelledby="heading-1" data-parent="#accordion" >
+                                                                    <div className="card-body">
+                                                                        <div className="row">
+
+                                                                            <div className="col-3" style={{ marginRight: "60px", width: "100px", height: "100px" }}>
+                                                                                <CircularProgressbar
+
+                                                                                    value={(res.rate / res.symptoms.length)}
+                                                                                    maxValue={1}
+                                                                                    strokeWidth={5}
+                                                                                    text={`${Math.floor((res.rate / res.symptoms.length) * 100)}%`}
+                                                                                    styles={(res.rate / res.symptoms.length) > 0.5 ? buildStyles({
+                                                                                        textColor: "red",
+                                                                                        pathColor: "red",
+
+
+                                                                                    }) : " "}
+                                                                                />
+                                                                                <span className="text-center">Probability</span>
+                                                                            </div>
+
+
+                                                                            <div className="col-9 ">
+                                                                                <h4>What is {res.label} ?</h4>
+                                                                                <p className="mb-0">{res.description}</p>
+                                                                                <div className="col-9 mt-5">
+                                                                                    <h4>What to Do/Take !</h4>
+                                                                                    <p className="mb-0">{res.treatment}</p>
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </>
+
+                    <div className="mt-0">
                         <div className="page-content page-container" id="page-content" >
                             <div className="py-5">
                                 <div className="row container d-flex justify-content-center">
@@ -430,7 +581,7 @@ const LinaerStepper = ({onChangeStepperLoading}) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="page-content page-container" id="page-content"  ref={section}>
+                        <div className="page-content page-container" id="page-content" ref={section}>
                             <div className="py-5">
                                 <div className="row container d-flex justify-content-center">
                                     <div className="col-lg-11 grid-margin stretch-card">

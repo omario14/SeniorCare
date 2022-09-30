@@ -3,3 +3,7 @@
     width: 2000px;
     background-color: rgb(247, 247, 247);
 }
+  
+  .img-container img {
+    height: 200px;
+  }

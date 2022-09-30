@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import TopBar from '../../components/TopBar/TopBar';
 import { TabTitle } from '../../utils/GeneralFunctions';
 import { BsFillFileEarmarkPersonFill } from "react-icons/bs";
 import './home.css';
@@ -8,13 +7,15 @@ import seniorService from '../../services/senior.service';
 import { MdElderly  } from "react-icons/md";
 import { Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Button } from '@mui/material';
+import BasicModal from './bmiCalculatorModal';
 
 class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      
+      modalbmi:false,
       userNumber:0,
       seniorNumber:0,
     };
@@ -45,6 +46,7 @@ class Home extends Component {
     const style = { color: "white", fontSize: "1.8em" }
     return (
       <div className='home'>
+        <BasicModal open={this.state.modalbmi} closeFn={()=>{this.setState({modalbmi:false})}}/>
         <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
          
           <div className="container-fluid py-4">
@@ -149,12 +151,12 @@ class Home extends Component {
                       <div className="col-lg-6">
                         <div className="d-flex flex-column h-100">
                           <p className="mb-1 pt-2 text-bold">Built by developers</p>
-                          <h5 className="font-weight-bolder">Soft UI Dashboard</h5>
-                          <p className="mb-5">From colors, cards, typography to complex elements, you will find the full documentation.</p>
-                          <a className="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" href=" /">
+                          <h5 className="font-weight-bolder">BMI Calculator</h5>
+                          <p className="mb-5">enter your weight and height and you get your body mass index in one click .</p>
+                          <Button className="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" onClick={()=>{this.setState({modalbmi:true})}}>
                             Read More
                             <i className="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
-                          </a>
+                          </Button>
                         </div>
                       </div>
                       <div className="col-lg-5 ms-auto text-center mt-5 mt-lg-0">

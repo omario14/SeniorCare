@@ -14,6 +14,10 @@ export default function SeniorDetails({ senior, addSeniorPage,socket, user }) {
   const [seniorArch, setSeniorArch] = useState([]);
   const [seniorArchsrtd, setSeniorArchsrtd] = useState([]);
   const [order, setOrder] = useState("DSC");
+  const [bmi,setBmi]=useState('');
+  const [msg,setMsg]=useState('');
+
+  
   
 
   const myRef = useRef(null);
@@ -39,7 +43,23 @@ export default function SeniorDetails({ senior, addSeniorPage,socket, user }) {
   useEffect(() => {
     retrieveArch({ senior });
   
-
+    seniorService.calculBmi(senior.weight,senior.height)
+    .then((res)=>{
+      let bmin = res.data.toFixed(1);
+      setBmi(bmin)
+    if(bmin < 18.5) {
+        setMsg("Underweight");
+    }
+    if(bmin >= 18.5 && bmin < 24.9) {
+      setMsg("Normal weight");
+    }
+    if(bmin >= 25 && bmin < 29.9) {
+      setMsg("Overweight");
+    }
+    if(bmin >= 30) {
+      setMsg("Obesity");
+    }
+    })
 
   }, []);
 
@@ -117,8 +137,10 @@ export default function SeniorDetails({ senior, addSeniorPage,socket, user }) {
                         <h6 className='text-capitalize'>{senior.name}</h6>
                         <p className="text-sm mb-0">
                           <i className="fa fa-check text-info" aria-hidden="true"></i>
-                          <span className="font-weight-bold ms-1">30 done</span> this month
+                          <span className="font-weight-bold ms-1">{senior.name}'s BMI is : </span> {bmi && bmi}  <Badge pill bg="light" text="dark"><span> {msg}</span></Badge>
+                         
                         </p>
+                        
                       </div>
 
                     </div>

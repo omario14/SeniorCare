@@ -10,7 +10,7 @@ class AuthService {
     return Axios
       .post(API_URL + "authenticate", { username, password })
       .then((response) => {
-        console.log("user",response.data);
+        
         if (response.data.accessToken) {
           localStorage.setItem("user", JSON.stringify(response.data));
         

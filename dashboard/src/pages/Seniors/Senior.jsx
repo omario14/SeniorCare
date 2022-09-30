@@ -184,6 +184,8 @@ class Senior extends Component {
                             cin: d.cin,
                             telephone: d.telephone,
                             file: d.file,
+                            weight:d.weight,
+                            height:d.height,
                             adress: d.adress,
                             famillySituation: d.famillySituation,
                             centerOfInterest: d.centerOfInterest,

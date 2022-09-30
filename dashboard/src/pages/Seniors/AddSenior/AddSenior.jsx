@@ -4,9 +4,14 @@ import './AddSenior.css'
 import { createSenior } from '../../../actions/senior';
 import { connect } from 'react-redux';
 import seniorService from '../../../services/senior.service';
-import { Button, ButtonGroup } from '@mui/material';
-import { GiHealthPotion, GiReturnArrow } from 'react-icons/gi';
+import { Button, ButtonGroup, Grid, InputAdornment, Slider } from '@mui/material';
+import { GiBodyHeight, GiHealthPotion, GiReturnArrow, GiWeightScale } from 'react-icons/gi';
+import MuiInput from '@mui/material/Input';
 import { Navigate } from 'react-router-dom';
+import styled from '@emotion/styled';
+const Input = styled(MuiInput)`
+  width: 62px;
+`;
 
 class AddSenior extends Component {
 	constructor(props) {
@@ -17,6 +22,9 @@ class AddSenior extends Component {
 		this.onChange = this.onChange.bind(this);
 		this.saveSenior = this.saveSenior.bind(this);
 		this.newSenior = this.newSenior.bind(this);
+		this.onChangeWeight = this.onChangeWeight.bind(this);
+		this.onChangeHeight = this.onChangeHeight.bind(this);
+		this.handleBlur = this.handleBlur.bind(this);
 		this.state = {
 			senior: null,
 			name: "",
@@ -28,6 +36,8 @@ class AddSenior extends Component {
 			cin: "",
 			adress: "",
 			famSituation: "",
+			height: 150,
+			weight: 70,
 			fileId: null,
 			seniorImg: "../../../../assets/img/images/avartar.png",
 			selectedFile: null,
@@ -70,6 +80,28 @@ class AddSenior extends Component {
 		});
 	}
 
+	onChangeWeight = (event) => {
+		this.setState({
+			weight: event.target.value === '' ? '' : Number(event.target.value)
+		});
+	}
+	onChangeHeight = (event) => {
+		this.setState({
+			height: event.target.value === '' ? '' : Number(event.target.value)
+		});
+	}
+
+	handleBlur = () => {
+		if (this.state.weight < 20) {
+			this.setState({
+				weight: 20
+			})
+		} else if (this.state.weight > 300) {
+			this.setState({
+				weight: 300
+			})
+		}
+	};
 	formValidation = () => {
 		const { name, lastname, birthDate, famSituation, cin, telephone } = this.state;
 		let isValid = true;
@@ -98,7 +130,7 @@ class AddSenior extends Component {
 			errors.cinError = "Cin length must be 8  !"
 			isValid = false;
 		}
-		if ((0<telephone.trim().length && telephone.trim().length < 8) || telephone.trim().length > 8) {
+		if ((0 < telephone.trim().length && telephone.trim().length < 8) || telephone.trim().length > 8) {
 			errors.telephoneError = "Telephone length must be 8   !"
 			isValid = false;
 		}
@@ -146,12 +178,14 @@ class AddSenior extends Component {
 						famillySituation: this.state.famSituation,
 						centerOfInterest: this.state.interests.value,
 						file: this.state.fileId,
+						weight: this.state.weight,
+						height: this.state.height,
 					};
 
 
 
 					seniorService.create(senior).then((res) => {
-						console.log("ddddd", res.data.id)
+
 						addSeniorPage()
 						this.setState({
 							published: true,
@@ -187,6 +221,8 @@ class AddSenior extends Component {
 					famillySituation: this.state.famSituation,
 					centerOfInterest: this.state.interests.value,
 					file: this.state.fileId,
+					weight: this.state.weight,
+					height: this.state.height,
 				};
 				this.setState({ published: true, });
 
@@ -240,7 +276,7 @@ class AddSenior extends Component {
 		const { addSeniorPage } = this.props;
 		const { user: currentUser } = this.props;
 
-		if (!currentUser ) {
+		if (!currentUser) {
 			return <Navigate to="/notFound" />;
 
 		}
@@ -420,6 +456,86 @@ class AddSenior extends Component {
 														value={this.state.telephone}
 														onChange={this.onChange} />
 													<span className="text-sm text-danger">{this.state.errors["telephoneError"]} </span>
+												</div>
+											</div>
+										</div>
+										<div className="rowoo rowoo-space">
+											<div className="col-2">
+												<div className="input-groupp">
+													<label className="label">Height *</label>
+													<Grid container spacing={2} alignItems="center">
+														<Grid item>
+															<GiBodyHeight />
+														</Grid>
+														<Grid item xs>
+															<Slider
+																value={typeof this.state.height === 'number' ? this.state.height : 110}
+																onChange={this.onChangeHeight}
+																aria-labelledby="input-slider"
+																name="height"
+																min={110}
+																max={290}
+															/>
+														</Grid>
+														<Grid item>
+															<Input
+																value={this.state.height}
+																size="small"
+																onChange={this.onChangeHeight}
+
+																name="height"
+																inputProps={{
+																	step: 10,
+																	min: 110,
+																	max: 290,
+																	type: 'number',
+																	'aria-labelledby': 'input-slider',
+																}}
+																endAdornment={<InputAdornment position="end">cm</InputAdornment>}
+															/>
+
+														</Grid>
+													</Grid>
+
+												</div>
+											</div>
+											<div className="col-2">
+												<div className="input-groupp">
+													<label className="label">Weight *</label>
+													<Grid container spacing={2} alignItems="center">
+														<Grid item>
+															<GiWeightScale />
+														</Grid>
+														<Grid item xs>
+															<Slider
+																value={typeof this.state.weight === 'number' ? this.state.weight : 20}
+																onChange={this.onChangeWeight}
+																aria-labelledby="input-slider"
+																name="weight"
+																min={20}
+																max={300}
+															/>
+														</Grid>
+														<Grid item>
+															<Input
+																value={this.state.weight}
+																size="small"
+																onChange={this.onChangeWeight}
+																onBlur={this.handleBlur}
+																name="weight"
+																inputProps={{
+																	step: 10,
+																	min: 20,
+																	max: 300,
+																	type: 'number',
+																	'aria-labelledby': 'input-slider',
+																}}
+																endAdornment={<InputAdornment position="end">kg</InputAdornment>}
+															/>
+
+														</Grid>
+													</Grid>
+
 												</div>
 											</div>
 										</div>

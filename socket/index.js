@@ -43,12 +43,12 @@ io.on("connection", (socket) => {
       io.to(rec.socketId).emit("getNotification",{
          senderName,
          content,
-         type
+         type 
       });
     } )
    }
     
-   });
+   }); 
 
   socket.on('disconnect',()=>{
     removeUser(socket.id);

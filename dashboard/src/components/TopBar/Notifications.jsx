@@ -1,6 +1,8 @@
-import { Badge, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-
+import { Badge, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import notifSound from "../../utils/audioClips/notif1.mp3";
+import {Howl,Howler} from "howler";
+import { NavLink } from 'react-router-dom';
 export default function Notifications({ socket }) {
     const [notifications, setNotifications] = useState([]);
 
@@ -9,6 +11,7 @@ export default function Notifications({ socket }) {
         if (socket) {
             socket.on("getNotification", (data) => {
                 setNotifications((prev) => [...prev, data]);
+                SoundPlay(notifSound);
             });
         }
     }, [socket]);
@@ -17,6 +20,15 @@ export default function Notifications({ socket }) {
         setNotifications([]);
        
       };
+
+    const SoundPlay = (src)=>{
+        const sound = new Howl({
+            src
+        })
+        sound.play();
+    }
+
+    Howler.volume(1.0)
 
     return (
         <div>
@@ -43,9 +55,9 @@ export default function Notifications({ socket }) {
                     <>
                     {notifications.map((n) => (
                     <li className="mb-2">
-                        <a
+                        <NavLink to={n.type==="Menu" && "/food"}
                             className="dropdown-item border-radius-md"
-                            href="/"
+                            
                         >
                             <div className="d-flex py-1">
                                 <div className="my-auto">
@@ -68,7 +80,7 @@ export default function Notifications({ socket }) {
                                     </p>
                                 </div>
                             </div>
-                        </a>
+                        </NavLink>
                     </li>
                 ))}
 

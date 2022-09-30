@@ -156,3 +156,16 @@
   margin-left: -3px;
   top: 30%;
 }
+
+#printOnly {
+  display : none;
+}
+body > #printOnly {
+  display: block;
+}
+
+@media print {
+   #printOnly {
+      display : block;
+   }
+}
