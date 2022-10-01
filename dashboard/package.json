@@ -53,6 +53,7 @@
     "react-select": "^5.3.1",
     "react-to-print": "^2.14.7",
     "react-validation": "^3.0.7",
+    "recharts": "^2.1.14",
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",
     "socket.io-client": "^4.5.1",

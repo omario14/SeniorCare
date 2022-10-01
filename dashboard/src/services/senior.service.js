@@ -37,6 +37,9 @@ class SeniorService {
   calculBmi(weight,height){
     return http.get(`/calcul-bmi/${weight}/${height}`,{headers: authHeader()})
   }
+  countInterests(){
+    return http.get(`/count-interests`,{headers: authHeader()})
+  }
 
 
 
