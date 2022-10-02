@@ -18,46 +18,9 @@ import {
   PolarAngleAxis,
   PolarRadiusAxis
 } from "recharts";
-import { FcMusic, FcReading } from 'react-icons/fc';
+import WeatherWidget from './WeatherWidget';
 
-const data = [
-  {
-    subject: "Math",
-    A: 120,
-    B: 110,
-    fullMark: 150
-  },
-  {
-    subject: "Chinese",
-    A: 98,
-    B: 130,
-    fullMark: 150
-  },
-  {
-    subject: "English",
-    A: 86,
-    B: 130,
-    fullMark: 150
-  },
-  {
-    subject: "Geography",
-    A: 99,
-    B: 100,
-    fullMark: 150
-  },
-  {
-    subject: "Physics",
-    A: 85,
-    B: 90,
-    fullMark: 150
-  },
-  {
-    subject: "History",
-    A: 65,
-    B: 85,
-    fullMark: 150
-  }
-];
+
 
 class Home extends Component {
   constructor(props) {
@@ -68,7 +31,7 @@ class Home extends Component {
       userNumber: 0,
       seniorNumber: 0,
       seniors: [],
-      data:[],
+      data: [],
 
     };
   }
@@ -78,11 +41,11 @@ class Home extends Component {
 
     seniorService.countInterests().then((res) => {
       this.setState({
-        seniors:res.data
+        seniors: res.data
       })
       this.mapToObj();
     })
-    
+
     userService.getUserNumber().then((res) => {
       this.setState({
         userNumber: res.data,
@@ -95,38 +58,38 @@ class Home extends Component {
     })
   }
 
-  mapToObj=()=>{
+  mapToObj = () => {
     this.setState({
       data:
-    Object.keys(this.state.seniors).map((key, i) =>  {
-      return {
-        key:key,
-        value:this.state.seniors[key]
-      }
+        Object.keys(this.state.seniors).map((key, i) => {
+          return {
+            key: key,
+            value: this.state.seniors[key]
+          }
+        })
     })
-  })
   }
 
-  iconCOI=(c)=>{
+  iconCOI = (c) => {
 
     switch (c) {
       case "reading":
 
-        return <FaBookReader color="white" size={14}/>
-       
+        return <FaBookReader color="white" size={14} />
+
       case "listening":
 
-        return <FaMusic color="white" size={14}/>
-       
+        return <FaMusic color="white" size={14} />
+
       case "playing":
 
         return <FaChess color="white" size={14} />
-       
+
       case "watching":
 
-        return <FaTv color="white" size={14}/>
-       
-    
+        return <FaTv color="white" size={14} />
+
+
       default:
         break;
     }
@@ -145,7 +108,7 @@ class Home extends Component {
         <BasicModal open={this.state.modalbmi} closeFn={() => { this.setState({ modalbmi: false }) }} />
         <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
 
-      
+
           <div className="container-fluid py-4">
             <div className="row ">
               <div className="col-xl-3 col-sm-6 mb-xl-0 mb-4">
@@ -258,11 +221,11 @@ class Home extends Component {
                         </div>
                       </div>
                       <div className="col-lg-5 ms-auto text-center mt-5 mt-lg-0">
-                        <div className="bg-gradient-primary border-radius-lg h-100">
+                        <div className="bg-gradient-primary border-radius-lg h-100" onClick={() => { this.setState({ modalbmi: true }) }}>
                           <img src="../assets/img/shapes/waves-white.svg" className="position-absolute h-100 w-50 top-0 d-lg-block d-none" alt="waves" />
 
-                          <div className="position-relative d-flex align-items-center justify-content-center h-100">
-                            <img className="w-50 position-relative z-index-2 pt-4" src="../assets/img/illustrations/bmi1.png" alt="rocket" />
+                          <div className="position-relative d-flex align-items-center justify-content-center h-100 scaleImg">
+                            <img className="w-50 position-relative z-index-2 pt-4" src="../assets/img/illustrations/bmi1.png" alt="scaleImg" />
                           </div>
                         </div>
                       </div>
@@ -291,66 +254,71 @@ class Home extends Component {
                 <div className="card z-index-2">
                   <div className="card-body p-1">
 
-                 
-         
-      
-                 
-                        
-                      <RadarChart
-                        cx={250}
-                        cy={200}
-                        outerRadius={150}
-                        width={500}
-                        height={500}
-                        data={this.state.data}
-                      >
-                        
-                        <PolarGrid />
-                       
-                        <PolarAngleAxis dataKey="key" />
-                     
-                        <PolarRadiusAxis />
-                       
-                        <Radar
-                          name="centreDinteret"
-                          dataKey="value"
-                          stroke="#8884d8"
-                          fill="#8884d8"
-                          fillOpacity={0.6}
-                        />
-                     
-                      
-                      </RadarChart>
-                     
-                       
-                  
+
+
+
+
+
+                    <RadarChart
+                      cx={250}
+                      cy={200}
+                      outerRadius={150}
+                      width={500}
+                      height={500}
+                      data={this.state.data}
+                    >
+
+                      <PolarGrid />
+
+                      <PolarAngleAxis dataKey="key" />
+
+                      <PolarRadiusAxis />
+
+                      <Radar
+                        name="centreDinteret"
+                        dataKey="value"
+                        stroke="#8884d8"
+                        fill="#8884d8"
+                        fillOpacity={0.6}
+                      />
+
+
+                    </RadarChart>
+
+
+
                     <h6 className="ms-2 mt-0 mb-0">What seniors most want to do </h6>
                     {/*<p className="text-sm ms-2"> (<span className="font-weight-bolder">+23%</span>) than last week </p>*/}
                     <div className="container border-radius-lg">
                       <div className="row">
-                      {this.state.data.map((s)=>(
+                        {this.state.data.map((s) => (
 
-                      
-                        <div className="col-3 py-3 ps-0">
-                          <div className="d-flex mb-2">
-                            <div className="icon icon-shape icon-xxs shadow border-radius-sm bg-gradient-info text-center me-2 d-flex align-items-center justify-content-center">
-                             {this.iconCOI(s.key)}
+
+                          <div className="col-3 py-3 ps-0">
+                            <div className="d-flex mb-2">
+                              <div className="icon icon-shape icon-xxs shadow border-radius-sm bg-gradient-info text-center me-2 d-flex align-items-center justify-content-center">
+                                {this.iconCOI(s.key)}
+                              </div>
+                              <p className="text-xs mt-1 mb-0 font-weight-bold text-capitalize">{s.key}</p>
                             </div>
-                            <p className="text-xs mt-1 mb-0 font-weight-bold text-capitalize">{s.key}</p>
+                            <h4 className="font-weight-bolder">{s.value}</h4>
+                            <div className="progress w-75">
+                              <div className={`progress-bar bg-dark w-${s.value * 10}`} role="progressbar" aria-valuenow={s.value} aria-valuemin="0" aria-valuemax={this.state.data.length}></div>
+                            </div>
                           </div>
-                          <h4 className="font-weight-bolder">{s.value}</h4>
-                          <div className="progress w-75">
-                            <div className={`progress-bar bg-dark w-${s.value*10}`} role="progressbar" aria-valuenow={s.value} aria-valuemin="0" aria-valuemax={this.state.data.length}></div>
-                          </div>
-                        </div>
                         ))}
-                       
+
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+
               <div className="col-lg-7">
+                <div className="row">
+                  <WeatherWidget />
+                </div>
+                <div className="row">
                 <div className="card z-index-2">
                   <div className="card-header pb-0">
                     <h6>Sales overview</h6>
@@ -361,19 +329,21 @@ class Home extends Component {
                   </div>
                   <div className="card-body p-3">
                     <div className="chart">
-                    { Object.keys(this.state.seniors).map((key, i) => (
-          <p key={i}>
-            <span>{key}</span>
-            <span>{this.state.seniors[key]}</span>
-          </p>
-        ))
-        
-        
-       }
+                      {Object.keys(this.state.seniors).map((key, i) => (
+                        <p key={i}>
+                          <span>{key}</span>
+                          <span>{this.state.seniors[key]}</span>
+                        </p>
+                      ))
+
+
+                      }
                     </div>
                   </div>
                 </div>
+                </div>
               </div>
+              
             </div>
             <div className="row my-4">
               <div className="col-lg-8 col-md-6 mb-md-0 mb-4">
