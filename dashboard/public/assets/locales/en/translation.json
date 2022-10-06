@@ -24,6 +24,7 @@
   "seniorPage": {
     "senior_table": "Senior Table",
     "add_senior": "add new senior",
+    "export_Seniors": "export to excel",
     "delete_seniors": "delete seniors ",
     "search": "search ",
     "cin": "cin",

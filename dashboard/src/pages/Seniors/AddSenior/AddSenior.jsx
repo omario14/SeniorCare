@@ -59,7 +59,6 @@ class AddSenior extends Component {
 
 			}
 		}
-		console.log("this is image " + this.state.seniorImg)
 		reader.readAsDataURL(e.target.files[0])
 	}
 
@@ -110,7 +109,7 @@ class AddSenior extends Component {
 			errors.nameError = "Name is empty !"
 			isValid = false;
 		}
-		if (!/^[A-Za-z]*$/.test(name.trim())) {
+		if (!/^[A-Za-z_ ]*$/.test(name.trim())) {
 			errors.nameError = "Name must contain only Letters !"
 			isValid = false;
 		}
@@ -186,7 +185,7 @@ class AddSenior extends Component {
 
 					seniorService.create(senior).then((res) => {
 
-						addSeniorPage()
+						
 						this.setState({
 							published: true,
 							senior: res.data
@@ -203,7 +202,7 @@ class AddSenior extends Component {
 
 
 					})
-
+					addSeniorPage(1)
 
 
 				})
@@ -241,7 +240,7 @@ class AddSenior extends Component {
 					}
 					seniorService.addToArchive(archive)
 
-					addSeniorPage()
+					addSeniorPage(1)
 				})
 
 

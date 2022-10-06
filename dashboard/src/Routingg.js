@@ -95,7 +95,7 @@ export default function Routingg({logOut}) {
    useEffect(() => { 
       if (currentUser ) {
       socket?.emit("newUser", currentUser.username,currentUser.roles[0].name);
-      console.log("socketsssssssss",socket)
+      
       
       }
     }, [socket, currentUser]);
@@ -104,7 +104,7 @@ export default function Routingg({logOut}) {
       if (currentUser ) {
         
       setSocket(io("http://localhost:5000"));
-      console.log("socket",socket)
+     
     }
     },[])
     

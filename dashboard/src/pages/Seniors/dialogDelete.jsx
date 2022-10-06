@@ -1,3 +1,6 @@
+import { Box } from "@mui/material";
+import { Button, ButtonGroup } from "react-bootstrap";
+
 function Dialog({ message, onDialog }) {
     return (
       <div
@@ -19,36 +22,44 @@ function Dialog({ message, onDialog }) {
         >
           <h3 className="text-uppercase" stlye={{ color: "#111", fontSize: "16px" }}>{message}</h3>
           
-          <div style={{ display: "flex", alignItems: "center" ,marginTop:"80px"}}>
-            <button
-              onClick={() => onDialog(true)}
-              className="btn  btn-rounded"
-              style={{
-                border: "2px solid ",
-               
-                marginRight: "10px",
-               backgroundColor:"#D24548",
-                cursor: "pointer"
-              }}
-            >
-              Yes
-            </button>
-            <button
-              onClick={() => onDialog(false)}
-              className="btn  btn-rounded"
-              style={{
-                
-                border: "2px solid ",
-                marginLeft: "10px",
-                backgroundColor:"#45d263",
-                cursor: "pointer"
-              }}
-            >
-              No
-            </button>
+          
+          
+          <Box
+                                mt={5}
+                                mb={5}
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="center"
+                                justifyContent="center"
+                            >
+                                <ButtonGroup
+                                    style={{ textAlign: "center", height: "40px" }} color="outlined" aria-label="outlined primary button group"
+                                >
+                                    <Button 
+                                        style={{
+                                            border: "2px solid ",
+                                            alignItems: "center",
+                                            borderRadius: "12px",
+                                            cursor: "pointer",
+                                            width :"120px"
+                                        }} onClick={() => onDialog(true)}>
+                                        Yes
+                                    </Button> <Button style={{
+                                        border: "2px solid ",
+                                        alignItems: "center",
+                                        borderRadius: "12px",
+                                        cursor: "pointer",
+                                        width :"120px"
+
+                                    }} onClick={() => onDialog(false)}>
+                                        No
+                                    </Button>
+                                </ButtonGroup >
+                            </Box>
+           
           </div>
         </div>
-      </div>
+      
     );
   }
   export default Dialog;

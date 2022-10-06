@@ -1,7 +1,8 @@
-import { Alert, Snackbar } from '@mui/material';
+import { withStyles } from '@material-ui/styles';
+import { Alert, Box, Snackbar, Tooltip } from '@mui/material';
 import React from 'react'
 import { Component } from 'react'
-import { Button, Form, Modal } from 'react-bootstrap';
+import { Button, ButtonGroup, Form, InputGroup, Modal } from 'react-bootstrap';
 import { FcEmptyTrash, FcPlus } from "react-icons/fc";
 import { IoTrashOutline } from 'react-icons/io5';
 import { MdEditNote } from 'react-icons/md';
@@ -15,7 +16,14 @@ import { TabTitle } from '../../utils/GeneralFunctions'
 import Dialog from '../Seniors/dialogDelete';
 import RegisterComponent from './addUser'
 import './staff.css'
+const BlueOnGreenTooltip = withStyles({
+    tooltip: {
+        color: "#1a2228",
+        backgroundColor: "rgba(250, 250, 255, 1)",
+        textTransform: "uppercase"
+    }
 
+})(Tooltip);
 class Staff extends Component {
     constructor(props) {
         super(props);
@@ -91,6 +99,7 @@ class Staff extends Component {
             editDialog: editDialog,
             name: this.myRef.current.name,
             lastName: this.myRef.current.lastName,
+            username: this.myRef.current.username,
             email: this.myRef.current.email,
             mobile: this.myRef.current.mobile,
             adress: this.myRef.current.adress,
@@ -104,7 +113,7 @@ class Staff extends Component {
     }
 
     handleClose = () => {
-       
+
         this.setState({
             editDialog: false,
         })
@@ -139,7 +148,7 @@ class Staff extends Component {
             this.getAllUsers();
             this.handleClose();
             this.setState({
-                toastUpdate:true,
+                toastUpdate: true,
             })
         })
     }
@@ -183,13 +192,13 @@ class Staff extends Component {
 
 
     ChangeisAddStaff = () => {
-       
-        this.setState({   isAddStaff: true })
+
+        this.setState({ isAddStaff: true })
     }
     toastAddShow = () => {
         this.setState({ toastAdd: true })
     }
-    deleteSenior=(user)=> {
+    deleteSenior = (user) => {
         this.handleDialog("Are you sure you want to delete?", true)
         this.myRef.current = user;
     }
@@ -206,7 +215,7 @@ class Staff extends Component {
                     }
                     this.setState({
                         users,
-                        toastDelete:true,
+                        toastDelete: true,
                     })
 
                 });
@@ -261,7 +270,7 @@ class Staff extends Component {
                                                     <thead className='theadstafTable' key="thead">
                                                         <tr key={"thead"}>
                                                             <th style={{ paddingLeft: "40px", width: "12px" }} className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                                Select
+                                                                #
                                                             </th>
                                                             <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                                                 User
@@ -290,7 +299,7 @@ class Staff extends Component {
                                                         ) : (
                                                             <>
                                                                 {this.state.users
-                                                                .filter(item=>item.roles[0].name!=="ROLE_ADMIN")
+                                                                    .filter(item => item.roles[0].name !== "ROLE_ADMIN")
                                                                     .map((user, i) =>
                                                                         <tr key={i}>
                                                                             <td style={{ paddingLeft: "40px", width: "12px" }}>
@@ -355,7 +364,7 @@ class Staff extends Component {
                                                                             </td>
                                                                             <td className="align-middle text-center" >
 
-                                                                                {user.roles.map(rolee => <>
+                                                                                {user.roles.map(rolee => <div key={i}>
 
                                                                                     {rolee.name === "ROLE_ACCOMPAGNANT" ?
                                                                                         <div> <SiOpsgenie color='#2E90B8' /> <br />{rolee.name.substring(5, 17)}</div>
@@ -365,7 +374,7 @@ class Staff extends Component {
                                                                                             :
                                                                                             <div>  <SiRedhat color='#2E90B8' /><br /> {rolee.name.substring(5, 17)}</div>
                                                                                     }
-                                                                                </>
+                                                                                </div>
 
                                                                                 )}
 
@@ -373,13 +382,13 @@ class Staff extends Component {
                                                                             <td className="align-middle">
                                                                                 <div className="col-lg-6 col-5 my-auto text-end" >
                                                                                     <div className="dropdown float-lg-end ">
-                                                                                        <a className="cursor-pointer" href='/' id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                        <a className="cursor-pointer" href="/#" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
                                                                                             <i className="fa fa-ellipsis-v text-secondary"></i>
                                                                                         </a>
                                                                                         <ul className="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                                                                                            <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#" onClick={(e) => this.handleShow(user, true)}> Edit <MdEditNote /></a></li>
+                                                                                            <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="/#" onClick={(e) => this.handleShow(user, true)}> Edit <MdEditNote /></a></li>
 
-                                                                                            <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#" onClick={(e) => this.deleteSenior(user, e)}>Delete <IoTrashOutline />  </a></li>
+                                                                                            <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="/#" onClick={(e) => this.deleteSenior(user, e)}>Delete <IoTrashOutline />  </a></li>
                                                                                         </ul>
                                                                                     </div>
                                                                                 </div>
@@ -407,12 +416,12 @@ class Staff extends Component {
                             </Snackbar>
                             <Snackbar open={this.state.toastUpdate} autoHideDuration={6000} onClose={() => this.setState({ toastUpdate: false })}>
                                 <Alert onClose={() => this.setState({ toastUpdate: false })} severity="info" sx={{ padding: "15px", height: "70px", width: '100%' }}>
-                                User is updated successfully
+                                    User is updated successfully
                                 </Alert>
                             </Snackbar>
                             <Snackbar open={this.state.toastAdd} autoHideDuration={6000} onClose={() => this.setState({ toastAdd: false })}>
                                 <Alert onClose={() => this.setState({ toastAdd: false })} severity="success" sx={{ padding: "15px", height: "70px", width: '100%' }}>
-                                User added successfully
+                                    User added successfully
                                 </Alert>
                             </Snackbar>
                         </div>
@@ -430,6 +439,24 @@ class Staff extends Component {
                         </Modal.Header>
                         <Modal.Body>
                             <Form onSubmit={this.handleUpdate}>
+
+                                <Form.Group style={{ padding: "12px 12px 0" }}>
+
+                                    <InputGroup>
+                                        <BlueOnGreenTooltip title="username unchangeable" placement="top">
+                                            <Form.Control
+                                                type="text"
+                                                placeholder="Username *"
+                                                name="username"
+                                                value={this.state.username}
+                                                disabled
+                                            />
+                                        </BlueOnGreenTooltip>
+                                        <InputGroup.Text><i className="fa fa-user" aria-hidden="true"></i></InputGroup.Text>
+                                    </InputGroup>
+
+                                </Form.Group>
+
                                 <Form.Group style={{ padding: "12px 12px 0" }}>
                                     <Form.Control
                                         type="text"
@@ -481,30 +508,39 @@ class Staff extends Component {
                                 </Form.Group>
 
 
-                                <Button variant="success" type="submit" className="btn  btn-rounded"
-                                    style={{
-                                        border: "2px solid ",
-                                        alignItems: "center",
-                                        margin: "10% 0 0 27%",
-                                        backgroundColor: "#D24548",
-                                        cursor: "pointer",
-
-                                    }}>
-                                    Edit User
-                                </Button>
+                                <Box
+                                    mt={5}
+                                    mb={5}
+                                    display="flex"
+                                    flexDirection="column"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                >
+                                    <ButtonGroup
+                                        style={{ textAlign: "center", height: "40px" }} color="outlined" aria-label="outlined primary button group"
+                                    >
+                                        <Button type="submit"
+                                            style={{
+                                                border: "2px solid ",
+                                                alignItems: "center",
+                                                borderRadius: "12px",
+                                                cursor: "pointer",
+                                            }}>
+                                            Edit User
+                                        </Button> <Button style={{
+                                            border: "2px solid ",
+                                            alignItems: "center",
+                                            borderRadius: "12px",
+                                            cursor: "pointer",
+                                        }} onClick={this.handleClose}>
+                                            Cancel
+                                        </Button>
+                                    </ButtonGroup >
+                                </Box>
                             </Form>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" className="btn  btn-rounded" style={{
-                                border: "2px solid ",
-                                alignItems: "center",
-                                margin: "0 31% 0 0",
 
-                                cursor: "pointer",
-                                left: "50%",
-                            }} onClick={this.handleClose}>
-                                Cancel
-                            </Button>
                         </Modal.Footer>
                     </Modal>
 

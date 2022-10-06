@@ -277,3 +277,25 @@
 }
 
 
+.sortField{
+  cursor: pointer;
+  transition: all .2s ease-in-out; 
+-webkit-transform: rotate(0) scale(1);
+transform: rotate(0) scale(1);
+}
+.sortField:hover {
+
+-webkit-transform:  scale(1.2);
+transform:  scale(1.2);
+}
+.actionBtn i{
+ 
+  transition: all .2s ease-in-out; 
+-webkit-transform: rotate(0) scale(1.2);
+transform: rotate(0) scale(1.2);
+}
+.actionBtn:hover i {
+
+-webkit-transform: rotate(90deg)  scale(1.5);
+transform: rotate(90deg)  scale(1.5);
+}

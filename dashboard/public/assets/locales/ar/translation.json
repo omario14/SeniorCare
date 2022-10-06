@@ -24,6 +24,7 @@
 "seniorPage": {
   "senior_table":"جدول كبار السن" ,
   "add_senior": "إضافة كبار السن الجدد  ",
+  "export_Seniors": "تصدير إلى Excel  ",
   "delete_seniors": "حذف كبار السن ",
   "search": "بحث ",
   "cin": "بطاقة تعريف",

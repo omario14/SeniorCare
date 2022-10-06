@@ -24,6 +24,7 @@
     "seniorPage": {
         "senior_table": "Table des aînés",
         "add_senior": "ajouter un nouveau senior",
+        "export_Seniors": "export vers excel",
         "delete_seniors": "supprimer les personnes âgées ",
         "search": "chercher ",
         "cin": "cin",

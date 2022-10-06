@@ -19,6 +19,7 @@ import {
   PolarRadiusAxis
 } from "recharts";
 import WeatherWidget from './WeatherWidget';
+import BmiChart from './BmiChart';
 
 
 
@@ -30,18 +31,18 @@ class Home extends Component {
       modalbmi: false,
       userNumber: 0,
       seniorNumber: 0,
-      seniors: [],
+      countInterestsList: [],
       data: [],
+      
 
     };
   }
 
   componentDidMount() {
 
-
     seniorService.countInterests().then((res) => {
       this.setState({
-        seniors: res.data
+        countInterestsList: res.data
       })
       this.mapToObj();
     })
@@ -61,10 +62,10 @@ class Home extends Component {
   mapToObj = () => {
     this.setState({
       data:
-        Object.keys(this.state.seniors).map((key, i) => {
+        Object.keys(this.state.countInterestsList).map((key, i) => {
           return {
             key: key,
-            value: this.state.seniors[key]
+            value: this.state.countInterestsList[key]
           }
         })
     })
@@ -319,28 +320,8 @@ class Home extends Component {
                   <WeatherWidget />
                 </div>
                 <div className="row">
-                <div className="card z-index-2">
-                  <div className="card-header pb-0">
-                    <h6>Sales overview</h6>
-                    <p className="text-sm">
-                      <i className="fa fa-arrow-up text-success"></i>
-                      <span className="font-weight-bold">4% more</span> in 2021
-                    </p>
-                  </div>
-                  <div className="card-body p-3">
-                    <div className="chart">
-                      {Object.keys(this.state.seniors).map((key, i) => (
-                        <p key={i}>
-                          <span>{key}</span>
-                          <span>{this.state.seniors[key]}</span>
-                        </p>
-                      ))
-
-
-                      }
-                    </div>
-                  </div>
-                </div>
+                  <BmiChart/>
+               
                 </div>
               </div>
               

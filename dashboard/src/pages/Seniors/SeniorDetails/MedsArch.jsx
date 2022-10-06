@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/styles';
-import { Badge  } from '@mui/material';
+import { Badge } from '@mui/material';
 
 import React, { useEffect, useState } from 'react'
 import { GiEyedropper, GiOverdose, GiPill, GiSpoon, GiSyringe } from 'react-icons/gi';
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function MedsArch({ arch, myRef,socket,user }) {
+export default function MedsArch({ arch, myRef, socket, user }) {
   const classes = useStyles();
   const [meds, setmeds] = useState([]);
   const [medDialog, setMedDialog] = useState(false);
@@ -35,63 +35,86 @@ export default function MedsArch({ arch, myRef,socket,user }) {
 
   }, [])
 
+  const doseTime = (value) => {
+    let content = [];
+    for (let index = 0; index < value; index++) {
+     
+      content.push(<div className="rowoo rowoo-space mx-4">
+        <div key={index} className="col-2">
+          <div className="input-groupp ">
+            <label className="label text-white ">time</label>
+            <input className="input--style-4 " type="time" />
+          </div>
+        </div>
+        <div className="col-2">
+          <div className="input-groupp ">
+            <label className="label text-white ">dose</label>
+            <input className="input--style-4 " type="number" />
+          </div>
+        </div>
+      </div>)
+
+    }
+    return content;
+  }
+
 
 
 
   return (
-    <div> 
-      {meds.length!==0 ?  meds.map((med,index) => (
+    <div>
+      {meds.length !== 0 ? meds.map((med, index) => (
 
 
-      <div key={index} className='medsCardBodyItem' onClick={() => { setMedDialog(true); myRef.current = med }}>
-        <span className="timeline-step">
-          <Badge
+        <div key={index} className='medsCardBodyItem' onClick={() => { setMedDialog(true); myRef.current = med }}>
+          <span className="timeline-step">
+            <Badge
 
-            color={med.done ?'success':'error'}
-            badgeContent={10}
-            variant='dot'
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'left',
-            }}
-            classes={{ badge: classes.badge }}
-          >
-            {(() => {
-              switch (med.meds.doseType) {
-                case "PILL":
-                  return <GiPill className='iconDose' />
-                  
-                case "SPOON":
-                  return <GiSpoon className='iconDose' />
-                case "DROP":
-                  return <GiEyedropper className='iconDose' />
-                case "INJECTION":
-                  return <GiSyringe className='iconDose' />
-                default:
-                  break;
-              }
-            })()}
-          </Badge>
-        </span>
-        <div className="timeline-content">
-          <div className='flex' style={{ display: "flex", justifyItems: "left", justifyContent: "space-between" }}>
-            <div >
-              <h6 className="text-dark text-sm font-weight-bold mb-0 text-capitalize">{med.meds.label} </h6>
+              color={med.done ? 'success' : 'error'}
+              badgeContent={10}
+              variant='dot'
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              classes={{ badge: classes.badge }}
+            >
+              {(() => {
+                switch (med.meds.doseType) {
+                  case "PILL":
+                    return <GiPill className='iconDose' />
 
-              <p className="text-secondary font-weight-bold text-xs mt-1 mb-0">{med.meds.idmed}</p>
+                  case "SPOON":
+                    return <GiSpoon className='iconDose' />
+                  case "DROP":
+                    return <GiEyedropper className='iconDose' />
+                  case "INJECTION":
+                    return <GiSyringe className='iconDose' />
+                  default:
+                    break;
+                }
+              })()}
+            </Badge>
+          </span>
+          <div className="timeline-content">
+            <div className='flex' style={{ display: "flex", justifyItems: "left", justifyContent: "space-between" }}>
+              <div >
+                <h6 className="text-dark text-sm font-weight-bold mb-0 text-capitalize">{med.meds.label} </h6>
+
+                <p className="text-secondary font-weight-bold text-xs mt-1 mb-0">{med.meds.idmed}</p>
+              </div>
+              <div className='' >
+                {med.meds.dose} {med.meds.doseType}
+              </div>
             </div>
-            <div className='' >
-              {med.meds.dose} {med.meds.doseType}
-            </div>
+
           </div>
 
+
         </div>
-
-
-      </div>
-    )):
-    <span className='vertical-center'>There is no Meds for this day</span>
-    }
+      )) :
+        <span className='vertical-center'>There is no Meds for this day</span>
+      }
 
 
 
@@ -111,10 +134,14 @@ export default function MedsArch({ arch, myRef,socket,user }) {
           <div onClick={(e) => e.stopPropagation()} className="modal-dialog modal-lg">
             <div className="modal-content">
               <div className="modal-body-med">
-                <div className="text-right" onClick={() => setMedDialog(false)}> <i className="fa fa-close close" ></i> </div>
+                <div className="text-right" > <i className="fa fa-close close" onClick={() => setMedDialog(false)}></i> </div>
                 <div className="row">
                   <div className="col-md-6">
-                    <div className="text-center mt-2"> <img src="../../../assets/img/images/medic1.png" width="300" alt='medic1' /> </div>
+
+                    <div className="text-center mt-2">
+
+                      {doseTime(myRef.current.meds.dose)}
+                      <img src="../../../assets/img/images/medic1.png" width="300" alt='medic1' /> </div>
                   </div>
                   <div className="col-md-6">
                     <div className="text-white mt-4">
@@ -123,7 +150,7 @@ export default function MedsArch({ arch, myRef,socket,user }) {
                           switch (myRef.current.meds.doseType) {
                             case "PILL":
                               return <GiPill className='iconDose' />
-                              
+
                             case "SPOON":
                               return <GiSpoon className='iconDose' />
                             case "DROP":
@@ -166,20 +193,20 @@ export default function MedsArch({ arch, myRef,socket,user }) {
                                 }
                                 return data;
                               }));
-                              
+
                               if (e.target.checked) {
-                                socket.emit("sendNotification",{
-                                  senderName:user.username,
-                                  content:myRef.current.meds.label,
-                                  type:"Meds"
-                                 
+                                socket.emit("sendNotification", {
+                                  senderName: user.username,
+                                  content: myRef.current.meds.label,
+                                  type: "Meds"
+
                                 })
                                 seniorService.putMedsToArchive(myRef.current.archive.idArch, myRef.current.meds.idmed, true)
                               } else {
                                 seniorService.putMedsToArchive(myRef.current.archive.idArch, myRef.current.meds.idmed, false)
                               }
-                             
-                              
+
+
                             }} />
                             <div>
                               <svg viewBox="0 0 44 44">
@@ -187,10 +214,10 @@ export default function MedsArch({ arch, myRef,socket,user }) {
                               </svg>
                             </div>
                           </div>
-                          {myRef.current.done ?(
-                          <span className="intro-2 text-uppercase text-white"> Done</span>)
-                          :
-                          <span className="intro-2 text-uppercase text-white"> Take</span>
+                          {myRef.current.done ? (
+                            <span className="intro-2 text-uppercase text-white"> Done</span>)
+                            :
+                            <span className="intro-2 text-uppercase text-white"> Take</span>
                           }
                         </label>
                       </div>

@@ -2452,7 +2452,7 @@ progress {
 }
 
 .table> :not(caption)>*>* {
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 0.2rem;
   background-color: var(--bs-table-bg);
   border-bottom-width: 1px;
   box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
@@ -22903,7 +22903,7 @@ hr.horizontal.gray-light {
 }
 
 .table thead th {
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 2.5rem;
   width: 100%;
   text-transform: capitalize;
   letter-spacing: 0px;

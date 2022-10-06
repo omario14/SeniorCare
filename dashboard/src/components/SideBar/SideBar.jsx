@@ -77,7 +77,7 @@ export default function SideBar({setTitle,socket}) {
 
 
   const onButtonClick=(title)=>{
-    console.log(title,"title")
+    
     
     TabTitle(title);
     setTitle(title); 

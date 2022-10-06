@@ -55,7 +55,7 @@ class Login extends Component {
       dispatch(login(this.state.username, this.state.password))
         .then(() => {
           if(isMounted ){
-          history.push("/profile");
+          history.push("/");
           window.location.reload();}
         })
         .catch(() => {
@@ -77,7 +77,7 @@ class Login extends Component {
     TabTitle('Login');
     const { isLoggedIn, message } = this.props;
     if (isLoggedIn) {
-      return <Navigate  to="/profile" />;
+      return <Navigate  to="/" />;
     }
 
     return (
