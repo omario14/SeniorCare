@@ -45,8 +45,8 @@ export default function SeniorDetails({ senior, addSeniorPage,socket, user }) {
   
     seniorService.calculBmi(senior.weight,senior.height)
     .then((res)=>{
-      let bmin = res.data.toFixed(1);
-      setBmi(bmin)
+      let bmin = res.data;
+      setBmi(bmin.toFixed(1))
     if(bmin < 18.5) {
         setMsg("Underweight");
     }

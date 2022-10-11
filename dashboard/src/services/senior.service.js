@@ -74,6 +74,10 @@ class SeniorService {
     
     return http.put(`addabc/${idArch}/${idmed}/${done}`, { headers: authHeader() })
   }
+  putDoseTimeDone(idDose,done) {
+    
+    return http.put(`/doseTimeDone/${idDose}/${done}`, { headers: authHeader() })
+  }
 
   addToArchive(data) {
     return http.put(`/updateArchive`, data, { headers: authHeader() });
@@ -85,6 +89,12 @@ class SeniorService {
 
   addMedication(medication) {
     return http.post("/addMedication", medication, { headers: authHeader() });
+  }
+  addMedicationDose(doseTime) {
+    return http.post("/addDoseTime", doseTime, { headers: authHeader() });
+  }
+  getDoseTimeByMed(idArch,idmed) {
+    return http.get(`/getDoseTimeByArch/${idArch}/${idmed}`, { headers: authHeader() })
   }
   getMedicationBySenior(idSenior) {
     return http.get(`/getMedicationsBySenior/${idSenior}`, { headers: authHeader() })

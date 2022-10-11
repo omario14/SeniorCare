@@ -65,6 +65,7 @@ export default function Routingg({logOut}) {
 
     
     const [socket, setSocket] = useState(null);
+    const [allDoseTime, setAllDoseTime] = useState([]);
   
     const currentLanguageCode = cookies.get("i18next") || "en";
     const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
@@ -89,6 +90,28 @@ export default function Routingg({logOut}) {
     
           }
         })
+        userService.getAllDoseTimes()
+        .then((res)=>{
+          setAllDoseTime(res.data.filter((d) => {
+            let arg;
+
+            if (d.arch.date === new Date().toISOString().split("T")[0]) {
+                let doseTime = {
+                    id: d.id,
+                    rdose: d.rdose,
+                    time: d.time,
+                    med: d.med,
+                    arch: d.arcg,
+                    done:d.isDone
+
+
+                }
+                arg = doseTime;
+            }
+            return arg
+        }));
+        })
+        verifDoseTime();
       }
     }, [currentUser]);
 
@@ -108,6 +131,18 @@ export default function Routingg({logOut}) {
     }
     },[])
     
+    const verifDoseTime= ()=>{
+      var today = new Date();
+      var time = today.getHours()+':'+today.getMinutes();
+      allDoseTime.map((d)=>{
+        if(d.time===time){
+          socket?.emit("sendNotification", {senderName:currentUser.username,content:time,type:"Meds"});
+      
+      
+      }
+        }
+      )
+    }
   
 const SidebarLayout = () => (
   <>
@@ -118,7 +153,7 @@ const SidebarLayout = () => (
 );
   return (
     <div>
-  
+      
    
       <div>
       {currentUser && <TopBar title={title} socket={socket} t={t} dir={dir}/>}

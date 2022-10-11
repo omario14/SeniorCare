@@ -8,6 +8,7 @@ import Dialog from '../../Seniors/dialogDelete';
 import './Meds.css';
 import { useForm } from 'react-hook-form';
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
+import MedsTimeModal from './MedsTimeModal';
 
 
 
@@ -30,6 +31,7 @@ export default function Meds({ onChangeStepperLoading }) {
     const [seniorError, setSeniorError] = useState(false);
     const [doseTError,setDoseTError]=useState(false);
     const [dateError,setDateError]=useState(false);
+    const [medDialog, setMedDialog] = useState(false);
 
     const { Option } = components;
     const { register, handleSubmit,reset, formState: { errors }, clearErrors } = useForm();
@@ -249,12 +251,15 @@ export default function Meds({ onChangeStepperLoading }) {
             endDate: endDate,
             senior: senior,
         }
+        
         seniorService.addMedication(medic).then(
             (res) => {
-             
+                myRef.current = res.data;
+              
                 const newMedication = [res.data, ...seniorMedications];
                 setSeniorMedications(newMedication);
-                archiveAdd(res.data)
+                setMedDialog(true);
+                
                 clearInput();
             }
         )
@@ -356,8 +361,9 @@ export default function Meds({ onChangeStepperLoading }) {
     ]
 
     return (
-      <div className="meds ">
-        <div className="timeline_area section_padding_130">
+      <>
+      <div className="meds " >
+        <div className="timeline_area section_padding_130" >
           <div
             style={{
               position: "absolute",
@@ -657,7 +663,11 @@ export default function Meds({ onChangeStepperLoading }) {
             </div>
           </div>
         </div>
+        
         {deleteModel && <Dialog onDialog={areUSureDelete} message={message} />}
       </div>
+     
+      <MedsTimeModal senior={senior} dates={getDatesInRange(new Date(startDate),new Date(endDate))} myRef={myRef} medDialog={medDialog} setMedDialog={setMedDialog}/>
+      </>
     );
 }

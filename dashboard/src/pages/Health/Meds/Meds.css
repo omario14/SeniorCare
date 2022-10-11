@@ -18,6 +18,7 @@
     width: 100%;
     position: relative;
     margin: 30px auto 0 auto;
+    
 }
 .meds .rowMed{
     width: 100%;
@@ -50,9 +51,16 @@
 }
 
 .personalInfoMed{
-    margin:50px 0 2px 0
+    margin:50px 0 2px 0;
 }
 
 
-
+.aas{
+    position: relative;
+    overflow: auto;
+    
+}
+.aas::-webkit-scrollbar {
+    display: none;
+  }
 

@@ -6502,6 +6502,7 @@ fieldset:disabled .btn {
   width: auto;
   margin: 0.5rem;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .modal.fade .modal-dialog {

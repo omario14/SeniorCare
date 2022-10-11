@@ -22,7 +22,7 @@ export default function BmiChart() {
     useEffect(() => {
         seniorService.getAll().then((response) => {
             setSeniors(response.data.filter((r) => (r.bmi !== 0)).sort((a, b) =>
-                a.bmi > b.bmi ? 1 : -1
+                a.dateOfBirth < b.dateOfBirth ? 1 : -1
             ).map((d) => {
                 return {
                     id: d.id,
@@ -117,12 +117,12 @@ export default function BmiChart() {
                                 <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
                             </linearGradient>
                         </defs>
-                        <XAxis dataKey="bmi" />
+                        <XAxis dataKey="age" />
                         <YAxis />
                         <CartesianGrid strokeDasharray="3 3" />
                         <Tooltip />
                         <Legend verticalAlign="bottom" height={36}/>
-                        <Area type="monotone" dataKey="age" stroke="#8884d8" fillOpacity={1} fill="url(#colorUv)" />
+                        <Area type="monotone" dataKey="bmi" stroke="#8884d8" fillOpacity={1} fill="url(#colorUv)" />
                         <Area type="monotone" dataKey="sex" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)" />
                     </AreaChart>
                 </div>

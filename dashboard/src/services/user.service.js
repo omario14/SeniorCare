@@ -5,8 +5,8 @@ import authHeader from "./auth-header";
 const API_URL = "http://localhost:8080/api/test/";
 
 class UserService {
-  getPublicContent() {
-    return axios.get(API_URL + "all", { headers: authHeader()});
+  getAllDoseTimes() {
+    return http.get("/getall-doseTime", { headers: authHeader()});
   }
 
   getUserBoard() {

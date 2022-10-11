@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
    socket.on("sendNotification",({senderName,content,type})=>{
       console.log("receisver",onlineUsers)
     const receiver = getAccompagnant(socket);
-    console.log("receiver",senderName)
+    console.log("receiver",receiver)
     if (receiver){
 
     receiver.map((rec)=>{
@@ -48,9 +48,9 @@ io.on("connection", (socket) => {
     } )
    }
     
-   }); 
+   });  
 
-  socket.on('disconnect',()=>{
+  socket.on("disconnect",()=>{
     removeUser(socket.id);
   });
 });
