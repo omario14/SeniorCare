@@ -312,7 +312,7 @@ class Ingredients extends Component {
                                                                     : <CardMedia
                                                                         component="img"
                                                                         height="140"
-                                                                        image={`http://localhost:8080/files/${ingredient.file.id}`}
+                                                                        image={process.env.REACT_APP_API_URL+`/files/${ingredient.file.id}`}
                                                                         alt="ingredient image"
                                                                     />}
 
@@ -325,11 +325,7 @@ class Ingredients extends Component {
                                                                     </Typography>
                                                                 </CardContent>
                                                             </CardActionArea>
-                                                            <CardActions>
-                                                                <Button size="small" color="primary">
-                                                                    Share
-                                                                </Button>
-                                                            </CardActions>
+                                                            
                                                         </Card>
 
 
@@ -365,7 +361,7 @@ class Ingredients extends Component {
 
                                                     <div key={i} onClick={(e) => this.CatIngredients(category, e)} className="columnIng">
                                                         <div className="cardIng">
-                                                            <img src={`http://localhost:8080/files/${category.ingCategoryImage.id}`} alt="ingCatImage" />
+                                                            <img src={process.env.REACT_APP_API_URL+`/files/${category.ingCategoryImage.id}`} alt="ingCatImage" />
                                                             <div className="img-container">
                                                                 <h3 style={{ fontSize: "50px", paddingTop: "20%" }}>{category.id}</h3>
                                                             </div>
@@ -404,7 +400,7 @@ class Ingredients extends Component {
                                         </ButtonGroup>
 
 
-                                    </div>
+                                    </div> 
                                     <div style={{ marginBottom: "80px" }}>
 
                                         <h1 className='text-uppercase'>INGREDIENTS</h1>

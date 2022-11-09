@@ -13,355 +13,342 @@ import MedsTimeModal from './MedsTimeModal';
 
 
 export default function Meds({ onChangeStepperLoading }) {
-    const [seniorList, setSeniorList] = useState([]);
-    const [senior, setSenior] = useState(null);
-    const [seniorMedications, setSeniorMedications] = useState([]);
-    const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
-    let date = new Date();
-    date.setDate(date.getDate() + 1);
-    const [endDate, setEndDate] = useState(new Date(date).toISOString().split("T")[0]);
-    const [medLabel, setMedLabel] = useState("");
-    const [dose, setDose] = useState("");
-    const [num, setNum] = useState(0);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [medsPerPage] = useState(3);
-    const [message, setMessage] = useState("");
-    const [deleteModel, setDeleteModel] = useState(false);
-    const [order, setOrder] = useState("DSC");
-    const [seniorError, setSeniorError] = useState(false);
-    const [doseTError,setDoseTError]=useState(false);
-    const [dateError,setDateError]=useState(false);
-    const [medDialog, setMedDialog] = useState(false);
+  const [seniorList, setSeniorList] = useState([]);
+  const [senior, setSenior] = useState(null);
+  const [seniorMedications, setSeniorMedications] = useState([]);
+  const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
+  let date = new Date();
+  date.setDate(date.getDate() + 1);
+  const [endDate, setEndDate] = useState(new Date(date).toISOString().split("T")[0]);
+  const [medLabel, setMedLabel] = useState("");
+  const [dose, setDose] = useState("");
+  const [num, setNum] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [medsPerPage] = useState(3);
+  const [message, setMessage] = useState("");
+  const [deleteModel, setDeleteModel] = useState(false);
+  const [order, setOrder] = useState("DSC");
+  const [seniorError, setSeniorError] = useState(false);
+  const [doseTError, setDoseTError] = useState(false);
+  const [dateError, setDateError] = useState(false);
+  const [medDialog, setMedDialog] = useState(false);
 
-    const { Option } = components;
-    const { register, handleSubmit,reset, formState: { errors }, clearErrors } = useForm();
+  const { Option } = components;
+  const { register, handleSubmit, reset, formState: { errors }, clearErrors } = useForm();
 
-    const section = useRef(null);
-    const myRef = useRef(null);
+  const section = useRef(null);
+  const myRef = useRef(null);
 
-    let incNum = () => {
-        if (num < 10) {
-            setNum(Number(num) + 1);
-            clearErrors("dose");
-        }
-    };
-    let decNum = () => {
-        if (num > 0) {
-            setNum(num - 1);
-        }
+  let incNum = () => {
+    if (num < 10) {
+      setNum(Number(num) + 1);
+      clearErrors("dose");
     }
-    let handleChange = (e) => {
-        setNum(e.target.value);
+  };
+  let decNum = () => {
+    if (num > 0) {
+      setNum(num - 1);
     }
+  }
+  let handleChange = (e) => {
+    setNum(e.target.value);
+  }
 
-    /************************* Delete Meds ***********************/
-    const deleteMed = (med) => {
-        handleDialog("Are you sure you want to delete ?", true)
-        myRef.current = med;
-    }
+  /************************* Delete Meds ***********************/
+  const deleteMed = (med) => {
+    handleDialog("Are you sure you want to delete ?", true)
+    myRef.current = med;
+  }
 
-    const handleDialog = (message, isLoading) => {
+  const handleDialog = (message, isLoading) => {
 
-        setMessage(message);
-        setDeleteModel(isLoading);
-
-
-    };
-    const areUSureDelete = (choose) => {
-        if (choose) {
-            const Meds = seniorMedications.filter(item => item.idmed !== myRef.current.idmed);
-            seniorService.removeMedById(myRef.current.idmed)
-                .then(res => {
-                    console.log(res);
-                    console.log(res.data);
-                    if (Math.ceil(seniorMedications.length / medsPerPage) !== Math.ceil(Meds.length / medsPerPage)) {
-                        setCurrentPage(Math.ceil(Meds.length / medsPerPage))
-                    }
-
-                    setSeniorMedications(Meds);
-
-                });
-
-            handleDialog("", false);
-        } else {
-            handleDialog("", false);
-        }
-    };
+    setMessage(message);
+    setDeleteModel(isLoading);
 
 
+  };
+  const areUSureDelete = (choose) => {
+    if (choose) {
+      const Meds = seniorMedications.filter(item => item.idmed !== myRef.current.idmed);
+      seniorService.removeMedById(myRef.current.idmed)
+        .then(res => {
+          if (Math.ceil(seniorMedications.length / medsPerPage) !== Math.ceil(Meds.length / medsPerPage)) {
+            setCurrentPage(Math.ceil(Meds.length / medsPerPage))
+          }
 
-    const retrieveSeniors = () => {
-        try {
-           
-            seniorService.getAll().then((result) => {
-                setSeniorList(result.data);
-            });
+          setSeniorMedications(Meds);
 
-           
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    const retrieveMeds = (senior) => {
-
-        try {
-            seniorService.getMedicationBySenior(senior.id)
-                .then((res) => {
-                    if (order === "ASC") {
-                        const sorted = [...res.data].sort((a, b) =>
-                            a["idmed"] > b["idmed"] ? 1 : -1
-                        );
-
-                        setSeniorMedications(sorted);
-
-                    }
-                    if (order === "DSC") {
-                        const sorted = [...res.data].sort((a, b) =>
-                            a["idmed"] < b["idmed"] ? 1 : -1
-                        );
-
-                        setSeniorMedications(sorted);
-
-                    }
-                })
-
-        } catch (error) {
-            console.log(error)
-        }
-
-    }
-    useEffect(() => {
-        retrieveMeds(senior);
-
-       
-    }, [senior]);
-    useEffect(() => {
-        retrieveSeniors();
-        return () => {
-            setSeniorList([]);
-        };
-    }, []);
-    const customStyles = {
-        control: base => ({
-            ...base,
-            marginTop: 6,
-            height: 41,
-            minHeight: 41,
-        })
-    };
-    useEffect(() => {
-        sorting("idmed")
-
-
-    }, [order]);
-    const sorting = (col) => {
-
-        if (order === "ASC") {
-            const sorted = [...seniorMedications].sort((a, b) =>
-                a[col] > b[col] ? 1 : -1
-            );
-
-            setSeniorMedications(sorted);
-
-        }
-        if (order === "DSC") {
-            const sorted = [...seniorMedications].sort((a, b) =>
-                a[col] < b[col] ? 1 : -1
-            );
-
-            setSeniorMedications(sorted);
-
-        }
-    }
-    const customStylesAsc = {
-        control: base => ({
-            ...base,
-            marginTop: 6,
-            width: 150,
-            height: 41,
-            size: 30,
-            minHeight: 41,
-        })
-    };
-    const renderCustomItem = (props) => {
-        return <Option  {...props}>
-            <img
-                src={`http://localhost:8080/files/${props.data.file}`}
-                style={{ width: 36, height: 36, marginRight: 20 }}
-                alt={props.data.name}
-            />
-            {props.data.name}
-        </Option >;
-    }
-
-    
-
-    const seniorValidation = () => {
-
-        if (!senior) {
-            setSeniorError(true);
-        }
-        if (!dose){
-          setDoseTError(true);
-        }
-        if (startDate>endDate){
-         setDateError(true);
-        }else{setDateError(false)}
-    }
-
-    function getDatesInRange(startDate, endDate) {
-      const date = new Date(startDate);
-    
-      const dates = [];
-    
-      while (date <= endDate) {
-        dates.push(new Date(date).toISOString().split("T")[0]);
-        date.setDate(date.getDate() + 1);
-      }
-    
-      return dates;
-    }
-
-    const archiveAdd=(meds)=>{
-      const dates = getDatesInRange(new Date(startDate),new Date(endDate));
-      dates.forEach(d=>{
-        let archive = {
-          idArch: `arch-${senior.id}-${d}`,
-          senior: senior,
-          date: new Date(d).toISOString().split("T")[0],
-      }
-      seniorService.addToArchive(archive).then(()=>{
-        seniorService.putMedsToArchive(archive.idArch,meds.idmed,false);
-      })
-      
-      })
-      
-    }
-
-    const saveMedication = (e) => {
-       
-      
-
-        let medic = {
-            label: medLabel,
-            dose: num,
-            doseType: dose.value,
-            startDate: startDate,
-            endDate: endDate,
-            senior: senior,
-        }
-        
-        seniorService.addMedication(medic).then(
-            (res) => {
-                myRef.current = res.data;
-              
-                const newMedication = [res.data, ...seniorMedications];
-                setSeniorMedications(newMedication);
-                setMedDialog(true);
-                
-                clearInput();
-            }
-        )
-       
-        
-        window.scrollTo({
-            top: section.current.offsetTop,
-            behavior: 'smooth',
         });
-       
-       reset({
-        medLabel:"",
 
-       })
+      handleDialog("", false);
+    } else {
+      handleDialog("", false);
     }
-    const clearInput = ()=>{
-      /********** Clear inputs *********/
-      setStartDate(new Date().toISOString().split("T")[0]);
-    
-      setEndDate(new Date(date).toISOString().split("T")[0]);
-    
-      setMedLabel("");
-      setDose("");
-      setNum(0);
-      if (order === "ASC") {
-          setCurrentPage(Math.ceil(seniorMedications.length / medsPerPage))
-      }
-      if (order === "DSC") {
-          setCurrentPage(1)
-      }
+  };
 
+
+
+  const retrieveSeniors = () => {
+    try {
+
+      seniorService.getAll().then((result) => {
+        setSeniorList(result.data);
+      });
+
+
+    } catch (e) {
+      console.log(e);
     }
-    // Get current meals
-    const indexOfLastMed = currentPage * medsPerPage;
-    const indexOfFirstMed = indexOfLastMed - medsPerPage;
-    const currentMeds = seniorMedications.slice(indexOfFirstMed, indexOfLastMed);
+  };
 
-    // Change page
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-    const seniorStyle = {
-        control: base => ({
-            ...base,
-            borderColor: '#f31111',
-            // This line disable the blue border
-            boxShadow: ' 0 0 0 1px #f31111'
-        })
+  useEffect(() => {
+    if (senior) {
+      try {
+        seniorService.getMedicationBySenior(senior.id)
+          .then((res) => {
+            if (order === "ASC") {
+              const sorted = [...res.data].sort((a, b) =>
+                a["idmed"] > b["idmed"] ? 1 : -1
+              );
+
+              setSeniorMedications(sorted);
+
+            }
+            if (order === "DSC") {
+              const sorted = [...res.data].sort((a, b) =>
+                a["idmed"] < b["idmed"] ? 1 : -1
+              );
+
+              setSeniorMedications(sorted);
+
+            }
+          })
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+  }, [senior, order]);
+
+  useEffect(() => {
+    retrieveSeniors();
+    return () => {
+      setSeniorList([]);
     };
-    const AscorDsc = [
-        {
-            value: "ASC",
-            label: (
-                <span>
-                    <RiSortAsc /> ASC                </span>
-            ),
-        },
-        {
-            value: "DSC",
-            label: (
-                <span>
-                    <RiSortDesc /> DSC
-                </span>
-            ),
-        },]
-    /*************Dose Type ********************/
-    const doseTypeOptions = [
-        {
-            value: "PILL",
-            label: (
-                <span>
-                    <GiPill /> Pill(s)
-                </span>
-            ),
-        },
-        {
-            value: "SPOON",
-            label: (
-                <span>
-                    <GiSpoon /> Spoon(s)
-                </span>
-            ),
-        },
-        {
-            value: "DROP",
-            label: (
-                <span>
-                    <GiEyedropper /> Drop(s)
-                </span>
-            ),
-        },
-        {
-          value: "INJECTION",
-          label: (
-              <span>
-                  <GiSyringe /> Injection(s)
-              </span>
-          ),
-      },
-    ]
+  }, []);
+  const customStyles = {
+    control: base => ({
+      ...base,
+      marginTop: 6,
+      height: 41,
+      minHeight: 41,
+    })
+  };
 
-    return (
-      <>
+  const customStylesAsc = {
+    control: base => ({
+      ...base,
+      marginTop: 6,
+      width: 150,
+      height: 41,
+      size: 30,
+      minHeight: 41,
+    })
+  };
+  const renderCustomItem = (props) => {
+    return <Option  {...props}>
+      {props.data.file !== null ?
+        <>
+          <img
+            src={process.env.REACT_APP_API_URL + `/files/${props.data.file}`}
+            style={{ width: 36, height: 36, marginRight: 20 }}
+            alt={props.data.name}
+          />
+        </>
+        :
+        <>
+          {props.data.sex === "male" ?
+            <img
+              src="..\..\..\assets\img\images\avatarNoimage.jpg"
+              style={{ width: 36, height: 36, marginRight: 20 }}
+              alt={props.data.name}
+            />
+            :
+            <img
+              src="..\..\..\assets\img\images\avatarW.jpg"
+              style={{ width: 36, height: 36, marginRight: 20 }}
+              alt={props.data.name}
+            />
+
+          }
+
+        </>
+
+
+
+      }
+
+
+      {props.data.name}
+    </Option >;
+  }
+
+
+
+  const seniorValidation = () => {
+
+    if (!senior) {
+      setSeniorError(true);
+    }
+    if (!dose) {
+      setDoseTError(true);
+    }
+    if (startDate > endDate) {
+      setDateError(true);
+    } else { setDateError(false) }
+  }
+
+  function getDatesInRange(startDate, endDate) {
+    const date = new Date(startDate);
+
+    const dates = [];
+
+    while (date <= endDate) {
+      dates.push(new Date(date).toISOString().split("T")[0]);
+      date.setDate(date.getDate() + 1);
+    }
+
+    return dates;
+  }
+
+
+
+  const saveMedication = (e) => {
+
+
+
+    let medic = {
+      label: medLabel,
+      dose: num,
+      doseType: dose.value,
+      startDate: startDate,
+      endDate: endDate,
+      senior: senior,
+    }
+   
+
+    seniorService.addMedication(medic).then(
+      (res) => {
+        myRef.current = res.data;
+
+        const newMedication = [res.data, ...seniorMedications];
+        setSeniorMedications(newMedication);
+        setMedDialog(true);
+
+        clearInput();
+      }
+    )
+
+
+    window.scrollTo({
+      top: section.current.offsetTop,
+      behavior: 'smooth',
+    });
+
+    reset({
+      medLabel: "",
+
+    })
+  }
+  const clearInput = () => {
+    /********** Clear inputs *********/
+    setStartDate(new Date().toISOString().split("T")[0]);
+
+    setEndDate(new Date(date).toISOString().split("T")[0]);
+
+    setMedLabel("");
+    setDose("");
+    setNum(0);
+    if (order === "ASC") {
+      setCurrentPage(Math.ceil(seniorMedications.length / medsPerPage))
+    }
+    if (order === "DSC") {
+      setCurrentPage(1)
+    }
+
+  }
+  // Get current meals
+  const indexOfLastMed = currentPage * medsPerPage;
+  const indexOfFirstMed = indexOfLastMed - medsPerPage;
+  const currentMeds = seniorMedications.slice(indexOfFirstMed, indexOfLastMed);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const seniorStyle = {
+    control: base => ({
+      ...base,
+      borderColor: '#f31111',
+      // This line disable the blue border
+      boxShadow: ' 0 0 0 1px #f31111'
+    })
+  };
+  const AscorDsc = [
+    {
+      value: "ASC",
+      label: (
+        <span>
+          <RiSortAsc /> ASC                </span>
+      ),
+    },
+    {
+      value: "DSC",
+      label: (
+        <span>
+          <RiSortDesc /> DSC
+        </span>
+      ),
+    },]
+  /*************Dose Type ********************/
+  const doseTypeOptions = [
+    {
+      value: "PILL",
+      label: (
+        <span>
+          <GiPill /> Pill(s)
+        </span>
+      ),
+    },
+    {
+      value: "SPOON",
+      label: (
+        <span>
+          <GiSpoon /> Spoon(s)
+        </span>
+      ),
+    },
+    {
+      value: "DROP",
+      label: (
+        <span>
+          <GiEyedropper /> Drop(s)
+        </span>
+      ),
+    },
+    {
+      value: "INJECTION",
+      label: (
+        <span>
+          <GiSyringe /> Injection(s)
+        </span>
+      ),
+    },
+  ]
+
+  return (
+    <>
       <div className="meds " >
         <div className="timeline_area section_padding_130" >
           <div
@@ -398,7 +385,7 @@ export default function Meds({ onChangeStepperLoading }) {
                 }}
                 options={seniorList}
                 components={{ Option: renderCustomItem }}
-                styles={seniorError&& seniorStyle}
+                styles={seniorError && seniorStyle}
               />
               <div>
                 {seniorError && (
@@ -414,7 +401,7 @@ export default function Meds({ onChangeStepperLoading }) {
                   <label htmlFor="name">Meds</label>
                   <input
                     value={medLabel}
-                    {...register("medLabel",  {required:{value:true,message:"Medication's name is required! "}, minLength:{value:3,message:"laaaaaaaaa"}})}
+                    {...register("medLabel", { required: { value: true, message: "Medication's name is required! " }, minLength: { value: 3, message: "laaaaaaaaa" } })}
                     onChange={(e) => {
                       setMedLabel(e.target.value);
                       clearErrors("medLabel");
@@ -422,7 +409,20 @@ export default function Meds({ onChangeStepperLoading }) {
                     type="text"
                     id="name"
                     placeholder="Medication name here"
+                    list="medicamentsList"
                   />
+                  <datalist id="medicamentsList">
+                    <option value="Panadol">Panadol</option>
+                    <option value="Paracétamol">Paracétamol (acétaminophène)</option>
+                    <option value="Diazépam">Diazépam</option>
+                    <option value="Métoclopramide">Métoclopramide</option>
+                    <option value="EFFERALGAN">EFFERALGAN</option>
+                    <option value="Feldene">Feldene</option>
+                    <option value="MAXILASE">MAXILASE</option>
+                    <option value="SPASMOCALM">SPASMOCALM</option>
+                    <option value="INSULATARD">INSULATARD</option>
+                    
+                  </datalist>
                   <div>
                     {errors.medLabel && (
                       <span className="text-sm text-danger">
@@ -459,7 +459,7 @@ export default function Meds({ onChangeStepperLoading }) {
                           message:
                             "Dose value must be greater than or equal to 1 !",
                         },
-                       
+
                       })}
                       onChange={handleChange}
                     />
@@ -473,19 +473,19 @@ export default function Meds({ onChangeStepperLoading }) {
                     />
 
                     <div style={{ width: "40%" }}>
-                      
+
                       <Select
-                        
+
                         options={doseTypeOptions}
                         onChange={(value) => {
                           setDose(value);
                           setDoseTError(false);
                         }}
                         value={dose}
-                        styles={doseTError?seniorStyle:customStyles}
+                        styles={doseTError ? seniorStyle : customStyles}
                       />
                     </div>
-                   
+
                   </div>
                   <div>
                     {errors.dose && (
@@ -493,12 +493,12 @@ export default function Meds({ onChangeStepperLoading }) {
                         {errors.dose.message}
                       </span>
                     )}
-                    <br/>
+                    <br />
                     {doseTError && (
-                  <span className="text-sm text-danger">
-                    Please select Dose type !
-                  </span>
-                )}
+                      <span className="text-sm text-danger">
+                        Please select Dose type !
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -508,47 +508,51 @@ export default function Meds({ onChangeStepperLoading }) {
                   <div className="input-groupp-icon">
                     <input
                       value={startDate}
-                      onChange={(e) => {setStartDate(e.target.value);if(e.target.value<endDate){setDateError(false)}}}
+                      onChange={(e) => { setStartDate(e.target.value); if (e.target.value < endDate) { setDateError(false) } }}
                       className="input--style-4"
                       type="date"
                       name="Date"
                       format="{yyyy-MM-dd}"
                       min={new Date().toISOString().split("T")[0]}
-                      style={{ borderColor:dateError&& '#f31111',
-                      // This line disable the blue border
-                      boxShadow: dateError&& ' 0 0 0 1px #f31111'}}
+                      style={{
+                        borderColor: dateError && '#f31111',
+                        // This line disable the blue border
+                        boxShadow: dateError && ' 0 0 0 1px #f31111'
+                      }}
 
                     />
-                   
-                   
+
+
                   </div>
-                  <div style={{position:"absolute",bottom:"55px"}}>
+                  <div style={{ position: "absolute", bottom: "55px" }}>
                     {dateError && (
-                  <span className="text-sm text-danger">
-                    EndDate must be greater than StartDate
-                  </span>
-                )}
-                    </div>
+                      <span className="text-sm text-danger">
+                        EndDate must be greater than StartDate
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="column">
                   <label htmlFor="contact">Treatment End Date</label>
                   <div className="input-groupp-icon">
                     <input
                       value={endDate}
-                      onChange={(e) => {setEndDate(e.target.value);setDateError(false);}}
+                      onChange={(e) => { setEndDate(e.target.value); setDateError(false); }}
                       className="input--style-4"
                       type="date"
                       name="Date"
                       format="{yyyy-MM-dd}"
                       min={startDate}
-                      style={{ borderColor:dateError&& '#f31111',
-                      // This line disable the blue border
-                      boxShadow: dateError&& ' 0 0 0 1px #f31111'}}
+                      style={{
+                        borderColor: dateError && '#f31111',
+                        // This line disable the blue border
+                        boxShadow: dateError && ' 0 0 0 1px #f31111'
+                      }}
                     />
                   </div>
-                  
+
                 </div>
-              
+
               </div>
 
               <div class="col-6 text-end mt-7 " style={{ marginLeft: "7%" }}>
@@ -663,11 +667,11 @@ export default function Meds({ onChangeStepperLoading }) {
             </div>
           </div>
         </div>
-        
+
         {deleteModel && <Dialog onDialog={areUSureDelete} message={message} />}
       </div>
-     
-      <MedsTimeModal senior={senior} dates={getDatesInRange(new Date(startDate),new Date(endDate))} myRef={myRef} medDialog={medDialog} setMedDialog={setMedDialog}/>
-      </>
-    );
+
+      <MedsTimeModal senior={senior} dates={getDatesInRange(new Date(myRef.current && myRef.current.startDate), new Date(myRef.current && myRef.current.endDate))} myRef={myRef} medDialog={medDialog} setMedDialog={setMedDialog} />
+    </>
+  );
 }

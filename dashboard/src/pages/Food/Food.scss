@@ -9,9 +9,10 @@ $black-color: #3a2483;
     grid-template-columns: 300px 600px;
     border-radius: $border-radius;
     box-shadow: 0 15px 20px rgba(0, 0, 0, 0.356);
+   
     .menuImg {
-     width: 300px;
-     height: 300px;
+     width: 200px;
+     height: 200px;
      border-radius: $border-radius 120px 120px $border-radius;
     }
     .btn {

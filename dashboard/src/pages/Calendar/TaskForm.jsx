@@ -156,7 +156,7 @@ e.preventDefault();
     >
       <div className="task-form">
 
-        <label>Name</label>
+        <label></label>
         <input
           disabled={disableName(task)}
           name="name"

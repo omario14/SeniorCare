@@ -12,9 +12,18 @@
     right: 0px;
     width: 82%;
     top: 0;
+}
+
+#light .topbar{
     
-    
-    
+    background-color: rgb(247, 247, 247);
+   
+}
+#dark .topbar{
+    background-color: #344767 !important;
+}
+#dark .topbar span{
+     color: antiquewhite;
 }
 .topLeft{
     flex: 1;

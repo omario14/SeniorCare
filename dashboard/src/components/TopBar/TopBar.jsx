@@ -31,6 +31,7 @@ class TopBar extends Component {
   }
   componentDidMount() {
     const user = this.props.user;
+    
     if (user) {
       this.setState({
         currentUser: user,
@@ -40,9 +41,13 @@ class TopBar extends Component {
   }
 
   logOut() {
+    
     this.props.dispatch(logout());
+    //this.props.socket.emit("disconnect");
+   
   }
    
+ 
   render(){
       // Toggle Sidenav
 
@@ -50,6 +55,7 @@ const iconSidenav = document.getElementById('iconSidenav');
 
 let body = document.getElementsByTagName('body')[0];
 let className = 'g-sidenav-pinned';
+
 
 
 function toggleSidenav() {
@@ -65,8 +71,10 @@ function toggleSidenav() {
   }
 
   }
-  const { currentUser } = this.state;
-  const {t,dir}=this.props;
+
+
+  const { currentUser , } = this.state;
+  const {t,dir,setToggleConfigFn}=this.props;
   const socket = this.props.socket;
   return (
     
@@ -146,7 +154,7 @@ function toggleSidenav() {
                      
                     </li>
                     <li className="nav-item px-3 d-flex align-items-center">
-                      <a href="/" className="nav-link text-body p-0">
+                      <a href="#/" onClick={()=>{setToggleConfigFn()}} className="nav-link text-body p-0">
                         <i className="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
                       </a>
                     </li>

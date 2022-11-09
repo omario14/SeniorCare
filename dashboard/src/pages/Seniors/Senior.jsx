@@ -11,7 +11,7 @@ import AddSenior from "./AddSenior/AddSenior"
 import "./Senior.css";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import { MdEditNote, MdOutlineExpandLess, MdOutlineExpandMore } from "react-icons/md";
+import { MdDinnerDining, MdEditNote, MdOutlineExpandLess, MdOutlineExpandMore } from "react-icons/md";
 import { FaFemale, FaMale } from "react-icons/fa";
 import { IoTrashOutline } from "react-icons/io5";
 import { BiDetail, BiSortAlt2 } from "react-icons/bi";
@@ -23,7 +23,8 @@ import { ExcelExport, ExcelExportColumn, ExcelExportColumnGroup } from '@progres
 import {
     withStyles
 } from "@material-ui/core/styles";
-import { GiBodyHeight, GiWeightScale } from "react-icons/gi";
+import { GiBodyHeight, GiHotMeal, GiWeightScale } from "react-icons/gi";
+import { RiCake3Line } from "react-icons/ri";
 
 const BlueOnGreenTooltip = withStyles({
     tooltip: {
@@ -304,16 +305,16 @@ class Senior extends Component {
         });
     };
     handleDialogDeleteCheckbox = (message, isLoadingDeleteCheckbox) => {
-        console.log("selected",this.state.selected," select : ",this.state.select)
-        if(this.state.selected===null && this.state.select.length===0){
+        
+        if (this.state.selected === null && this.state.select.length === 0) {
             alert("Please select senior to delete !!")
-       
-    }else{
-        this.setState({
-            message: message,
-            isLoadingDeleteCheckbox: isLoadingDeleteCheckbox,
-        });
-    }
+
+        } else {
+            this.setState({
+                message: message,
+                isLoadingDeleteCheckbox: isLoadingDeleteCheckbox,
+            });
+        }
     };
     handleClose = () => {
 
@@ -369,7 +370,7 @@ class Senior extends Component {
                     .then(() => {
                         this.setState({
                             selected: null,
-                           
+
                         })
                         this.retrieveSeniors();
                     })
@@ -640,7 +641,7 @@ class Senior extends Component {
                                                                         event.preventDefault();
                                                                         this.setState({
                                                                             currentPage: 1,
-                                                                            seniorsPerPage: 20
+                                                                            seniorsPerPage: 40
                                                                         })
 
                                                                     } else {
@@ -678,7 +679,7 @@ class Senior extends Component {
                                                                 </NavLink>
                                                             </BlueOnGreenTooltip>
                                                         </div>
- 
+
 
                                                     </div>
                                                 </div>
@@ -688,7 +689,7 @@ class Senior extends Component {
                                                         <table className="table align-items-center mb-0" id="table-to-xls" style={{ overflow: "hidden" }}>
                                                             <thead key="thead">
                                                                 <tr key={"thead"} >
-                                                                    <th style={{ paddingLeft: "40px",paddingRight: "0", width: "12px" }}>
+                                                                    <th style={{ paddingLeft: "40px", paddingRight: "0", width: "12px" }}>
                                                                         <div className="form-check">
                                                                             {this.state.seniors.length === 0 ?
                                                                                 <>
@@ -729,13 +730,13 @@ class Senior extends Component {
                                                                         }
                                                                         {t("seniorPage.cin") + " / " + t("profilePage.phone")}
                                                                     </th>
-                                                                    <th  className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortField" onClick={() => this.sorting("sex")}>
-                                                                    {this.state.col === "sex" &&
+                                                                    <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortField" onClick={() => this.sorting("sex")}>
+                                                                        {this.state.col === "sex" &&
                                                                             (
                                                                                 this.state.order === "ASC" ?
                                                                                     <FaMale size={20} />
                                                                                     :
-                                                                                    <FaFemale size={20}  />
+                                                                                    <FaFemale size={20} />
                                                                             )
                                                                         }
                                                                         {t("profilePage.gender")}
@@ -779,7 +780,7 @@ class Senior extends Component {
                                                                                     .toLowerCase()
                                                                                     .includes(this.state.searchTerm.toLowerCase())
                                                                             ) {
-                                                                                sturn= s;
+                                                                                sturn = s;
                                                                             }
                                                                             return sturn;
                                                                         }).map((senior, i) =>
@@ -820,7 +821,7 @@ class Senior extends Component {
                                                                                                     :
                                                                                                     <>
                                                                                                         <img
-                                                                                                            src={`http://localhost:8080/files/${senior.file}`}
+                                                                                                            src={process.env.REACT_APP_API_URL + `/files/${senior.file}`}
                                                                                                             className="avatar avatar-sm me-3"
                                                                                                             alt="user1"
                                                                                                         />
@@ -859,8 +860,8 @@ class Senior extends Component {
                                                                                         </span>
                                                                                     </td>
                                                                                     <td className="align-middle">
-                                                                                        <div className="col-lg-6 col-5 my-auto text-end" >
-                                                                                            <div className="dropdown float-lg-end ">
+                                                                                        <div className="col-lg-6 col-5 my-auto text-end" style={{zIndex:"9999"}}>
+                                                                                            <div className="dropdown float-lg-end " >
                                                                                                 <a className="cursor-pointer actionBtn" href="/#" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
                                                                                                     <i className="fa fa-ellipsis-v text-secondary "></i>
                                                                                                 </a>
@@ -896,15 +897,15 @@ class Senior extends Component {
 
 
 
-                                                                                            <div id="section1" style={{ position: "relative", height: "50px", paddingLeft: "80px", display: "flex", whiteSpace: "nowrap", width: "150px" }} >
-                                                                                                <label style={{ fontSize: "1.2em" }} className="text-uppercase text-secondary text-center font-weight-bolder opacity-7 mt-1  text-start m-0">{t("food")} :</label>
+                                                                                            <div id="section1" style={{ position: "relative", height: "50px", paddingLeft: "-80px", display: "flex", whiteSpace: "nowrap", width: "150px" }} >
+                                                                                                <label style={{ fontSize: "1.2em" }} className="text-uppercase text-secondary  font-weight-bolder opacity-7 mt-1  text-start m-0">{t("food")} :</label>
                                                                                                 &nbsp;&nbsp;
                                                                                                 &nbsp;&nbsp;
                                                                                                 &nbsp;&nbsp;
 
                                                                                                 <input
                                                                                                     id={senior.id + "BREAKFAST"}
-                                                                                                    checked={this.state.seniorArch && this.state.seniorArch[0].checkedBreakfast}
+                                                                                                    checked={this.state.seniorArch ? this.state.seniorArch[0].checkedBreakfast : false}
                                                                                                     value={senior.id}
                                                                                                     name="customCheckbox"
                                                                                                     type="checkbox"
@@ -946,6 +947,8 @@ class Senior extends Component {
                                                                                                                 checkedBreakfast: 1,
                                                                                                                 checkedLunch: senior.checkedLunch,
                                                                                                                 checkedDinner: senior.checkedDinner,
+                                                                                                                weight: senior.weight,
+                                                                                                                height: senior.height
                                                                                                             };
 
 
@@ -971,6 +974,8 @@ class Senior extends Component {
                                                                                                                 checkedBreakfast: 0,
                                                                                                                 checkedLunch: senior.checkedLunch,
                                                                                                                 checkedDinner: senior.checkedDinner,
+                                                                                                                weight: senior.weight,
+                                                                                                                height: senior.height
                                                                                                             };
 
                                                                                                             seniorService.update(
@@ -996,7 +1001,8 @@ class Senior extends Component {
                                                                                                             checkedBreakfast: senior.checkedBreakfast,
                                                                                                             checkedLunch: senior.checkedLunch,
                                                                                                             checkedDinner: senior.checkedDinner,
-                                                                                                            menus: senior.menus,
+                                                                                                            weight: senior.weight,
+                                                                                                            height: senior.height
                                                                                                         };
 
                                                                                                         seniorService.getMedicationBySenior(senior.id).then((res) => {
@@ -1014,13 +1020,13 @@ class Senior extends Component {
 
                                                                                                         }
 
-                                                                                                        seniorService.addToArchive(archive).then(console.log("Archive"))
+                                                                                                        seniorService.addToArchive(archive).then(console.log("Archive",archive))
                                                                                                         seniorService.update(senior.id, senioret).then(console.log("successs"))
 
                                                                                                     }
                                                                                                     }
                                                                                                 />
-                                                                                                <label htmlFor={senior.id + "BREAKFAST"} className="align-middle-label text-secondary text-uppercase">{t("seniorPage.breakfast")} </label>
+                                                                                                <label htmlFor={senior.id + "BREAKFAST"} className="align-middle-label text-secondary text-uppercase">{t("seniorPage.breakfast")}  <RiCake3Line size={20} /> </label>
                                                                                                 <input
                                                                                                     id={senior.id + "LUNCH"}
                                                                                                     checked={this.state.seniorArch ? this.state.seniorArch[0].checkedLunch : false}
@@ -1062,6 +1068,8 @@ class Senior extends Component {
                                                                                                                 checkedBreakfast: senior.checkedBreakfast,
                                                                                                                 checkedLunch: 1,
                                                                                                                 checkedDinner: senior.checkedDinner,
+                                                                                                                weight: senior.weight,
+                                                                                                                height: senior.height
                                                                                                             };
 
 
@@ -1087,6 +1095,8 @@ class Senior extends Component {
                                                                                                                 checkedBreakfast: senior.checkedBreakfast,
                                                                                                                 checkedLunch: 0,
                                                                                                                 checkedDinner: senior.checkedDinner,
+                                                                                                                weight: senior.weight,
+                                                                                                                height: senior.height
                                                                                                             };
 
                                                                                                             seniorService.update(
@@ -1113,7 +1123,8 @@ class Senior extends Component {
                                                                                                             checkedBreakfast: senior.checkedBreakfast,
                                                                                                             checkedLunch: senior.checkedLunch,
                                                                                                             checkedDinner: senior.checkedDinner,
-                                                                                                            menus: senior.menus,
+                                                                                                            weight: senior.weight,
+                                                                                                            height: senior.height
                                                                                                         };
 
 
@@ -1132,7 +1143,7 @@ class Senior extends Component {
                                                                                                         seniorService.update(senior.id, senioret).then(console.log("successs"))
                                                                                                     }
                                                                                                     } />
-                                                                                                <label htmlFor={senior.id + "LUNCH"} className="align-middle-label text-secondary text-uppercase">{t("seniorPage.lunch")} </label>
+                                                                                                <label htmlFor={senior.id + "LUNCH"} className="align-middle-label text-secondary text-uppercase">{t("seniorPage.lunch")} <MdDinnerDining size={20} /></label>
                                                                                                 <input id={senior.id + "DINNER"}
                                                                                                     checked={this.state.seniorArch ? this.state.seniorArch[0].checkedDinner : false}
                                                                                                     value={senior.id}
@@ -1173,6 +1184,8 @@ class Senior extends Component {
                                                                                                                 checkedBreakfast: senior.checkedBreakfast,
                                                                                                                 checkedLunch: senior.checkedLunch,
                                                                                                                 checkedDinner: 1,
+                                                                                                                weight: senior.weight,
+                                                                                                                height: senior.height
                                                                                                             };
 
 
@@ -1199,6 +1212,8 @@ class Senior extends Component {
                                                                                                                 checkedBreakfast: senior.checkedBreakfast,
                                                                                                                 checkedLunch: senior.checkedLunch,
                                                                                                                 checkedDinner: 0,
+                                                                                                                weight: senior.weight,
+                                                                                                                height: senior.height
                                                                                                             };
 
                                                                                                             seniorService.update(
@@ -1224,7 +1239,8 @@ class Senior extends Component {
                                                                                                             checkedBreakfast: senior.checkedBreakfast,
                                                                                                             checkedLunch: senior.checkedLunch,
                                                                                                             checkedDinner: senior.checkedDinner,
-                                                                                                            menus: senior.menus,
+                                                                                                            weight: senior.weight,
+                                                                                                            height: senior.height
                                                                                                         };
 
                                                                                                         let archive = {
@@ -1237,14 +1253,13 @@ class Senior extends Component {
 
 
                                                                                                         }
-
                                                                                                         seniorService.addToArchive(archive).then(console.log("Archive"))
                                                                                                         seniorService.update(senior.id, senioret).then(console.log("successs"))
 
 
                                                                                                     }
                                                                                                     } />
-                                                                                                <label htmlFor={senior.id + "DINNER"} className="align-middle-label text-secondary text-uppercase">{t("seniorPage.dinner")} </label>
+                                                                                                <label htmlFor={senior.id + "DINNER"} className="align-middle-label text-secondary text-uppercase">{t("seniorPage.dinner")} <GiHotMeal size={20} /> </label>
 
 
 
@@ -1419,7 +1434,7 @@ class Senior extends Component {
                                             :
                                             <>
                                                 <img
-                                                    src={this.state.imgChange ? this.state.seniorPicture : `http://localhost:8080/files/${this.state.seniorPicture}`}
+                                                    src={this.state.imgChange ? this.state.seniorPicture : process.env.REACT_APP_API_URL + `/files/${this.state.seniorPicture}`}
 
                                                     alt="seniorPicture"
                                                 />

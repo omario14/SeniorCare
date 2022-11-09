@@ -125,7 +125,7 @@ export default function SeniorDetails({ senior, addSeniorPage,socket, user }) {
                           </>
                           :
                           <img
-                            src={`http://localhost:8080/files/${senior.file}`}
+                            src={process.env.REACT_APP_API_URL+`/files/${senior.file}`}
                             alt="profile_image"
                             className="w-100 border-radius-lg shadow-sm"
                           />
@@ -144,18 +144,7 @@ export default function SeniorDetails({ senior, addSeniorPage,socket, user }) {
                       </div>
 
                     </div>
-                    <div className="col-lg-6 col-5 my-auto text-end">
-                      <div className="dropdown float-lg-end pe-4">
-                        <a className="cursor-pointer" href='/' id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
-                          <i className="fa fa-ellipsis-v text-secondary"></i>
-                        </a>
-                        <ul className="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                          <li><a className="dropdown-item border-radius-md" href=" /">Action</a></li>
-                          <li><a className="dropdown-item border-radius-md" href=" /">Another action</a></li>
-                          <li><a className="dropdown-item border-radius-md" href=" /">Something else here</a></li>
-                        </ul>
-                      </div>
-                    </div>
+                    
                   </div>
                   <div className="row my-3">
                     <div className="panel">
@@ -326,10 +315,7 @@ export default function SeniorDetails({ senior, addSeniorPage,socket, user }) {
                                       name="customCheckbox"
                                       type="checkbox"
                                       className="align-middle-inputDetails   "
-
-
-
-
+                                      readOnly
                                     />
                                     <label htmlFor={arch.idArch + "BREAKFAST"} className="align-middle-labelDetails text-secondary">BREAKFAST </label>
                                     <input
@@ -339,8 +325,7 @@ export default function SeniorDetails({ senior, addSeniorPage,socket, user }) {
                                       name="customCheckbox"
                                       type="checkbox"
                                       className="align-middle-inputDetails   "
-
-
+                                      readOnly
                                     />
                                     <label htmlFor={arch.idArch + "LUNCH"} className="align-middle-labelDetails text-secondary">LUNCH </label>
                                     <input
@@ -350,8 +335,7 @@ export default function SeniorDetails({ senior, addSeniorPage,socket, user }) {
                                       name="customCheckbox"
                                       type="checkbox"
                                       className="align-middle-inputDetails   "
-
-
+                                      readOnly
                                     />
                                     <label htmlFor={arch.idArch + "DINNER"} className="align-middle-labelDetails text-secondary">DINNER </label>
                                   </div>

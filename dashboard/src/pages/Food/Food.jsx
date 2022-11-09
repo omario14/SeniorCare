@@ -5,10 +5,11 @@ import { TabTitle } from "../../utils/GeneralFunctions";
 import './Food.css';
 import './Food.scss';
 import chefService from "../../services/chef.service";
-import { FormControl, InputLabel, ListItemAvatar, ListItemText, MenuItem, Select } from "@mui/material";
-
-import { FcCalendar } from "react-icons/fc";
+import { Alert, FormControl, InputLabel, ListItemText, MenuItem, Select } from "@mui/material";
 import { Badge } from "react-bootstrap";
+import { RiCake3Line } from "react-icons/ri";
+import { MdDinnerDining } from "react-icons/md";
+import { GiHotMeal } from "react-icons/gi";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -80,10 +81,12 @@ class Food extends Component {
                             <div className="row" data-aos="fade-up" data-aos-delay="100">
                                 <div className="col-lg-12 d-flex justify-content-center">
                                     <div id="buttons" >
-
-                                        <button className={this.state.activeType === "breakfastMenu" ? 'button-value active' : 'button-value'} onClick={() => this.setState({ activeType: "breakfastMenu" })}>BreakFast</button>
-                                        <button className={this.state.activeType === "lunchMenu" ? 'button-value active' : 'button-value'} onClick={() => this.setState({ activeType: "lunchMenu" })}>Lunch</button>
-                                        <button className={this.state.activeType === "dinnerMenu" ? 'button-value active' : 'button-value'} onClick={() => this.setState({ activeType: "dinnerMenu" })}>Dinner</button>
+                                        {this.state.menu.filter((m) => m.date === this.state.select).length !== 0 &&
+                                            <>
+                                                <button className={this.state.activeType === "breakfastMenu" ? 'button-value active' : 'button-value'} onClick={() => this.setState({ activeType: "breakfastMenu" })}>BreakFast <RiCake3Line /></button>
+                                                <button className={this.state.activeType === "lunchMenu" ? 'button-value active' : 'button-value'} onClick={() => this.setState({ activeType: "lunchMenu" })}>Lunch <MdDinnerDining /></button>
+                                                <button className={this.state.activeType === "dinnerMenu" ? 'button-value active' : 'button-value'} onClick={() => this.setState({ activeType: "dinnerMenu" })}>Dinner <GiHotMeal /></button>
+                                            </>}
                                         <FormControl sx={{ m: 1, minWidth: 170 }}>
                                             <InputLabel id="demo-simple-select-helper-label">Date</InputLabel>
                                             <Select
@@ -119,149 +122,213 @@ class Food extends Component {
                         {!this.state.loading ? (
 
                             <div className="container-fluid py-4">
-                                {this.state.menu.filter((m) => m.date === this.state.select).map((menu) => (
-                                    <>
+                                {this.state.menu.filter((m) => m.date === this.state.select).length !== 0 ?
+                                    (
+                                        this.state.menu.filter((m) => m.date === this.state.select).map((menu) => (
+                                            <>
 
-                                        {this.state.activeType === "breakfastMenu" && menu.breakfastMenu.map((breakfast) => (
-                                            <div className="foodContainer mb-5 mt-5">
-                                                {breakfast.image === null ? (
-                                                    <img
-                                                        src={
-                                                            "../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif"
-                                                        }
-                                                        alt="mealpic"
-                                                        className="menuImg"
+                                                {this.state.activeType === "breakfastMenu" &&
 
-                                                    />
-                                                ) : (
-                                                    <img
-                                                        src={`http://localhost:8080/files/${breakfast.image.id}`}
-                                                        alt="mealpic"
-                                                        className="menuImg"
+                                                    (menu.breakfastMenu.length !== 0 ?
+                                                        (
+                                                            menu.breakfastMenu.map((breakfast) => (
+                                                                <div className="foodContainer mb-5 mt-5">
+                                                                    {breakfast.image === null ? (
+                                                                        <img
+                                                                            src={
+                                                                                "../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif"
+                                                                            }
+                                                                            alt="mealpic"
+                                                                            className="menuImg"
 
-                                                    />
-                                                )}
+                                                                        />
+                                                                    ) : (
+                                                                        <img
+                                                                            src={process.env.REACT_APP_API_URL + `/files/${breakfast.image.id}`}
+                                                                            alt="mealpic"
+                                                                            className="menuImg"
 
-                                                <div className="foodContainer__text">
-                                                    <h1>{breakfast.label}</h1>
+                                                                        />
+                                                                    )}
 
-
-
-
-                                                    <p>
-                                                        {breakfast.description}
-                                                    </p>
-
-                                                    <div className="foodContainer__text__timing">
-                                                        {breakfast.ingredients.map((ing) => (
+                                                                    <div className="foodContainer__text text-start " style={{ maxWidth: "850px" }}>
+                                                                        <h1 className="text-start text-capitalize">{breakfast.label}</h1>
 
 
-                                                            <div className="foodContainer__text__timing_time">
-                                                                <h2 className="text-capitalize">{ing.label}</h2>
-                                                                <p className="text-capitalize">{ing.description}</p>
+
+
+                                                                        <p className="text-capitalize text-sm">
+                                                                            {breakfast.description}
+                                                                        </p>
+
+                                                                        <div className="foodContainer__text__timing scrollyb" style={{ maxWidth: "830px", overflowX: "auto" }}>
+                                                                            {breakfast.ingredients.map((ing) => (
+
+
+
+                                                                                <div className="foodContainer__text__timing_time"  >
+                                                                                    <h2 className="text-capitalize text-nowrap">♦{ing.label} &nbsp; </h2>
+
+                                                                                </div>
+                                                                            ))}
+
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                            ))
+                                                        )
+
+                                                        :
+                                                        (
+                                                            <div className="messageEmpty d-flex">
+                                                                <Alert variant={false} iconMapping={{
+                                                                    success: <RiCake3Line fontSize="1.629rem" color="#6759ff" />,
+                                                                }} sx={{ color: "#6759ff", marginTop: "70px", padding: "15px", paddingLeft: "15%", height: "70px", width: '100%', fontSize: "1.629rem", fontFamily: "fantasy" }} > <p>ooops there is no breakfast for this menu !</p> </Alert>
+                                                                <img src={"../../../../assets/img/illustrations/woolly-man-sits-and-holds-a-mug-of-milk-1.png"} alt="woolymanimg" />
+                                                            </div>
+                                                        )
+                                                    )
+                                                }
+                                                {this.state.activeType === "lunchMenu" &&
+
+                                                    (menu.lunchMenu.length !== 0 ?
+
+
+                                                        (
+                                                            menu.lunchMenu.map((lunchMenu) => (
+                                                                <div className="foodContainer mb-5 mt-5">
+                                                                    {lunchMenu.image === null ? (
+                                                                        <img
+                                                                            src={
+                                                                                "../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif"
+                                                                            }
+                                                                            alt="mealpic"
+                                                                            className="menuImg"
+
+                                                                        />
+                                                                    ) : (
+                                                                        <img
+                                                                            src={process.env.REACT_APP_API_URL + `/files/${lunchMenu.image.id}`}
+                                                                            alt="mealpic"
+                                                                            className="menuImg"
+
+                                                                        />
+                                                                    )}
+
+                                                                    <div className="foodContainer__text text-start " style={{ maxWidth: "850px" }}>
+                                                                        <h1 className="text-start text-capitalize">{lunchMenu.label}</h1>
+
+
+
+
+                                                                        <p className="text-capitalize text-sm">
+                                                                            {lunchMenu.description}
+                                                                        </p>
+
+                                                                        <div className="foodContainer__text__timing scrollyb" style={{ maxWidth: "830px", overflowX: "auto" }}>
+                                                                            {lunchMenu.ingredients.map((ing) => (
+
+
+
+                                                                                <div className="foodContainer__text__timing_time"  >
+                                                                                    <h2 className="text-capitalize text-nowrap">♦{ing.label} &nbsp; </h2>
+
+                                                                                </div>
+                                                                            ))}
+
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                            ))
+                                                        )
+                                                        :
+                                                        (
+                                                            <div className="messageEmpty d-flex">
+                                                                <Alert variant={false} iconMapping={{
+                                                                    success: <MdDinnerDining fontSize="1.629rem" color="#6759ff" />,
+                                                                }} sx={{ color: "#6759ff", marginTop: "70px", padding: "15px", paddingLeft: "15%", height: "70px", width: '100%', fontSize: "1.629rem", fontFamily: "fantasy" }} > <p>ooops there is no lunch for this menu !</p> </Alert>
+                                                                <img src={"../../../../assets/img/illustrations/woolly-man-sits-and-holds-a-mug-of-milk-1.png"}  alt="woolymanimg" />
+                                                            </div>
+                                                        ))
+                                                }
+                                                {this.state.activeType === "dinnerMenu" &&
+
+                                                    (menu.dinnerMenu.length !== 0 ?
+                                                        (
+                                                            menu.dinnerMenu.map((dinnerMenu) => (
+                                                                <div className="foodContainer mb-5 mt-5">
+                                                                    {dinnerMenu.image === null ? (
+                                                                        <img
+                                                                            src={
+                                                                                "../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif"
+                                                                            }
+                                                                            alt="mealpic"
+                                                                            className="menuImg"
+
+                                                                        />
+                                                                    ) : (
+                                                                        <img
+                                                                            src={process.env.REACT_APP_API_URL + `/files/${dinnerMenu.image.id}`}
+                                                                            alt="mealpic"
+                                                                            className="menuImg"
+
+                                                                        />
+                                                                    )}
+
+                                                                    <div className="foodContainer__text text-start " style={{ maxWidth: "850px" }}>
+                                                                        <h1 className="text-start text-capitalize">{dinnerMenu.label}</h1>
+
+
+
+
+                                                                        <p className="text-capitalize text-sm">
+                                                                            {dinnerMenu.description}
+                                                                        </p>
+
+                                                                        <div className="foodContainer__text__timing scrollyb" style={{ maxWidth: "830px", overflowX: "auto" }}>
+                                                                            {dinnerMenu.ingredients.map((ing) => (
+
+
+
+                                                                                <div className="foodContainer__text__timing_time"  >
+                                                                                    <h2 className="text-capitalize text-nowrap">♦{ing.label} &nbsp; </h2>
+
+                                                                                </div>
+                                                                            ))}
+
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                            )))
+                                                        :
+                                                        (
+                                                            <div className="messageEmpty d-flex">
+                                                                <Alert variant={false} iconMapping={{
+                                                                    success: <GiHotMeal fontSize="1.629rem" color="#6759ff" />,
+                                                                }} sx={{ color: "#6759ff", marginTop: "70px", padding: "15px", paddingLeft: "15%", height: "70px", width: '100%', fontSize: "1.629rem", fontFamily: "fantasy" }} > <p>ooops there is no dinner for this menu !</p> </Alert>
+                                                                <img src={"../../../../assets/img/illustrations/woolly-man-sits-and-holds-a-mug-of-milk-1.png"}  alt="woolymanimg" />
                                                             </div>
                                                         ))}
+                                            </>
 
-                                                    </div>
-                                                    <button className="btn">view recipe <i className="fa fa-arrow-right"></i></button>
-                                                </div>
-                                            </div>
-
-                                        ))}
-                                        {this.state.activeType === "lunchMenu" && menu.lunchMenu.map((lunchMenu) => (
-                                            <div className="foodContainer mb-5 mt-5">
-                                                {lunchMenu.image === null ? (
-                                                    <img
-                                                        src={
-                                                            "../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif"
-                                                        }
-                                                        alt="mealpic"
-                                                        className="menuImg"
-
-                                                    />
-                                                ) : (
-                                                    <img
-                                                        src={`http://localhost:8080/files/${lunchMenu.image.id}`}
-                                                        alt="mealpic"
-                                                        className="menuImg"
-
-                                                    />
-                                                )}
-
-                                                <div className="foodContainer__text">
-                                                    <h1>{lunchMenu.label}</h1>
-
-
-
-
-                                                    <p>
-                                                        {lunchMenu.description}
-                                                    </p>
-
-                                                    <div className="foodContainer__text__timing">
-                                                        {lunchMenu.ingredients.map((ing) => (
-
-
-                                                            <div className="foodContainer__text__timing_time">
-                                                                <h2 className="text-capitalize">{ing.label}</h2>
-                                                                <p className="text-capitalize">{ing.description}</p>
-                                                            </div>
-                                                        ))}
-
-                                                    </div>
-                                                    <button className="btn">view recipe <i className="fa fa-arrow-right"></i></button>
-                                                </div>
-                                            </div>
-
-                                        ))}
-                                        {this.state.activeType === "dinnerMenu" && menu.dinnerMenu.map((dinnerMenu) => (
-                                            <div className="foodContainer mb-5 mt-5">
-                                                {dinnerMenu.image === null ? (
-                                                    <img
-                                                        src={
-                                                            "../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif"
-                                                        }
-                                                        alt="mealpic"
-                                                        className="menuImg"
-
-                                                    />
-                                                ) : (
-                                                    <img
-                                                        src={`http://localhost:8080/files/${dinnerMenu.image.id}`}
-                                                        alt="mealpic"
-                                                        className="menuImg"
-
-                                                    />
-                                                )}
-
-                                                <div className="foodContainer__text">
-                                                    <h1>{dinnerMenu.label}</h1>
-
-
-
-
-                                                    <p>
-                                                        {dinnerMenu.description}
-                                                    </p>
-
-                                                    <div className="foodContainer__text__timing">
-                                                        {dinnerMenu.ingredients.map((ing) => (
-
-
-                                                            <div className="foodContainer__text__timing_time">
-                                                                <h2 className="text-capitalize">{ing.label}</h2>
-                                                                <p className="text-capitalize">{ing.description}</p>
-                                                            </div>
-                                                        ))}
-
-                                                    </div>
-                                                    <button className="btn">view recipe <i className="fa fa-arrow-right"></i></button>
-                                                </div>
-                                            </div>
-
-                                        ))}
-                                    </>
-                                ))}
+                                        ))
+                                    )
+                                    :
+                                    (
+                                        <div className="messageEmpty d-flex">
+                                            <Alert variant={false} iconMapping={{
+                                                success: <GiHotMeal fontSize="1.629rem" color="#6759ff" />,
+                                            }} sx={{ color: "#6759ff", marginTop: "70px", padding: "15px", paddingLeft: "15%", height: "70px", width: '100%', fontSize: "1.629rem", fontFamily: "fantasy" }} > <p>Menu is not ready yet for this day. <br /> Try to change the date</p> </Alert>
+                                            <img src={"../../../../assets/img/illustrations/woolly-man-sits-and-holds-a-mug-of-milk-1.png"} alt="woolymanimg"/>
+                                        </div>
+                                    )
+                                }
 
                             </div>
 

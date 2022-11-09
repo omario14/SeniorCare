@@ -33,6 +33,18 @@ class UserService {
   isConnected(){
     return http.get('/currentUser',{headers: authHeader()})
   }
+  addNotif(notif){
+    return http.post(`/addnotif`,notif, { headers: authHeader() });
+  }
+  getAllNotifications(){
+    return http.get('/getall-Notifications', { headers: authHeader() })
+  }
+  getAllNotificationsByUser(user){
+    return http.get(`/getnotif-byuser/${user}`, { headers: authHeader() })
+  }
+  removeNotification(id){
+    return http.delete(`/delete-notification/${id}`, { headers: authHeader() })
+  }
 }
 
 export default new UserService();

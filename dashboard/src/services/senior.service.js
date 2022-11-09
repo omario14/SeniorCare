@@ -66,17 +66,32 @@ class SeniorService {
   getArchiveBySenior(idSenior) {
     return http.get(`/getarchives-bysenior/${idSenior}`, { headers: authHeader() })
   }
+  getArchiveById(idarch) {
+    return http.get(`/getarchives-byId/${idarch}`, { headers: authHeader() })
+  }
 
   getMedsByArchive(idArchive) {
     return http.get(`/getMedications-byArch/${idArchive}`, { headers: authHeader() })
   }
   putMedsToArchive(idArch, idmed,done) {
     
-    return http.put(`addabc/${idArch}/${idmed}/${done}`, { headers: authHeader() })
+    return http.put(`/addabc/${idArch}/${idmed}/${done}`, { headers: authHeader() })
   }
   putDoseTimeDone(idDose,done) {
     
     return http.put(`/doseTimeDone/${idDose}/${done}`, { headers: authHeader() })
+  }
+  putReminderDone(idDose,remind) {
+    
+    return http.put(`/reminderDose/${idDose}/${remind}`, { headers: authHeader() })
+  }
+  removeDoseTime(idDose) {
+    
+    return http.delete(`/deleteDoseTime/${idDose}`, { headers: authHeader() })
+  }
+  removeArchMedByMedAndArch(idMed,idArch) {
+    
+    return http.delete(`/deleteArchMedsBymedAndArch/${idMed}/${idArch}`, { headers: authHeader() })
   }
 
   addToArchive(data) {

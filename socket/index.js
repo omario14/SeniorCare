@@ -22,18 +22,43 @@ const io = new Server({
     return onlineUsers.find((user)=>user.username===username);
  };
  const getAccompagnant = (socket)=>
- {
+ { 
     return onlineUsers.filter((user)=>user.roles==="ROLE_ACCOMPAGNANT" && user.socketId!==socket.id);
  };
 
+ const getAccompagnants = ()=>
+ { 
+    return onlineUsers.filter((user)=>user.roles==="ROLE_ACCOMPAGNANT" );
+ };
+
 io.on("connection", (socket) => {
+   console.log("HELLLO socket",socket.id)
    socket.on("newUser",(username,roles)=>{
-    addNewUser(username,socket.id,roles);
+    addNewUser(username,socket.id,roles); 
    
     
    });
 
-   socket.on("sendNotification",({senderName,content,type})=>{
+   socket.on("sendNotificationMedication",({senderName,content,time,type})=>{
+      console.log("receisver",onlineUsers)
+    const receiver = getAccompagnants();
+    console.log("receiver",receiver)
+    if (receiver){
+
+    receiver.map((rec)=>{
+      var sid= rec.socketId;
+      io.to(rec.socketId).emit("getNotification",{
+         sid,
+         senderName,
+         content,
+         time,
+         type 
+      });
+    } )
+   }
+    
+   });  
+   socket.on("sendNotification",({senderName,content,time,type})=>{
       console.log("receisver",onlineUsers)
     const receiver = getAccompagnant(socket);
     console.log("receiver",receiver)
@@ -43,6 +68,7 @@ io.on("connection", (socket) => {
       io.to(rec.socketId).emit("getNotification",{
          senderName,
          content,
+         time,
          type 
       });
     } )
@@ -50,8 +76,10 @@ io.on("connection", (socket) => {
     
    });  
 
-  socket.on("disconnect",()=>{
-    removeUser(socket.id);
+  socket.on("disconnect",()=>{ 
+   console.log("add",socket.id);
+    removeUser(socket.id); 
+    console.log(socket.id);
   });
 });
 

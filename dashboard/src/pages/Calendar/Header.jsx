@@ -119,26 +119,46 @@ function Header() {
             MenuProps={MenuProps}
             disabled={loading}
           >
-           
+
             <MenuItem value="0">
               <ListItemAvatar >
                 <FcCalendar />
               </ListItemAvatar>
               <ListItemText> <em>All</em>  {loading && (
-              <span className="spinner-border spinner-border-sm"></span>
-            )}</ListItemText>
+                <span className="spinner-border spinner-border-sm"></span>
+              )}</ListItemText>
             </MenuItem>
             {seniors && seniors.map((s, i) => (
 
 
               <MenuItem key={i} value={s.id}>
                 <ListItemAvatar >
-                  <img style={{ borderRadius: "50%" }} width="40px" height="40px" src={`http://localhost:8080/files/${s.file}`} alt='mealImage' />
+                  {s.file === null ?
+                    <>
+                      {s.sex === "male" ?
+                        <img
+                          src="..\..\..\assets\img\images\avatarNoimage.jpg"
+                          style={{ borderRadius: "50%" }} width="40px" height="40px"
+                          alt="user1"
+                        />
+                        :
+                        <img
+                          src="..\..\..\assets\img\images\avatarW.jpg"
+                          style={{ borderRadius: "50%" }} width="40px" height="40px"
+                          alt="user1"
+                        />
+
+                      }
+
+                    </>
+                    :
+                    <img style={{ borderRadius: "50%" }} width="40px" height="40px" src={process.env.REACT_APP_API_URL + `/files/${s.file}`} alt='seniorImage' />
+                  }
                 </ListItemAvatar>
 
                 <ListItemText> {s.name}  {loading && (
-              <span className="spinner-border spinner-border-sm"></span>
-            )}</ListItemText>
+                  <span className="spinner-border spinner-border-sm"></span>
+                )}</ListItemText>
               </MenuItem>
 
             ))}

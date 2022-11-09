@@ -34,7 +34,12 @@ class ChefService {
   }
 
   updateMeal(id,data) {
+
     return http.put(`/update-Meal/${id}`,data, { headers: authHeader() });
+  }
+  deleteMeal(idMeal) {
+    console.log("supp",idMeal)
+    return http.delete(`/delete-Meal/${idMeal}`, { headers: authHeader() });
   }
 
   updateCheckedMeal() {

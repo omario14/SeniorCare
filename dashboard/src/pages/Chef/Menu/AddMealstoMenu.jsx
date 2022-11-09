@@ -6,7 +6,8 @@ import { MdDinnerDining, MdFreeBreakfast } from "react-icons/md";
 import Select from "react-select";
 import chefService from "../../../services/chef.service";
 import '../chef.scss';
-
+import moment from  'moment';
+import userService from "../../../services/user.service";
 export default function AddMealstoMenu(props) {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [breakFastMenu, setBreakFastMenu] = useState([]);
@@ -17,7 +18,8 @@ export default function AddMealstoMenu(props) {
   const [selectListDIN, setSelectListDIN] = useState([]);
   const [mealCategory, setMealCategory] = useState(" ");
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [loading, setLoading] = useState(false);
+  var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   useEffect(() => {
     setBreakFastMenu(props.meals);
     setLunchMenu(props.meals);
@@ -26,6 +28,9 @@ export default function AddMealstoMenu(props) {
       setBreakFastMenu([]);
       setLunchMenu([]);
       setDinnerMenu([]);
+      setSelectListBF([]);
+      setSelectListLUN([]);
+      setSelectListDIN([]);
     };
   }, []);
 
@@ -35,7 +40,7 @@ export default function AddMealstoMenu(props) {
 
   const handleSave = (e) => {
     e.preventDefault();
-
+    setLoading(true);
     let menu = {
       date: date,
       breakfastMenu: selectListBF,
@@ -45,12 +50,26 @@ export default function AddMealstoMenu(props) {
     chefService.addNewMenu(menu).then((data) => {
       props.setMenu(data.data);
       props.setMealSelect(true);
-      props.socket.emit("sendNotification",{ 
-        senderName:props.user.username,
-        content:menu.date,
-        type:"Menu"
-       
+      props.socket.emit("sendNotification", {
+        senderName: props.user.username,
+        content: "Menu for "+days[new Date(menu.date).getDay()] +" is ready for use  ",
+        time:new Date(),
+        type: "Menu"
+
       })
+      userService.addNotif({
+        senderName:"SeniGuard", 
+        message:"Menu for "+days[new Date(menu.date).getDay()]  +" [ "+ menu.date +" ] is ready for use  ", 
+        date:moment(new Date()).format("YYYY-MM-DD HH:MM:SS").toString(),
+        type:"Menu"
+      }) 
+      setBreakFastMenu([]);
+      setLunchMenu([]);
+      setDinnerMenu([]);
+      setSelectListBF([]);
+      setSelectListLUN([]);
+      setSelectListDIN([]);
+      setLoading(false);
     });
   };
 
@@ -94,9 +113,7 @@ export default function AddMealstoMenu(props) {
           <Button onClick={() => props.setMealSelect(true)}>
             <GiReturnArrow /> &nbsp;&nbsp; Return
           </Button>
-          <Button onClick={() => props.setMealSelect(false)}>
-            <GiHealthPotion /> &nbsp;&nbsp; Add New Menu Plan
-          </Button>
+         
         </ButtonGroup>
       </div>
 
@@ -142,23 +159,23 @@ export default function AddMealstoMenu(props) {
                       <p className="small text-muted font-italic mb-4">
                         Choose your main dish.
                       </p>
-                      
-                      <div id="search-container" style={{width:"40%"}}>
-                    <input
-                        type="search"
-                        id="search-input"
-                        placeholder="Search for Meal here.."
-                        autocomplete="off"
-                        onChange={(event) => {
+
+                      <div id="search-container" style={{ width: "40%" }}>
+                        <input
+                          type="search"
+                          id="search-input"
+                          placeholder="Search for Meal here.."
+                          autocomplete="off"
+                          onChange={(event) => {
                             setSearchTerm(event.target.value);
-                           
-                        }}
-                    />
-                </div>
 
-                    
+                          }}
+                        />
+                      </div>
 
-                     
+
+
+
                     </>
                   ) : (
                     <>
@@ -170,22 +187,22 @@ export default function AddMealstoMenu(props) {
                     {mealCategory === "BREAKFAST" ? (
                       <>
                         {breakFastMenu.filter((meal) => {
-                                                    if (searchTerm === "") {
-                                                        return meal;
-                                                    } else if (
-                                                        meal.label
-                                                            .toLowerCase()
-                                                            .includes(searchTerm.toLowerCase()) ||
-                                                        meal.description
-                                                            .toLowerCase()
-                                                            .includes(searchTerm.toLowerCase()) ||
-                                                        meal.type.name
-                                                            .toLowerCase()
-                                                            .includes(searchTerm.toLowerCase())
-                                                    ) {
-                                                        return meal;
-                                                    }
-                                                }).map((meal, i) => (
+                          if (searchTerm === "") {
+                            return meal;
+                          } else if (
+                            meal.label
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase()) ||
+                            meal.description
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase()) ||
+                            meal.type.name
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase())
+                          ) {
+                            return meal;
+                          }
+                        }).map((meal, i) => (
                           <li key={i}
                             className={
                               meal.checkedBreakfast === false
@@ -264,7 +281,7 @@ export default function AddMealstoMenu(props) {
                             </div>
                             <label htmlFor={meal.id}>
                               <img
-                                src={`http://localhost:8080/files/${meal.image.id}`}
+                                src={process.env.REACT_APP_API_URL +`/files/${meal.image.id}`}
                                 alt=""
                                 width="60"
                               />
@@ -275,22 +292,22 @@ export default function AddMealstoMenu(props) {
                     ) : mealCategory === "LUNCH" ? (
                       <>
                         {lunchMenu.filter((meal) => {
-                                                    if (searchTerm === "") {
-                                                        return meal;
-                                                    } else if (
-                                                        meal.label
-                                                            .toLowerCase()
-                                                            .includes(searchTerm.toLowerCase()) ||
-                                                        meal.description
-                                                            .toLowerCase()
-                                                            .includes(searchTerm.toLowerCase()) ||
-                                                        meal.type.name
-                                                            .toLowerCase()
-                                                            .includes(searchTerm.toLowerCase())
-                                                    ) {
-                                                        return meal;
-                                                    }
-                                                }).map((meal, i) => (
+                          if (searchTerm === "") {
+                            return meal;
+                          } else if (
+                            meal.label
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase()) ||
+                            meal.description
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase()) ||
+                            meal.type.name
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase())
+                          ) {
+                            return meal;
+                          }
+                        }).map((meal, i) => (
                           <li
                             key={i}
                             className={
@@ -369,7 +386,7 @@ export default function AddMealstoMenu(props) {
                             </div>
                             <label htmlFor={meal.id}>
                               <img
-                                src={`http://localhost:8080/files/${meal.image.id}`}
+                               src={process.env.REACT_APP_API_URL +`/files/${meal.image.id}`}
                                 alt=""
                                 width="60"
                               />
@@ -380,22 +397,22 @@ export default function AddMealstoMenu(props) {
                     ) : mealCategory === "DINNER" ? (
                       <>
                         {dinnerMenu.filter((meal) => {
-                                                    if (searchTerm === "") {
-                                                        return meal;
-                                                    } else if (
-                                                        meal.label
-                                                            .toLowerCase()
-                                                            .includes(searchTerm.toLowerCase()) ||
-                                                        meal.description
-                                                            .toLowerCase()
-                                                            .includes(searchTerm.toLowerCase()) ||
-                                                        meal.type.name
-                                                            .toLowerCase()
-                                                            .includes(searchTerm.toLowerCase())
-                                                    ) {
-                                                        return meal;
-                                                    }
-                                                }).map((meal, i) => (
+                          if (searchTerm === "") {
+                            return meal;
+                          } else if (
+                            meal.label
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase()) ||
+                            meal.description
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase()) ||
+                            meal.type.name
+                              .toLowerCase()
+                              .includes(searchTerm.toLowerCase())
+                          ) {
+                            return meal;
+                          }
+                        }).map((meal, i) => (
                           <li
                             key={i}
                             className={
@@ -474,7 +491,7 @@ export default function AddMealstoMenu(props) {
                             </div>
                             <label htmlFor={meal.id}>
                               <img
-                                src={`http://localhost:8080/files/${meal.image.id}`}
+                                src={process.env.REACT_APP_API_URL +`/files/${meal.image.id}`}
                                 alt=""
                                 width="60"
                               />
@@ -491,15 +508,24 @@ export default function AddMealstoMenu(props) {
             </div>
 
             <div className="p-t-15">
-              <button className="btn btn--radius-2 btn--blue" type="submit">
-                <i
-                  className="fa fa-plus-circle fadd "
-                  style={{
-                    position: "relative",
-                    left: "-15px",
-                    bottom: "-2px",
-                  }}
-                />
+              <button disabled={loading} className="btn btn--radius-2 btn--blue" type="submit">
+                {loading ?
+                  (
+                    <span className="spinner-border spinner-border-sm"></span>
+                  )
+
+                  :
+                  (
+                    <i
+                      className="fa fa-plus-circle fadd "
+                      style={{
+                        position: "relative",
+                        left: "-15px",
+                        bottom: "-2px",
+                      }}
+                    />
+                  )
+                }
                 ADD
               </button>
             </div>

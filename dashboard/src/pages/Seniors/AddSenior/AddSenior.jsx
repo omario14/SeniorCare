@@ -192,7 +192,7 @@ class AddSenior extends Component {
 						});
 						let archive = {
 							idArch: `arch-${res.data.id}-${new Date().toISOString().split("T")[0]}`,
-							senior: res.data,
+							senior: res.data.id,
 							date: new Date().toISOString().split("T")[0],
 							checkedBreakfast: 0,
 							checkedLunch: 0,
@@ -232,7 +232,7 @@ class AddSenior extends Component {
 					})
 					let archive = {
 						idArch: `arch-${this.state.senior.id}-${new Date().toISOString().split("T")[0]}`,
-						senior: this.state.senior,
+						senior: this.state.senior.id,
 						date: new Date().toISOString().split("T")[0],
 						checkedBreakfast: 0,
 						checkedLunch: 0,

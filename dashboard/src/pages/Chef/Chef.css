@@ -7,6 +7,7 @@
 }
 
 
+
 .rowIng {
   display: flex;
   flex-wrap: wrap;
@@ -27,7 +28,8 @@
   box-shadow: 0 0 2.4em rgba(25, 0, 58, 0.1);
   padding: 3.5em 1em;
   margin-bottom: 50px;
- 
+  width: 250px;
+  height: 500px;
   border-radius: 0.6em;
   color: #1f003b;
   cursor: pointer;
@@ -45,7 +47,8 @@
 .cardIng img {
   
   top:0;
-  width: 100%;
+  width: 200px;
+  height:200px;
   
   
 }
@@ -225,7 +228,7 @@ input[type="file"]{
 .imageIconIng{
   display: block;
   position: relative;
-  background-color: #cda45e;
+  background-color: #605ecd;
   color: #ffffff;
   font-size: 18px;
   text-align: center;
@@ -238,7 +241,10 @@ input[type="file"]{
 
 /*********************** Meal *************************/
 
-
+.MealCardContainer .activeMeal {
+  background-color: #6759ff;
+  color: #ffffff;
+}
 
 
 .cardMeal-block {
@@ -500,7 +506,7 @@ border: 2px solid #e9a1ff;
   font-size: 36px;
   font-weight: 700;
   font-family: "Playfair Display", serif;
-  color: #cda45e;
+  color: #605ecd;
 }
 .menu #menu-flters {
   padding: 0;
@@ -575,7 +581,7 @@ border: 2px solid #e9a1ff;
 }
 
 .menu .menu-content a:hover {
-  color: #cda45e;
+  color: #605ecd;
 }
 
 .menu .menu-content span {
@@ -584,7 +590,7 @@ border: 2px solid #e9a1ff;
   z-index: 3;
   padding: 0 10px;
   font-weight: 600;
-  color: #cda45e;
+  color: #605ecd;
 }
 
 .menu .menu-ingredients {

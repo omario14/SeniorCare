@@ -92,3 +92,10 @@
       grid-column-gap: 1em;
     }
   }
+  .messageEmpty{
+    position: absolute;
+    left: 22%;
+    top: 40%;
+       margin-top: 15px; 
+  width: 50%;
+  }

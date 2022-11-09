@@ -182,7 +182,7 @@ export default function MenuFood(props) {
                                                                         <>
                                                                             <li key={index} className="d-flex justify-content-start mb-5" >
                                                                                 <div className="img_cont_msg" >
-                                                                                    <img src={`http://localhost:8080/files/${breakfast.image.id}`} alt="imageMeal" className="user_img_msg" />
+                                                                                    <img src={process.env.REACT_APP_API_URL+`/files/${breakfast.image.id}`} alt="imageMeal" className="user_img_msg" />
                                                                                 </div>
                                                                                 <div className="msg_cotainer">
                                                                                     {breakfast.label}
@@ -215,7 +215,7 @@ export default function MenuFood(props) {
 
                                                                         <li key={index} className="d-flex justify-content-start mb-5" >
                                                                             <div className="img_cont_msg" >
-                                                                                <img src={`http://localhost:8080/files/${lunch.image.id}`} alt="imageMeal" className=" user_img_msg" />
+                                                                                <img src={process.env.REACT_APP_API_URL+`/files/${lunch.image.id}`} alt="imageMeal" className=" user_img_msg" />
                                                                             </div>
                                                                             <div className="msg_cotainer">
                                                                                 {lunch.label}
@@ -252,7 +252,7 @@ export default function MenuFood(props) {
 
                                                                             <li key={index} className="d-flex justify-content-start mb-5" >
                                                                                 <div className="img_cont_msg" >
-                                                                                    <img src={`http://localhost:8080/files/${dinner.image.id}`} alt="imageMeal" className=" user_img_msg" />
+                                                                                    <img src={process.env.REACT_APP_API_URL+`/files/${dinner.image.id}`} alt="imageMeal" className=" user_img_msg" />
                                                                                 </div>
                                                                                 <div className="msg_cotainer">
                                                                                     {dinner.label}

@@ -7,7 +7,9 @@ import Filter from "./FilterActions";
 import Pagination from "./Pagination";
 import { SiJusteat } from "react-icons/si";
 import { MdOutlineExpandLess, MdOutlineExpandMore } from "react-icons/md";
-
+import '../Food/Food.css'
+import '../Food/Food.scss'
+import { IoTrashOutline } from "react-icons/io5";
 function MealCard(props) {
     const [loading, setLoading] = useState(false);
     const [meals, setMeals] = useState([]);
@@ -15,7 +17,8 @@ function MealCard(props) {
     const [activeType, setActiveType] = useState("All");
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [mealsPerPage, setMealsPerPage] = useState(4);
+    const [mealsPerPage, setMealsPerPage] = useState(3);
+
 
     const retrieveMeals = () => {
         try {
@@ -40,8 +43,12 @@ function MealCard(props) {
     // Get current meals
     const indexOfLastMeal = currentPage * mealsPerPage;
     const indexOfFirstMeal = indexOfLastMeal - mealsPerPage;
-    const currentMeals = meals.slice(indexOfFirstMeal, indexOfLastMeal);
-    const currentFiltered = filtered.slice(indexOfFirstMeal, indexOfLastMeal);
+    const currentMeals = meals.sort((a, b) =>
+    a["label"].toLowerCase() > b["label"].toLowerCase() ? 1 : -1
+).slice(indexOfFirstMeal, indexOfLastMeal);
+    const currentFiltered = filtered.sort((a, b) =>
+    a["label"].toLowerCase() > b["label"].toLowerCase() ? 1 : -1
+).slice(indexOfFirstMeal, indexOfLastMeal);
 
     // Change page
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -49,7 +56,7 @@ function MealCard(props) {
     return (
         <>
             <div className="container">
-                <div id="search-container" style={{width: "40%"}}>
+                <div id="search-container" style={{ width: "40%" }}>
                     <input
                         type="search"
                         id="search-input"
@@ -93,12 +100,12 @@ function MealCard(props) {
                                     setActiveType={setActiveType}
                                 />
                                 <div
-                                    className="row menu-container"
+                                    className="rowIng menu-container"
                                     data-aos="fade-up"
                                     data-aos-delay="200"
                                 >
                                     {filtered.length !== 0 ? (
-                                        <>
+                                        <div className="container-fluid py-4">
                                             {currentFiltered
                                                 .filter((meal) => {
                                                     if (searchTerm === "") {
@@ -118,46 +125,49 @@ function MealCard(props) {
                                                     }
                                                 })
                                                 .map((meal, index) => (
-                                                    <div
-                                                        key={index}
-                                                        className="col-lg-6 menu-item filter-starters"
-                                                    >
+                                                    <div key={index} className="foodContainer mb-5 mt-5">
                                                         {meal.image === null ? (
                                                             <img
                                                                 src={
                                                                     "../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif"
                                                                 }
                                                                 alt="mealpic"
-                                                                className="menu-img"
+                                                                className="menuImg"
 
                                                             />
                                                         ) : (
                                                             <img
-                                                                src={`http://localhost:8080/files/${meal.image.id}`}
+                                                                src={process.env.REACT_APP_API_URL + `/files/${meal.image.id}`}
                                                                 alt="mealpic"
-                                                                className="menu-img"
+                                                                className="menuImg"
 
                                                             />
                                                         )}
-                                                        <div className="menu-content">
-                                                            <a href="#">
-                                                                {meal.label}
-                                                            </a>
-                                                            <span >
-                                                                         <MdOutlineExpandMore size={30}/>
-                                                                    </span>
-                                                        </div>
 
-                                                        {meal.ingredients.map((ingredient, i) => (
-                                                            <div
-                                                                key={i}
-                                                                className="menu-ingredients"
-                                                            >
-                                                                
-                                                                {ingredient.label}
+                                                        <div className="foodContainer__text text-start " style={{ maxWidth: "850px" }}>
+                                                            <h1 className="text-start text-capitalize">{meal.label}</h1>
+
+
+
+
+                                                            <p className="text-capitalize text-sm">
+                                                                {meal.description}
+                                                            </p>
+
+                                                            <div className="foodContainer__text__timing scrollyb" style={{ maxWidth: "830px", overflowX: "auto" }}>
+                                                                {meal.ingredients.map((ing) => (
+
+
+
+                                                                    <div className="foodContainer__text__timing_time"  >
+                                                                        <h2 className="text-capitalize text-nowrap">♦{ing.label} &nbsp; </h2>
+
+                                                                    </div>
+                                                                ))}
+
                                                             </div>
-                                                        ))}
 
+                                                        </div>
                                                     </div>
                                                 ))}
                                             <Pagination
@@ -166,11 +176,11 @@ function MealCard(props) {
                                                 totalmeals={filtered.length}
                                                 paginate={paginate}
                                             />
-                                        </>
+                                        </div>
                                     ) : (
                                         <>
                                             {loading ? (
-                                                <>
+                                                <div className="container-fluid py-4">
                                                     {currentMeals
                                                         .filter((meal) => {
                                                             if (searchTerm === "") {
@@ -190,47 +200,49 @@ function MealCard(props) {
                                                             }
                                                         })
                                                         .map((meal, index) => (
-                                                            <div
-                                                        key={index}
-                                                        className="col-lg-6 menu-item filter-starters"
-                                                    >
-                                                        {meal.image === null ? (
-                                                            <img
-                                                                src={
-                                                                    "../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif"
-                                                                }
-                                                                alt="mealpic"
-                                                                className="menu-img"
+                                                            <div key={index} className="foodContainer mb-5 mt-5">
+                                                                {meal.image === null ? (
+                                                                    <img
+                                                                        src={
+                                                                            "../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif"
+                                                                        }
+                                                                        alt="mealpic"
+                                                                        className="menuImg"
 
-                                                            />
-                                                        ) : (
-                                                            <img
-                                                                src={`http://localhost:8080/files/${meal.image.id}`}
-                                                                alt="mealpic"
-                                                                className="menu-img"
+                                                                    />
+                                                                ) : (
+                                                                    <img
+                                                                        src={process.env.REACT_APP_API_URL + `/files/${meal.image.id}`}
+                                                                        alt="mealpic"
+                                                                        className="menuImg"
 
-                                                            />
-                                                        )}
-                                                        <div className="menu-content">
-                                                            <a href="#">
-                                                                {meal.label}
-                                                            </a>
-                                                            <span >
-                                                                         <MdOutlineExpandMore size={30}/>
-                                                                    </span>
-                                                        </div>
+                                                                    />
+                                                                )}
 
-                                                        {meal.ingredients.map((ingredient, i) => (
-                                                            <div
-                                                                key={i}
-                                                                className="menu-ingredients"
-                                                            >
-                                                                
-                                                                {ingredient.label}
+                                                                <div className="foodContainer__text text-start" style={{ maxWidth: "850px" }}>
+                                                                    <h1 className="text-start text-capitalize">{meal.label}</h1>
+
+
+
+
+                                                                    <p>
+                                                                        {meal.description}
+                                                                    </p>
+
+                                                                    <div className="foodContainer__text__timing scrollyb" style={{ maxWidth: "830px", overflowX: "auto"}}>
+                                                                        {meal.ingredients.map((ing) => (
+
+
+                                                                            <div className="foodContainer__text__timing_time"  >
+                                                                                <h2 className="text-capitalize text-nowrap">{ing.label}&nbsp; | &nbsp;</h2>
+
+                                                                            </div>
+                                                                        ))}
+
+                                                                    </div>
+
+                                                                </div>
                                                             </div>
-                                                        ))}
-
-                                                    </div>
                                                         ))}
 
                                                     <Pagination
@@ -239,7 +251,7 @@ function MealCard(props) {
                                                         totalmeals={meals.length}
                                                         paginate={paginate}
                                                     />
-                                                </>
+                                                </div>
                                             ) : (
                                                 <div className="mt-5">
                                                     <ul className="o-vertical-spacing o-vertical-spacing--l">

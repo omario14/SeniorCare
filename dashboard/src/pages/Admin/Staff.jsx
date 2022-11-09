@@ -335,7 +335,7 @@ class Staff extends Component {
                                                                                             :
                                                                                             <>
                                                                                                 <img
-                                                                                                    src={`http://localhost:8080/files/${user.picture.id}`}
+                                                                                                    src={process.env.REACT_APP_API_URL+`/files/${user.picture.id}`}
                                                                                                     className="avatar avatar-sm me-3"
                                                                                                     alt="user1"
                                                                                                 />
@@ -382,13 +382,13 @@ class Staff extends Component {
                                                                             <td className="align-middle">
                                                                                 <div className="col-lg-6 col-5 my-auto text-end" >
                                                                                     <div className="dropdown float-lg-end ">
-                                                                                        <a className="cursor-pointer" href="/#" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                        <a className="cursor-pointer" href="#" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
                                                                                             <i className="fa fa-ellipsis-v text-secondary"></i>
                                                                                         </a>
                                                                                         <ul className="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                                                                                            <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="/#" onClick={(e) => this.handleShow(user, true)}> Edit <MdEditNote /></a></li>
+                                                                                            <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#" onClick={(e) => this.handleShow(user, true)}> Edit <MdEditNote /></a></li>
 
-                                                                                            <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="/#" onClick={(e) => this.deleteSenior(user, e)}>Delete <IoTrashOutline />  </a></li>
+                                                                                            <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#" onClick={(e) => this.deleteSenior(user, e)}>Delete <IoTrashOutline />  </a></li>
                                                                                         </ul>
                                                                                     </div>
                                                                                 </div>

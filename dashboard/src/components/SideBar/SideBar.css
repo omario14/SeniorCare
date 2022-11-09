@@ -23,6 +23,39 @@ color: aliceblue;
 }
 }
 
+/*************** ping notification dot ***************/
+@keyframes ping {
+    0% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+  
+  .ping {
+    position: relative;
+    padding-top: 1em;
+  }
+  
+  .ping::before,
+  .ping::after {
+    content: '';
+    position: absolute;
+    top: 0.35em;
+    right: -0.45em;
+    width: 0.65em;
+    height: 0.65em;
+    border-radius: 50%;
+    background-color: currentColor;
+  }
+  
+  .ping::before {
+      animation: ping 1.7s ease infinite;
+    opacity: 0.25;
+  }
 
 
 

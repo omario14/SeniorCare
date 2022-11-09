@@ -1,0 +1,59 @@
+{
+  "app_title": "WeCare",
+  "homepage": {
+    "phrase1": "We ",
+    "phrase2": "care,",
+    "phrase3": "We ",
+    "phrase4": "listen.",
+    "phrase5": "You will never be alone.",
+    "button": "Consult"
+  },
+  "profilePage": {
+    "profile_information": "Profile Information",
+    "username": "username",
+    "email": "Email ",
+    "phone": "Phone ",
+    "roles": "Roles",
+    "name": "Name",
+    "lastname": "Lastname",
+    "address": "Address",
+    "gender": "Gender",
+    "male":"Male",
+    "female":"Female"
+  },
+  "seniorPage": {
+    "senior_table": "Senior Table",
+    "add_senior": "add new senior",
+    "export_Seniors": "export to excel",
+    "delete_seniors": "delete seniors ",
+    "search": "search ",
+    "cin": "cin",
+    "birth_date": "birth date",
+    "actions": "actions",
+    "edit": "edit",
+    "details": "details",
+    "delete":"Delete",
+    "breakfast":"breakfast",
+    "lunch":"lunch",
+    "dinner":"dinner"
+  },
+  "alerts":{
+    "profile_update":"Your informations are up to date " ,
+    "senior_delete":"Senior is deleted successfully" ,
+    "senior_update":" Senior is updated successfully" 
+  },
+  "language": "Language",
+  "dashboard": "Dashboard",
+  "seniors": "Seniors",
+  "health": "Health",
+  "food": "Food",
+  "calendar": "Calendar",
+  "profile": "Profile",
+  "staff":"Staff",
+  "meal": "Meal",
+  "ingredients": "Ingredients",
+  "account_pages": "ACCOUNT PAGES",
+  "pages":"Pages",
+  "logout":"logout"
+  
+}

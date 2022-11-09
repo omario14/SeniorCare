@@ -2,22 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { Badge } from 'react-bootstrap';
 import {  XAxis, YAxis, CartesianGrid, Tooltip, Legend, AreaChart, Area } from 'recharts';
 import seniorService from '../../services/senior.service';
+import { getAge } from '../../utils/GeneralFunctions';
 
 
 
 export default function BmiChart() {
     const [seniors, setSeniors] = useState([]);
 
-    function getAge(dateString) {
-        var today = new Date();
-        var birthDate = new Date(dateString);
-        var age = today.getFullYear() - birthDate.getFullYear();
-        var m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        return age;
-    }
+  
 
     useEffect(() => {
         seniorService.getAll().then((response) => {

@@ -165,6 +165,8 @@ class Meal extends Component {
               addMeal: "mealCard",
               mealImg:
                 "../../../../assets/img/images/CategoryImages/output-onlinegiftools.gif",
+                selectList: [],
+                ingredients: []
             });
 
             localStorage.removeItem("ingredients");
@@ -232,7 +234,7 @@ class Meal extends Component {
       },
     ];
     return (
-      <div className="ingredients">
+      <div className="ingredients scrollyb">
        
 
         {this.state.addMeal === "addMeal" ? (

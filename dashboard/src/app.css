@@ -6,10 +6,12 @@
   margin-right: 0;
   padding-right: 0;
 }
-.bg-white {
+#light .bg-white {
   background-color: #fff !important;
 }
-
+#dark .bg-white {
+  background-color: #C2E9F6;
+}
 .bg-transparent {
   background-color: transparent !important;
 }
@@ -123,4 +125,30 @@
   100%{
       background-color: #ffad00;
   }
+}
+
+
+
+/* width */
+::-webkit-scrollbar {
+  height:8px;
+  width: 10px;
+  
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 100px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(170, 170, 170); 
+  border-radius: 100px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }

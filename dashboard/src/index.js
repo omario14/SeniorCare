@@ -12,6 +12,11 @@ import App from "./App";
 
 import "flag-icon-css/css/flag-icon.min.css";
 import { Provider } from "react-redux";
+import TimeAgo from 'javascript-time-ago'
+
+import en from 'javascript-time-ago/locale/en.json'
+
+TimeAgo.addDefaultLocale(en)
 i18next
   .use(HttpApi)
   .use(LanguageDetector)
@@ -38,6 +43,7 @@ const loadingMarkup = (
 );
 
 ReactDOM.render(
+  
   <Suspense fallback={loadingMarkup}>
     <React.StrictMode>
       <Provider store={store}>

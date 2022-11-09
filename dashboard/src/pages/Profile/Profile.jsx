@@ -34,7 +34,8 @@ class Profile extends Component {
       adress: "",
       mobile: "",
       roles: [],
-
+      notifications: [],
+      tab: "info",
       user: "",
       userImg: "../../../assets/img/images/avartarU.png",
       imgChange: false,
@@ -42,7 +43,7 @@ class Profile extends Component {
       fileId: null,
       picture: "",
       edit: false,
-      toasUpdate:false,
+      toasUpdate: false,
     };
   }
 
@@ -91,7 +92,6 @@ class Profile extends Component {
         this.setState({ userImg: reader.result, selectedFile: e.target.files[0], imgChange: true })
       }
     }
-    console.log("this is image " + this.state.userImg)
 
     reader.readAsDataURL(e.target.files[0])
   }
@@ -115,7 +115,6 @@ class Profile extends Component {
   }
 
   onChangeLastName(e) {
-    console.log("tareezaeget", e)
     this.setState({
       lastName: e.target.value,
     });
@@ -132,7 +131,6 @@ class Profile extends Component {
     this.setState({
       roleuser: [e.target.value]
     })
-    console.log(JSON.stringify(this.state.roleuser))
 
   }
   onChangeEmail(e) {
@@ -141,7 +139,6 @@ class Profile extends Component {
     });
   }
   onChangeadrs(e) {
-    console.log("target", e)
     this.setState({
       adress: e.target.value
     })
@@ -198,7 +195,7 @@ class Profile extends Component {
             if (response.data.accessToken) {
               this.setState({
                 edit: false,
-                toasUpdate:true,
+                toasUpdate: true,
                 user: response.data,
                 username: response.data.username,
                 email: response.data.email,
@@ -240,7 +237,7 @@ class Profile extends Component {
         if (response.data.accessToken) {
           this.setState({
             edit: false,
-            toasUpdate:true,
+            toasUpdate: true,
             user: response.data,
             username: response.data.username,
             email: response.data.email,
@@ -262,8 +259,8 @@ class Profile extends Component {
   }
 
   render() {
-   
-    const { user: currentUser,t,dir } = this.props;
+
+    const { user: currentUser, t, dir } = this.props;
     TabTitle(t("profile"));
     if (!currentUser) {
       return <Navigate to="/login" />;
@@ -301,7 +298,7 @@ class Profile extends Component {
                           :
 
                           <img
-                            src={`http://localhost:8080/files/${this.state.picture.id}`}
+                            src={process.env.REACT_APP_API_URL + `/files/${this.state.picture.id}`}
                             alt="profile_image"
                             className="w-100 border-radius-lg shadow-sm"
 
@@ -316,7 +313,7 @@ class Profile extends Component {
                       <>
 
                         <img
-                          src={this.state.imgChange ? this.state.userImg : `http://localhost:8080/files/${this.state.picture.id}`}
+                          src={this.state.imgChange ? this.state.userImg : process.env.REACT_APP_API_URL + `/files/${this.state.picture.id}`}
                           alt="profile_image"
                           className="w-100 border-radius-lg shadow-sm"
                         />
@@ -349,7 +346,7 @@ class Profile extends Component {
                       className="nav nav-pills nav-fill p-1 bg-transparent"
                       role="tablist"
                     >
-                      <li className="nav-item">
+                      <li className="nav-item" onClick={() => this.setState({ tab: "info" })}>
                         <a
                           className="nav-link mb-0 px-0 py-1 active "
                           data-bs-toggle="tab"
@@ -397,10 +394,10 @@ class Profile extends Component {
                               </g>
                             </g>
                           </svg>
-                          <span className="ms-1">App</span>
+                          <span className="ms-1">Info</span>
                         </a>
                       </li>
-                      <li className="nav-item">
+                      <li className="nav-item" onClick={() => { this.setState({ tab: "msg" }); userService.getAllNotificationsByUser(this.state.username).then((res) => { this.setState({ notifications: res.data }) }) }}>
                         <a
                           className="nav-link mb-0 px-0 py-1 "
                           data-bs-toggle="tab"
@@ -447,58 +444,9 @@ class Profile extends Component {
                           <span className="ms-1">Messages</span>
                         </a>
                       </li>
-                      <li className="nav-item">
-                        <a
-                          className="nav-link mb-0 px-0 py-1 "
-                          data-bs-toggle="tab"
-                          href="/"
-                          role="tab"
-                          aria-selected="false"
-                        >
-                          <svg
-                            className="text-dark"
-                            width="16px"
-                            height="16px"
-                            viewBox="0 0 40 40"
-                            version="1.1"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <title>settings</title>
-                            <g
-                              stroke="none"
-                              strokeWidth="1"
-                              fill="none"
-                              fillRule="evenodd"
-                            >
-                              <g
-                                transform="translate(-2020.000000, -442.000000)"
-                                fill="/FFFFFF"
-                                fillRule="nonzero"
-                              >
-                                <g transform="translate(1716.000000, 291.000000)">
-                                  <g transform="translate(304.000000, 151.000000)">
-                                    <polygon
-                                      className="color-background"
-                                      opacity="0.596981957"
-                                      points="18.0883333 15.7316667 11.1783333 8.82166667 13.3333333 6.66666667 6.66666667 0 0 6.66666667 6.66666667 13.3333333 8.82166667 11.1783333 15.315 17.6716667"
-                                    ></polygon>
-                                    <path
-                                      className="color-background"
-                                      d="M31.5666667,23.2333333 C31.0516667,23.2933333 30.53,23.3333333 30,23.3333333 C29.4916667,23.3333333 28.9866667,23.3033333 28.48,23.245 L22.4116667,30.7433333 L29.9416667,38.2733333 C32.2433333,40.575 35.9733333,40.575 38.275,38.2733333 L38.275,38.2733333 C40.5766667,35.9716667 40.5766667,32.2416667 38.275,29.94 L31.5666667,23.2333333 Z"
-                                      opacity="0.596981957"
-                                    ></path>
-                                    <path
-                                      className="color-background"
-                                      d="M33.785,11.285 L28.715,6.215 L34.0616667,0.868333333 C32.82,0.315 31.4483333,0 30,0 C24.4766667,0 20,4.47666667 20,10 C20,10.99 20.1483333,11.9433333 20.4166667,12.8466667 L2.435,27.3966667 C0.95,28.7083333 0.0633333333,30.595 0.00333333333,32.5733333 C-0.0583333333,34.5533333 0.71,36.4916667 2.11,37.89 C3.47,39.2516667 5.27833333,40 7.20166667,40 C9.26666667,40 11.2366667,39.1133333 12.6033333,37.565 L27.1533333,19.5833333 C28.0566667,19.8516667 29.01,20 30,20 C35.5233333,20 40,15.5233333 40,10 C40,8.55166667 39.685,7.18 39.1316667,5.93666667 L33.785,11.285 Z"
-                                    ></path>
-                                  </g>
-                                </g>
-                              </g>
-                            </g>
-                          </svg>
-                          <span className="ms-1">Settings</span>
-                        </a>
-                      </li>
+
+                      <div class="moving-tab position-absolute nav-link" style={this.state.tab === "info" ? { padding: "0px", transition: " all 0.5s ease 0s", transform: " translate3d(32px, 0px, 0px)", width: "100px" } : { padding: "0px", transition: " all 0.5s ease 0s", transform: " translate3d(200px, 0px, 0px)", width: "120px" }}>
+                        <a class="nav-link mb-0 px-0 py-1 active" data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="true">-</a></div>
                     </ul>
                   </div>
                 </div>
@@ -507,227 +455,290 @@ class Profile extends Component {
           </div>
           <div className="container-fluid py-4" dir={dir}>
             <div className="row mx-1">
+              {this.state.tab === "info" ?
+                <div className="col-12 col-xl-12">
+                  <div className="card h-100">
+                    <div className="card-header pb-0 p-3">
+                      <div className="row">
+                        <div className="col-md-8 d-flex align-items-center">
+                          <h6 className="mb-0">{t("profilePage.profile_information")}</h6>
+                        </div>
+                        <div className="col-md-4 text-end">
+                          <a href="#">
+                            {this.state.edit === false ?
 
-              <div className="col-12 col-xl-12">
-                <div className="card h-100">
-                  <div className="card-header pb-0 p-3">
-                    <div className="row">
-                      <div className="col-md-8 d-flex align-items-center">
-                        <h6 className="mb-0">{t("profilePage.profile_information")}</h6>
-                      </div>
-                      <div className="col-md-4 text-end">
-                        <a href="#">
-                          {this.state.edit === false ?
+                              <FaUserEdit className=" text-secondary text-sm"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                onClick={this.changeEditMode}
+                                title="Edit Profile" />
+                              :
+                              <GiConfirmed
+                                onClick={this.handleUpdate} className="text-secondary text-sm" data-bs-toggle="tooltip"
+                                data-bs-placement="top" />
+                            }
 
-                            <FaUserEdit className=" text-secondary text-sm"
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                              onClick={this.changeEditMode}
-                              title="Edit Profile" />
-                            :
-                            <GiConfirmed
-                              onClick={this.handleUpdate} className="text-secondary text-sm" data-bs-toggle="tooltip"
-                              data-bs-placement="top" />
-                          }
-
-                        </a>
+                          </a>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="card-body p-3">
+                    <div className="card-body p-3">
 
-                    <hr className="horizontal gray-light my-4" />
-                    {this.state.edit ?
+                      <hr className="horizontal gray-light my-4" />
+                      {this.state.edit ?
 
-                      <div style={{ display: "flex", alignContent: "space-evenly", alignItems: "center", justifyItems: "center", justifyContent: "space-evenly" }}>
-                        <div style={{ width: "45%" }}>
+                        <div style={{ display: "flex", alignContent: "space-evenly", alignItems: "center", justifyItems: "center", justifyContent: "space-evenly" }}>
+                          <div style={{ width: "45%" }}>
 
 
-                          <ul className="list-group">
-                            <li className="list-group-item border-0 ps-0 pt-0 text-sm">
-                              <strong className="text-dark">{t("profilePage.username")} :</strong> &nbsp;{" "}
-                              <Tooltip title="You don't have permission to change this" placement="top-end">
-                                <span>
-                                  <TextField
+                            <ul className="list-group">
+                              <li className="list-group-item border-0 ps-0 pt-0 text-sm">
+                                <strong className="text-dark">{t("profilePage.username")} :</strong> &nbsp;{" "}
+                                <Tooltip title="You don't have permission to change this" placement="top-end">
+                                  <span>
+                                    <TextField
 
-                                    disabled={true}
-                                    style={{ width: "60%" }}
-                                    className="input--style-4 "
-                                    type="text"
-                                    name="username"
-                                    defaultValue={this.state.username}
-                                  />
-                                </span>
-                              </Tooltip>
-                            </li>
-                            <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">{t("profilePage.email")} :</strong> &nbsp;{" "}
-                              <TextField
-                                style={{ width: "60%" }}
-                                className="input--style-4"
-                                type="text"
-                                name="email"
-                                defaultValue={this.state.email}
-                                onChange={this.onChangeEmail} />
+                                      disabled={true}
+                                      style={{ width: "60%" }}
+                                      className="input--style-4 "
+                                      type="text"
+                                      name="username"
+                                      defaultValue={this.state.username}
+                                    />
+                                  </span>
+                                </Tooltip>
+                              </li>
+                              <li className="list-group-item border-0 ps-0 text-sm">
+                                <strong className="text-dark">{t("profilePage.email")} :</strong> &nbsp;{" "}
+                                <TextField
+                                  style={{ width: "60%" }}
+                                  className="input--style-4"
+                                  type="text"
+                                  name="email"
+                                  defaultValue={this.state.email}
+                                  onChange={this.onChangeEmail} />
 
-                            </li>
-                            <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">{t("profilePage.phone")} :</strong> &nbsp;
-                              <TextField
-                                style={{ width: "60%" }}
-                                className="input--style-4"
-                                type="text"
-                                name="mobile"
-                                defaultValue={this.state.mobile}
-                                onChange={this.onChangeMobile} />
+                              </li>
+                              <li className="list-group-item border-0 ps-0 text-sm">
+                                <strong className="text-dark">{t("profilePage.phone")} :</strong> &nbsp;
+                                <TextField
+                                  style={{ width: "60%" }}
+                                  className="input--style-4"
+                                  type="text"
+                                  name="mobile"
+                                  defaultValue={this.state.mobile}
+                                  onChange={this.onChangeMobile} />
 
-                            </li>
+                              </li>
 
-                            <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">{t("profilePage.roles")} :</strong> &nbsp;{" "}
-                              <ul>
-                                {this.state.roles &&
-                                  this.state.roles.map((role, index) => (
-                                    <li key={index}>{role.name.substring(5, role.name.length)}</li>
-                                  ))}
-                              </ul>
-                            </li>
+                              <li className="list-group-item border-0 ps-0 text-sm">
+                                <strong className="text-dark">{t("profilePage.roles")} :</strong> &nbsp;{" "}
+                                <ul>
+                                  {this.state.roles &&
+                                    this.state.roles.map((role, index) => (
+                                      <li key={index}>{role.name.substring(5, role.name.length)}</li>
+                                    ))}
+                                </ul>
+                              </li>
 
-                          </ul>
+                            </ul>
+                          </div>
+                          <div style={{ width: "45%" }}>
+
+
+                            <ul className="list-group">
+                              <li className="list-group-item border-0 ps-0 pt-0 text-sm">
+                                <strong className="text-dark">{t("profilePage.name")} :</strong> &nbsp;{" "}
+                                <TextField
+                                  style={{ width: "60%" }}
+                                  className="input--style-4 "
+                                  type="text"
+                                  name="name"
+                                  defaultValue={this.state.name}
+                                  onChange={this.onChangeName} />
+
+                              </li>
+                              <li className="list-group-item border-0 ps-0 text-sm">
+                                <strong className="text-dark">{t("profilePage.lastname")} :</strong> &nbsp; {" "}
+                                <TextField
+                                  style={{ width: "60%" }}
+                                  className="input--style-4 "
+                                  type="text"
+                                  name="lastName"
+                                  defaultValue={this.state.lastName}
+                                  onChange={this.onChangeLastName} />
+
+                              </li>
+                              <li className="list-group-item border-0 ps-0 text-sm">
+                                <strong className="text-dark">{t("profilePage.address")} :</strong> &nbsp; {" "}
+                                <TextField
+                                  style={{ width: "60%" }}
+                                  className="input--style-4 "
+                                  type="text"
+                                  name="adress"
+                                  variant="standard"
+                                  defaultValue={this.state.adress}
+                                  onChange={this.onChangeadrs} />
+
+                              </li>
+
+                              <li className="list-group-item border-0 ps-0 text-sm d-flex">
+
+
+
+                                <strong className="text-dark">{t("profilePage.gender")} :</strong> &nbsp;{" "}
+                                <div className="p-t-5" style={{ marginLeft: "10px", width: "60%" }}>
+                                  <label className="radio-container m-r-45">{t("profilePage.male")}
+                                    <input onChange={this.onChangeGender} checked={this.state.gender === "male"}
+                                      type="radio"
+                                      value="male" />
+                                    <span className="checkmark"></span>
+                                  </label>
+                                  <label className="radio-container">{t("profilePage.female")}
+                                    <input
+                                      onChange={this.onChangeGender} checked={this.state.gender === "female"}
+                                      type="radio"
+                                      value="female" />
+                                    <span className="checkmark"></span>
+                                  </label>
+                                </div>
+
+
+
+
+                              </li>
+
+                            </ul>
+                          </div>
+
                         </div>
-                        <div style={{ width: "45%" }}>
+
+                        :
+                        <div style={{ display: "flex", alignContent: "space-evenly", alignItems: "center", justifyItems: "center", justifyContent: "space-evenly" }}>
+                          <div style={{ width: "45%" }}>
 
 
-                          <ul className="list-group">
-                            <li className="list-group-item border-0 ps-0 pt-0 text-sm">
-                              <strong className="text-dark">{t("profilePage.name")} :</strong> &nbsp;{" "}
-                              <TextField
-                                style={{ width: "60%" }}
-                                className="input--style-4 "
-                                type="text"
-                                name="name"
-                                defaultValue={this.state.name}
-                                onChange={this.onChangeName} />
+                            <ul className="list-group">
+                              <li className="list-group-item border-0 ps-0 pt-0 text-sm text-capitalize">
+                                <strong className="text-dark">{t("profilePage.username")} :</strong> &nbsp;{" "}
+                                {this.state.user.username}
+                              </li>
+                              <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
+                                <strong className="text-dark">{t("profilePage.email")} :</strong> &nbsp;{" "}
+                                {this.state.email}
+                              </li>
+                              <li className="list-group-item border-0 ps-0 text-sm ">
+                                <strong className="text-dark">{t("profilePage.phone")} :</strong> &nbsp;
+                                {this.state.mobile}
+                              </li>
 
-                            </li>
-                            <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">{t("profilePage.lastname")} :</strong> &nbsp; {" "}
-                              <TextField
-                                style={{ width: "60%" }}
-                                className="input--style-4 "
-                                type="text"
-                                name="lastName"
-                                defaultValue={this.state.lastName}
-                                onChange={this.onChangeLastName} />
+                              <li className="list-group-item border-0 ps-0 text-sm">
+                                <strong className="text-dark">{t("profilePage.roles")} :</strong> &nbsp;{" "}
+                                <ul>
+                                  {this.state.roles &&
+                                    this.state.roles.map((role, index) => (
+                                      <li key={index}>{role.name.substring(5, role.name.length)}</li>
+                                    ))}
+                                </ul>
+                              </li>
 
-                            </li>
-                            <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">{t("profilePage.address")} :</strong> &nbsp; {" "}
-                              <TextField
-                                style={{ width: "60%" }}
-                                className="input--style-4 "
-                                type="text"
-                                name="adress"
-                                variant="standard"
-                                defaultValue={this.state.adress}
-                                onChange={this.onChangeadrs} />
-
-                            </li>
-
-                            <li className="list-group-item border-0 ps-0 text-sm d-flex">
+                            </ul>
+                          </div>
+                          <div style={{ width: "45%" }}>
 
 
+                            <ul className="list-group">
+                              <li className="list-group-item border-0 ps-0 pt-0 text-sm text-capitalize">
+                                <strong className="text-dark">{t("profilePage.name")} :</strong> &nbsp;{" "}
+                                {this.state.name}
+                              </li>
+                              <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
+                                <strong className="text-dark">{t("profilePage.lastname")} :</strong> &nbsp; {" "}
+                                {this.state.lastName}
+                              </li>
+                              <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
+                                <strong className="text-dark">{t("profilePage.address")} :</strong> &nbsp;{" "}
+                                {this.state.adress}
+                              </li>
+                              <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
+                                <strong className="text-dark">{t("profilePage.gender")} :</strong> &nbsp;{" "}
+                                {this.state.gender}
+                              </li>
 
-                              <strong className="text-dark">{t("profilePage.gender")} :</strong> &nbsp;{" "}
-                              <div className="p-t-5" style={{ marginLeft: "10px", width: "60%" }}>
-                                <label className="radio-container m-r-45">{t("profilePage.male")}
-                                  <input onChange={this.onChangeGender} checked={this.state.gender === "male"}
-                                    type="radio"
-                                    value="male" />
-                                  <span className="checkmark"></span>
-                                </label>
-                                <label className="radio-container">{t("profilePage.female")}
-                                  <input
-                                    onChange={this.onChangeGender} checked={this.state.gender === "female"}
-                                    type="radio"
-                                    value="female" />
-                                  <span className="checkmark"></span>
-                                </label>
+                            </ul>
+                          </div>
+
+                        </div>
+                      }
+
+                    </div>
+                  </div>
+                </div>
+                :
+                <div className="col-12 col-xl-12" >
+                  <div className="card" style={{ maxHeight: "650px" }}>
+                    <div className="card-header pb-0 px-3">
+                      <h6 className="mb-0">Notifications</h6>
+
+
+                    </div>
+                    <div className="card-body pt-4 p-3" >
+                      <ul className="list-group" style={{ maxHeight: "550px", overflow: "auto" }}>
+                        {this.state.notifications && this.state.notifications.sort((a, b) =>
+                          a.type < b.type ? 1 : -1).map((notif, index) => (
+                            <li
+                              key={index}
+                              className="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg"
+                            >
+                              <div className="d-flex flex-column">
+                                <h6 className="mb-3 text-sm">{notif.id}</h6>
+                                <span className="mb-2 text-xs">
+                                  Sender :{" "}
+                                  <span className="text-dark font-weight-bold ms-sm-2">
+                                    {notif.senderName}
+                                  </span>
+                                </span>
+                                <span className="mb-2 text-xs">
+                                  Message:{" "}
+                                  <span className="text-dark ms-sm-2 font-weight-bold">
+                                    {notif.message}
+                                  </span>
+                                </span>
+                                <span className="mb-2 text-xs">
+                                  Date:{" "}
+                                  <span className="text-dark ms-sm-2 font-weight-bold">
+                                    {notif.date}
+                                  </span>
+                                </span>
+                                <span className="text-xs">
+                                  Type:{" "}
+                                  <span className="text-dark ms-sm-2 font-weight-bold">
+                                    {notif.type}
+                                  </span>
+                                </span>
+
+                              </div>
+
+                              <div className="ms-auto text-end">
+                                <a
+                                  className="btn btn-link text-danger text-gradient px-3 mb-0"
+                                  onClick={(e) => { e.preventDefault(); userService.removeNotification(notif.id);this.setState({notifications:this.state.notifications.filter(item => item.id !== notif.id)}) }}
+                                  href="#/"
+                                >
+                                  <i className="far fa-trash-alt me-2"></i>Delete
+                                </a>
                               </div>
 
 
-
-
                             </li>
-
-                          </ul>
-                        </div>
-
-                      </div>
-
-                      :
-                      <div style={{ display: "flex", alignContent: "space-evenly", alignItems: "center", justifyItems: "center", justifyContent: "space-evenly" }}>
-                        <div style={{ width: "45%" }}>
-
-
-                          <ul className="list-group">
-                            <li className="list-group-item border-0 ps-0 pt-0 text-sm text-capitalize">
-                              <strong className="text-dark">{t("profilePage.username")} :</strong> &nbsp;{" "}
-                              {this.state.user.username}
-                            </li>
-                            <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
-                              <strong className="text-dark">{t("profilePage.email")} :</strong> &nbsp;{" "}
-                              {this.state.email}
-                            </li>
-                            <li className="list-group-item border-0 ps-0 text-sm ">
-                              <strong className="text-dark">{t("profilePage.phone")} :</strong> &nbsp;
-                              {this.state.mobile}
-                            </li>
-
-                            <li className="list-group-item border-0 ps-0 text-sm">
-                              <strong className="text-dark">{t("profilePage.roles")} :</strong> &nbsp;{" "}
-                              <ul>
-                                {this.state.roles &&
-                                  this.state.roles.map((role, index) => (
-                                    <li key={index}>{role.name.substring(5, role.name.length)}</li>
-                                  ))}
-                              </ul>
-                            </li>
-
-                          </ul>
-                        </div>
-                        <div style={{ width: "45%" }}>
-
-
-                          <ul className="list-group">
-                            <li className="list-group-item border-0 ps-0 pt-0 text-sm text-capitalize">
-                              <strong className="text-dark">{t("profilePage.name")} :</strong> &nbsp;{" "}
-                              {this.state.name}
-                            </li>
-                            <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
-                              <strong className="text-dark">{t("profilePage.lastname")} :</strong> &nbsp; {" "}
-                              {this.state.lastName}
-                            </li>
-                            <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
-                              <strong className="text-dark">{t("profilePage.address")} :</strong> &nbsp;{" "}
-                              {this.state.adress}
-                            </li>
-                            <li className="list-group-item border-0 ps-0 text-sm text-capitalize">
-                              <strong className="text-dark">{t("profilePage.gender")} :</strong> &nbsp;{" "}
-                              {this.state.gender}
-                            </li>
-
-                          </ul>
-                        </div>
-
-                      </div>
-                    }
-
+                          ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
+              }
 
-             
+
             </div>
             <footer className="footer pt-3  ">
               <div className="container-fluid">
@@ -735,10 +746,10 @@ class Profile extends Component {
               </div>
             </footer>
           </div>
-          <Snackbar  open={this.state.toasUpdate} autoHideDuration={6000} onClose={() => this.setState({ toasUpdate: false })}>
-                <Alert onClose={() => this.setState({ toasUpdate: false })} severity="info" sx={{textTransform:"uppercase", padding: "15px", height: "70px", width: '100%' }}>
-                {t("alerts.profile_update")}
-                </Alert>
+          <Snackbar open={this.state.toasUpdate} autoHideDuration={6000} onClose={() => this.setState({ toasUpdate: false })}>
+            <Alert onClose={() => this.setState({ toasUpdate: false })} severity="info" sx={{ textTransform: "uppercase", padding: "15px", height: "70px", width: '100%' }}>
+              {t("alerts.profile_update")}
+            </Alert>
           </Snackbar>
         </main>
       </div>

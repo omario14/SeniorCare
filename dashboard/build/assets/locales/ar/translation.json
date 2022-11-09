@@ -1,0 +1,64 @@
+{
+  
+  "homepage": {
+      "phrase1": "نهتم ",
+      "phrase2": "بك،",
+      "phrase3": "نستمع ",
+      "phrase4": "اليك.",
+      "phrase5": "لن تكون وحيدا أبدا.",
+      "button": "اطلب استشارة"
+  },
+  "profilePage": {
+    "profile_information": " معلومات الملف الشخصي",
+    "username": "اسم االمستخدم ",
+    "email": "البريد الإلكتروني ",
+    "phone": "الهاتف ",
+    "roles": " الأدوار ",
+    "name": " اسم ",
+    "lastname": " اللقب ",
+    "address": " عنوان ",
+    "gender": " جنس ",
+    "male":"ذكر",
+    "female":"أنثى"
+},
+"seniorPage": {
+  "senior_table":"جدول كبار السن" ,
+  "add_senior": "إضافة كبار السن الجدد  ",
+  "export_Seniors": "تصدير إلى Excel  ",
+  "delete_seniors": "حذف كبار السن ",
+  "search": "بحث ",
+  "cin": "بطاقة تعريف",
+  "birth_date": "تاريخ الميلاد",
+  "actions": " أجراءات ",
+  "edit":"تعديل",
+  "details": "تفاصيل",
+  "delete": "حذف",
+  "breakfast":"فطور الصباح",
+  "lunch":"وجبة غداء",
+  "dinner":"وجبة عشاء"
+  
+  
+}, 
+"alerts":{
+  "profile_update":" تم تحديث معلوماتك الخاصة بنجاح " ,
+  "senior_delete":"تم حذف المسن بنجاح"  ,
+  "senior_update":" تم تحديث كبير السن بنجاح" 
+},
+    "language": "اللغة",
+    "dashboard": "الصفحة الرئيسية",
+    "seniors": "كبار السن",
+    "health": "الصحة",
+    "food": "غذاء",
+    "calendar": "تقويم",
+    "profile":"الملف الشخصي",
+    "staff":"الموظفين",
+    "meal": "وجبة",
+    "ingredients":"مكونات",
+    "santer":"على صحتك",
+    "soin":"اعتن بنفسك.",
+    "account_pages":"صفحات الحساب",
+    "pages":"صفحة",
+    "logout":"تسجيل خروج"
+    
+
+  }

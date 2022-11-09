@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { InputGroup } from 'react-bootstrap';
+import { BiPlusCircle } from 'react-icons/bi';
 import { GiEyedropper, GiOverdose, GiPill, GiSpoon, GiSyringe } from 'react-icons/gi'
 import { IoCalendarNumber } from 'react-icons/io5'
 import seniorService from '../../../services/senior.service';
@@ -9,9 +10,7 @@ export default function MedsTimeModal({myRef,medDialog,setMedDialog,senior,dates
     const [num,setNum] = useState([]);
     const [time,setTime] = useState([]);
 
-useEffect(() => {
-console.log(dates)
-}, [])
+
 
 useEffect(() => {
         if(medDialog){
@@ -28,23 +27,42 @@ useEffect(() => {
     const archiveAdd=()=>{
     
       dates.forEach((d)=>{
-        let archive = {
-          idArch: `arch-${senior.id}-${d}`,
-          senior: senior,
-          date: new Date(d).toISOString().split("T")[0],
-      }
+        let archive ;
+        seniorService.getArchiveById(`arch-${senior.id}-${d}`).then((res)=>{
+          console.log(res)
+          if (res.status==="200"){
+            archive =  {
+              idArch: `arch-${senior.id}-${d}`,
+              senior: senior,
+              date: new Date(d).toISOString().split("T")[0],
+              checkedBreakfast: res.data.checkedBreakfast,
+              checkedLunch: res.data.checkedLunch,
+              checkedDinner: res.data.checkedDinner,
+          } 
+         
+          }else{
+            
+             archive = {
+              idArch: `arch-${senior.id}-${d}`,
+              senior: senior,
+              date: new Date(d).toISOString().split("T")[0],
+             
+          }
+          
+          }
+          seniorService.addToArchive(archive).then(()=>{
+            seniorService.putMedsToArchive(archive.idArch,myRef.current.idmed,false);
+            newTimeDose(archive);
+          })
+        })
       
-      seniorService.addToArchive(archive).then(()=>{
-        seniorService.putMedsToArchive(archive.idArch,myRef.current.idmed,false);
-        newTimeDose(archive)
-     
-
-      })
+   
       
       })
       
     }
 
+  
 
     const newTimeDose = (archive) => {
       
@@ -57,10 +75,9 @@ useEffect(() => {
          rdose: num[index] 
         }
         
-     
+       
       seniorService.addMedicationDose(doseTime)
       .then(()=>{
-        console.log("doseTime  :  " , doseTime)
         setMedDialog(false)
       })
 
@@ -178,6 +195,8 @@ useEffect(() => {
                       </span></span>
                       <div className="d-flex flex-column mt-2" >
                         <span className="intro-2 mb-2"> <IoCalendarNumber /> <span className='ml-5'>{myRef.current.date}</span></span>
+                        <span className="intro-2 mb-2"> <IoCalendarNumber /> <span className='ml-5'>{myRef.current.startDate}</span></span>
+                        <span className="intro-2 mb-2"> <IoCalendarNumber /> <span className='ml-5'>{myRef.current.endDate}</span></span>
                         <span className="intro-2"><GiOverdose /> {myRef.current.dose} {myRef.current.doseType} </span>
                         Counter{counter}
                         Dose{num[0]}
@@ -187,13 +206,17 @@ useEffect(() => {
 
                         <label className=" m-2">
                           <div id="binCover">
-                            <input className="binCheckbox" type="button" 
+                            <input className="binCheckbox" type="button" id="checkbox" 
                             onClick={(e)=>{
                               e.preventDefault();
                               if (counter< myRef.current.dose){
                               setCounter(counter+1)}
                               }} 
                               />
+                               <div id="bin-icon" className='text-center mt-1'>
+                              <BiPlusCircle  size={40}/>
+                              </div>
+                              <div id="layer"></div>
                             
                           </div>
                           <span className="intro-2 text-uppercase text-white"> Add</span>

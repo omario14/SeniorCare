@@ -18,9 +18,8 @@ export default function MedsArch({ arch, myRef, socket, user }) {
   const [meds, setmeds] = useState([]);
   const [medDialog, setMedDialog] = useState(false);
   const [doseTimeState, setDoseTimeState] = useState([]);
-  const [counter, setCounter] = useState(1);
   useEffect(() => {
-  
+   
     seniorService.getMedsByArchive(arch.idArch)
       .then((res) => {
         setmeds(res.data.map((d) => {
@@ -71,27 +70,27 @@ export default function MedsArch({ arch, myRef, socket, user }) {
 
         <div key={index} className='medsCardBodyItem'
           onClick={() => {
-            setMedDialog(true);
+            
             myRef.current = med
-            console.log(myRef)
             seniorService.getDoseTimeByMed(med.archive.idArch,med.meds.idmed)
               .then((res) => {
                 setDoseTimeState(
                   res.data.map((d) => {
-
                     return {
                       id: d.id,
                       time: d.time,
                       rdose: d.rdose,
+                      reminded:d.reminded,
                       arch:d.arch,
-                      done: d.isDone,     
+                      done: d.taken,     
                     };
-          
+                   
                 
                
 
-              }))})
-              console.log(doseTimeState)
+              }))
+              })
+              setMedDialog(true);
           }}>
           <span className="timeline-step">
             <Badge
@@ -157,7 +156,7 @@ export default function MedsArch({ arch, myRef, socket, user }) {
         }} onClick={() => setMedDialog(false)}>
 
 
-          <div onClick={(e) => e.stopPropagation()} className="modal-dialog modal-lg">
+          <div onClick={(e) => e.stopPropagation()} className="modal-dialog modal-lg modal-drg">
             <div className="modal-content">
               <div className="modal-body-med">
                 <div className="text-right" > <i className="fa fa-close close" onClick={() => setMedDialog(false)}></i> </div>
@@ -240,14 +239,14 @@ export default function MedsArch({ arch, myRef, socket, user }) {
                       ))
 
                       }
-                      {/*<img src="../../../assets/img/images/medic1.png" width="300" alt='medic1' /> */}
+                     
 
                     </div>
                   </div>
-                  <div className="col-md-4 ">
-                    <div className="text-white mt-4 ms-5">
-                      <span className="intro-1">{total}  </span >
-                      <span className="intro-1">{myRef.current.meds.label}  <span >
+                  <div className="col-md-5 ">
+                    <div className="text-white mt-4 ms-1">
+                     
+                      <span className="intro-1 ">{myRef.current.meds.label}  <span >
                         {(() => {
                           switch (myRef.current.meds.doseType) {
                             case "PILL":
@@ -264,23 +263,17 @@ export default function MedsArch({ arch, myRef, socket, user }) {
                           }
                         })()}
                       </span></span>
-                      <div className="d-flex flex-column mt-2" >
+                      <div className="d-flex flex-column mt-7" >
                         <span className="intro-2 mb-2"> <IoCalendarNumber /> <span className='ml-5'>{myRef.current.archive.date}</span></span>
                         <span className="intro-2"><GiOverdose /> {myRef.current.meds.dose} {myRef.current.meds.doseType} </span>
-                        aaaaaaaa{counter}
+                       
                       </div>
                       <div className="d-flex flex-row mt-5 mb-4">
 
+                        
                         <label className=" m-2">
                           <div id="binCover">
-                            <input className="binCheckbox" type="button" onClick={(e) => { e.preventDefault(); setCounter(counter + 1) }} />
-
-                          </div>
-                          <span className="intro-2 text-uppercase text-white"> Add</span>
-                        </label>
-                        <label className=" m-2">
-                          <div id="binCover">
-                            <input className="binCheckbox" type="checkbox" id="checkbox" checked={myRef.current.isDone} />
+                            <input className="binCheckbox" type="checkbox" id="checkbox"  onClick={(e)=>{e.preventDefault();seniorService.removeArchMedByMedAndArch(myRef.current.meds.idmed,myRef.current.archive.idArch);setmeds(meds.filter(item => item.archmedpk !== myRef.current.archmedpk));setMedDialog(false)}}/>
                             <div id="bin-icon">
                               <div id="lid"></div>
                               <div id="box">
@@ -295,8 +288,8 @@ export default function MedsArch({ arch, myRef, socket, user }) {
                         </label>
 
                         <label className="toggleButton m-2">
-                          <div  >
-                            <input value={myRef.current.archmedpk} type="checkbox" checked={total===doseTimeState.length}  />
+                          <div>
+                            <input value={myRef.current.archmedpk} type="checkbox" checked={total===doseTimeState.length}  readOnly/>
                             <div>
                               <svg viewBox="0 0 44 44">
                                 <path d="M14,24 L21,31 L39.7428882,11.5937758 C35.2809627,6.53125861 30.0333333,4 24,4 C12.95,4 4,12.95 4,24 C4,35.05 12.95,44 24,44 C35.05,44 44,35.05 44,24 C44,19.3 42.5809627,15.1645919 39.7428882,11.5937758" transform="translate(-2.000000, -2.000000)"></path>

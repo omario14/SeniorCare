@@ -32,12 +32,13 @@ const languages = [
   },
 ];
 
-export default function SideBar({setTitle,socket}) {
+export default function SideBar({setTitle,socket,bg}) {
   const [showAccompagnantBoard, setShowAccompagnantBoard] = useState(false);
   const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [showChefBoard, setShowChefBoard] = useState(false);
   const { user: currentUser } = useSelector((state) => state.auth);
   const [notifications, setNotifications] = useState([]);
+  
 
   const currentLanguageCode = cookies.get("i18next") || "en";
   const currentLanguage = languages.find((l) => l.code === currentLanguageCode);
@@ -95,6 +96,7 @@ let className = 'g-sidenav-pinned';
 
 function toggleSidenav() {
   if (body.classList.contains(className)) {
+    body.classList.add(className);
     body.classList.remove(className);
     setTimeout(function() {
       sidenav.classList.remove("bg-white");
@@ -114,7 +116,7 @@ function toggleSidenav() {
     <div className="sideBar" >
        
       
-      <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 ps ps--active-y bg-white "
+      <aside className={"sidenav  navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 ps ps--active-y "+bg}
        
         id="sidenav-main"
       >
@@ -175,7 +177,8 @@ function toggleSidenav() {
                        
                    
             <NavLink to="/food" onClick={()=>{onButtonClick(`${t("food")}`);handleRead()}} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
-            <Badge color="warning" invisible={notifications.length>0  ? false:true}  variant="dot">
+              
+            <Badge className={notifications.length>0 ?"ping":""} style={notifications.length>0 ? {color:'#fd7e14'}:{}} invisible={notifications.length>0  ? false:true}  >
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                   
               
@@ -254,7 +257,7 @@ function toggleSidenav() {
             
             <li className="nav-item">
               
-            <NavLink  to="/" onClick={()=>onButtonClick('Home')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+            <NavLink  to="/" onClick={()=>onButtonClick(t("dashboard"))}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                  <div> <FaHome className="color-backgroundIcon" size="1.5em" /></div>
                 </div>
@@ -265,7 +268,7 @@ function toggleSidenav() {
             <li className="nav-item">
             
               
-              <NavLink to="/staff"  onClick={()=>onButtonClick('Senior')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+              <NavLink to="/staff"  onClick={()=>onButtonClick(t("staff"))}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 
                 <div><RiUser2Fill className="color-backgroundIcon" size="1.5em" /></div>
@@ -279,14 +282,7 @@ function toggleSidenav() {
               
             </li>     
           
-            <li className="nav-item">
-            <NavLink to="/calendar" onClick={()=>onButtonClick('Calendar')} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
-                <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                <div> <BiCalendar className="color-backgroundIcon" size="1.5em"/></div>
-                </div>
-                <span className="nav-link-text ms-1 text-uppercase">{t("calendar")}</span>
-            </NavLink>
-            </li>
+           
             <li className="nav-item mt-3">
               <h6 className="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">
               {t("account_pages")}
@@ -343,16 +339,7 @@ function toggleSidenav() {
           {showChefBoard && (
           <ul className="navbar-nav">
             
-            <li className="nav-item">
-              
-            <NavLink  to="/" onClick={()=>onButtonClick('Home')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
-                <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                 <div> <FaHome className="color-backgroundIcon" size="1.5em" /></div>
-                </div>
-                <span className="nav-link-text ms-1 text-uppercase">{t("dashboard")}</span>
-            </NavLink>
-              
-            </li>             
+                 
             <li className="nav-item">
             
               

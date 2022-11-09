@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import seniorService from '../../services/senior.service';
 import './home.css'
-import { Button, FormControl, FormHelperText, Grid, InputAdornment, ListItem, OutlinedInput, Stack } from '@mui/material';
+import { Button, FormControl, FormHelperText, InputAdornment, ListItem, OutlinedInput } from '@mui/material';
 import { GiBodyHeight, GiWeightScale } from 'react-icons/gi';
 const style = {
   position: 'absolute',
