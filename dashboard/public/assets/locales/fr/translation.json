@@ -37,6 +37,9 @@
         "lunch":"déjeuner",
         "dinner":"dîner"
       },
+      "staffPage":{
+        "user":"Utilisateur"
+      },
     "alerts":{
       "profile_update":"Vos informations sont à jour"  ,
       "senior_delete":"Senior a été supprimé avec succès",

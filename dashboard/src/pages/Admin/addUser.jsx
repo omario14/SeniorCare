@@ -52,15 +52,7 @@ const vmobile = (value) => {
 };
 
 
-const vpassword = (value) => {
-  if (value.length < 6 || value.length > 40) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        The password must be between 6 and 40 characters.
-      </div>
-    );
-  }
-};
+
 
 
 class Register extends Component {
@@ -71,7 +63,7 @@ class Register extends Component {
     this.onChangeLastName = this.onChangeLastName.bind(this);
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangeEmail = this.onChangeEmail.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
+    this.generatePassword = this.generatePassword.bind(this);
     this.onChangeRole = this.onChangeRole.bind(this);
     this.onChangeGender = this.onChangeGender.bind(this);
     this.onChangeMobile = this.onChangeMobile.bind(this);
@@ -91,6 +83,7 @@ class Register extends Component {
       selectedFile: null,
       picture: null,
       successful: false,
+      loading: false,
     };
   }
 
@@ -157,24 +150,61 @@ class Register extends Component {
     });
   }
 
-  onChangePassword(e) {
-    this.setState({
-      password: e.target.value,
-    });
+
+
+  /**************** generate password ****************/
+   generatePassword = () => {
+    
+   
+
+    let pass = ''
+    for (let i = 0; i < 16; i++) {
+      let choice = this.random(0, 2)
+      if ( choice === 0) {
+        pass += this.randomLower()
+      } else if (choice === 1) {
+        pass += this.randomUpper()
+      } else if ( choice === 2) {
+        pass += this.random(0, 9)
+      } else {
+        i--
+      }
+    }
+   console.log(pass,"pass")
+   return pass;
   }
+
+   random = (min = 0, max = 1) => {
+    return Math.floor(Math.random() * (max + 1 - min) + min)
+  }
+
+   randomLower = () => {
+    return String.fromCharCode(this.random(97, 122))
+  }
+
+   randomUpper = () => {
+    return String.fromCharCode(this.random(65, 90))
+  }
+
+   randomSymbol = () => {
+    const symbols = "~*$%@#^&!?*'-=/,.{}()[]<>"
+    return symbols[this.random(0, symbols.length - 1)]
+  }
+
+
 
   handleRegister(e) {
     e.preventDefault();
     // Create an object of formData
     const formData = new FormData();
-    const { isAddStaff,toastAddShow ,getAllUsers} = this.props;
+    const { isAddStaff, toastAddShow, getAllUsers } = this.props;
     // Update the formData object
     formData.append(
       "file",
       this.state.selectedFile,
     );
 
-
+    
     if (this.state.selectedFile) {
       seniorService.upload(formData).then(res => {
 
@@ -184,32 +214,35 @@ class Register extends Component {
       }).then(() => {
 
         this.setState({
+          loading: true,
           successful: false,
         });
 
         this.form.validateAll();
 
         if (this.checkBtn.context._errors.length === 0) {
-         
+
           this.props
             .dispatch(
 
-              register(this.state.name, this.state.lastName, this.state.username, this.state.email, this.state.password, this.state.mobile, this.state.gender, this.state.adress, this.state.picture, this.state.roleuser)
+              register(this.state.name, this.state.lastName, this.state.username, this.state.email,this.generatePassword(), this.state.mobile, this.state.gender, this.state.adress, this.state.picture, this.state.roleuser)
             )
             .then(() => {
+              getAllUsers();
+              isAddStaff();
               this.setState({
+                loading: false,
                 successful: true,
               });
-              
-              getAllUsers();
-              
+
+
             })
             .catch(() => {
               this.setState({
                 successful: false,
               });
             });
-           isAddStaff();
+
 
           toastAddShow();
         }
@@ -220,35 +253,41 @@ class Register extends Component {
 
       this.setState({
         successful: false,
+        loading: true 
       });
 
       this.form.validateAll();
 
       if (this.checkBtn.context._errors.length === 0) {
-        
+
         this.props
           .dispatch(
-            register(this.state.name, this.state.lastName, this.state.username, this.state.email, this.state.password, this.state.mobile, this.state.gender, this.state.adress, this.state.picture, this.state.roleuser)
+            register(this.state.name, this.state.lastName, this.state.username, this.state.email, this.generatePassword(), this.state.mobile, this.state.gender, this.state.adress, this.state.picture, this.state.roleuser)
           )
           .then(() => {
+           
+            getAllUsers();
+            isAddStaff();
             this.setState({
+              loading: false,
               successful: true,
             });
-            
-            getAllUsers();
-          
+
+
           })
           .catch(() => {
             this.setState({
               successful: false,
             });
           });
-          isAddStaff();
-          toastAddShow();
+
+
+
+        toastAddShow();
       }
     }
 
-   
+
 
   }
 
@@ -263,10 +302,10 @@ class Register extends Component {
     }
     return (
       <div className='sign'>
-        
+
 
         <section className="min-vh-100 mb-8 mt-4">
-      
+
           <div className="page-header mt-5  bg-gradient-dark opacity-9 align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg" style={{ backgroundImage: "url('../../../assets/img/curved-images/curved14.jpg')" }}>
 
             <div className="container ">
@@ -280,19 +319,19 @@ class Register extends Component {
             </div>
           </div>
           <div
-					style={{
-						position: "absolute",
-						top: "0px",
-						left: "28px",
-					}}
-				>
-					<ButtonGroup variant="text" aria-label="text button group">
-						<Button onClick={()=>this.props.isAddStaff()} >
-							<GiReturnArrow  /> &nbsp;&nbsp; Return
-						</Button>
+            style={{
+              position: "absolute",
+              top: "0px",
+              left: "28px",
+            }}
+          >
+            <ButtonGroup variant="text" aria-label="text button group">
+              <Button onClick={() => this.props.isAddStaff()} >
+                <GiReturnArrow /> &nbsp;&nbsp; Return
+              </Button>
 
-					</ButtonGroup>
-				</div>
+            </ButtonGroup>
+          </div>
           <div className="container">
             <div className="row mt-lg-n10 mt-md-n11 mt-n10">
               <div className="col-xl-6 col-lg-5 col-md-7 mx-auto">
@@ -359,28 +398,28 @@ class Register extends Component {
                               />
                             </div>
                             <div className="mb-3 " style={{ width: "45%" }}>
-                             
-                                <label htmlFor="gender">Gender</label>
-                                <div className="p-t-10">
-                                  <label className="radio-container m-r-45">Male
-                                    <input checked={this.state.gender === "male"}
-                                      onChange={this.onChangeGender}
-                                      type="radio"
-                                      value="male"
-                                      name='male' />
-                                    <span className="checkmark"></span>
-                                  </label>
-                                  <label className="radio-container">Female
-                                    <input
-                                      checked={this.state.gender === "female"}
-                                      onChange={this.onChangeGender}
-                                      type="radio"
-                                      value="female"
-                                      name="female" />
-                                    <span className="checkmark"></span>
-                                  </label>
-                                </div>
-                              
+
+                              <label htmlFor="gender">Gender</label>
+                              <div className="p-t-10">
+                                <label className="radio-container m-r-45">Male
+                                  <input checked={this.state.gender === "male"}
+                                    onChange={this.onChangeGender}
+                                    type="radio"
+                                    value="male"
+                                    name='male' />
+                                  <span className="checkmark"></span>
+                                </label>
+                                <label className="radio-container">Female
+                                  <input
+                                    checked={this.state.gender === "female"}
+                                    onChange={this.onChangeGender}
+                                    type="radio"
+                                    value="female"
+                                    name="female" />
+                                  <span className="checkmark"></span>
+                                </label>
+                              </div>
+
                             </div>
                           </div>
                           <div className="mb-3" >
@@ -392,6 +431,7 @@ class Register extends Component {
                               onChange={this.onChangeMobile}
                               validations={[required, vmobile]}
                             />
+                            
                           </div>
 
                           <div className="mb-3" >
@@ -406,9 +446,9 @@ class Register extends Component {
 
                             </select>
                           </div>
-                          <div style={{ display: "flex", justifyContent: "space-between" }}>
+                          
 
-                            <div className="mb-3" style={{ width: "45%" }}>
+                            <div className="mb-3">
                               <label htmlFor="email">Email<span className="text-primary">*</span></label>
                               <Input
                                 type="email"
@@ -416,22 +456,31 @@ class Register extends Component {
                                 value={this.state.email}
                                 onChange={this.onChangeEmail}
                                 validations={[required, email]}
+                                placeholder="exemple@gmail.com"
                               />
                             </div>
-                            <div className="mb-3" style={{ width: "45%" }}>
-                              <label htmlFor="password">Password</label>
-                              <Input
-                                type="text"
-                                className="form-control passwordStyle"
-                                value={this.state.password}
-                                onChange={this.onChangePassword}
-                                validations={[required, vpassword]}
-                              />
-                            </div>
-                          </div>
+                           
+                          
 
                           <div className="text-center">
-                            <button className="btn bg-gradient-dark w-100 my-4 mb-2">Add</button>
+                            
+                            <button className="btn bg-gradient-dark w-100 my-4 mb-2">{this.state.loading ?
+                              (
+                                <span className="spinner-border spinner-border-sm"></span>
+                              )
+
+                              :
+                              (
+                                <i
+                                  className="fa fa-plus-circle fadd "
+                                  style={{
+                                    position: "relative",
+                                    left: "-15px",
+                                    bottom: "-2px",
+                                  }}
+                                />
+                              )
+                            }Add</button>
                           </div>
                         </div>
                       )}

@@ -45,6 +45,9 @@ class UserService {
   removeNotification(id){
     return http.delete(`/delete-notification/${id}`, { headers: authHeader() })
   }
+
+
+ 
 }
 
 export default new UserService();

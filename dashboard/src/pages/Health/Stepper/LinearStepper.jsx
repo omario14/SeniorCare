@@ -203,19 +203,7 @@ const LinaerStepper = ({ onChangeStepperLoading }) => {
     });
 
 
-    useEffect(() => {
-        if (activeStep === steps.length) {
-            setTimeout(() => {
-                window.scrollTo({
-                    top: section.current.offsetTop,
-                    behavior: 'smooth',
-                });
-                handleConfirm();
-
-            }, 10000);
-
-        }
-    }, [activeStep])
+   
 
     const handleNext = () => {
         if (activeStep === 1 && methods.control._formValues.senior === null) {
@@ -272,6 +260,7 @@ const LinaerStepper = ({ onChangeStepperLoading }) => {
 
     }
     const handleConfirm = () => {
+       
         symptomsService.checkIllnes()
             .then((result) => {
                 const sorted = [...result.data].sort((a, b) => (
@@ -282,6 +271,11 @@ const LinaerStepper = ({ onChangeStepperLoading }) => {
                 setResults(sorted);
                 setButtonPrint(true);
             })
+            window.scrollTo({
+                top: section.current.offsetTop,
+                behavior: 'smooth',
+            });
+            
     }
 
     const toggleAccordion = (i) => {

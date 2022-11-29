@@ -67,27 +67,22 @@ class Staff extends Component {
         this.getAllUsers();
     }
 
+   
     getAllUsers = () => {
         this.setState({
             isSkeleton: true,
         })
-        seniorService.getFiles().then(response => {
 
-            this.setState({
-                fileInfo: response.data,
-                isSkeleton: false,
-            })
-
-
-        })
 
         userService.getAllUsers()
             .then((res) => {
                 this.setState({
                     users: res.data,
+                    isSkeleton: false,
                 })
 
             })
+            console.log(this.state.users,"stateusers")
     }
 
 
@@ -192,8 +187,10 @@ class Staff extends Component {
 
 
     ChangeisAddStaff = () => {
-
-        this.setState({ isAddStaff: true })
+     
+        this.setState({ 
+            isAddStaff: true 
+        })
     }
     toastAddShow = () => {
         this.setState({ toastAdd: true })
@@ -226,8 +223,9 @@ class Staff extends Component {
     };
 
     render() {
-        TabTitle('Staff');
-        const { user: currentUser } = this.props;
+       
+        const { user: currentUser,t,dir } = this.props;
+         TabTitle(t("staff"));
         if (!currentUser) {
 
             return <Navigate to="/notFound" />;
@@ -243,8 +241,8 @@ class Staff extends Component {
                             <div className="row">
                                 <div className="col-12">
                                     <div className="card mb-4">
-                                        <div className="card-header pb-0 tableBG" >
-                                            <div className="text-uppercase " ><h6 className="text-light ">Staff</h6></div>
+                                        <div className="card-header pb-0 tableBG" dir={dir}  >
+                                            <div className="text-uppercase " ><h6 className="text-light ">{t("staff")}</h6></div>
 
                                             <div style={{ display: "flex", paddingBottom: "10px" }}>
                                                 <div className="tableIcons" >
@@ -273,18 +271,18 @@ class Staff extends Component {
                                                                 #
                                                             </th>
                                                             <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                                User
+                                                            {t("staffPage.user")}
                                                             </th>
                                                             <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                                Username
+                                                            {t("profilePage.username")}
                                                             </th>
                                                             <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                                Email
+                                                            {t("profilePage.email")}
                                                             </th>
                                                             <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                                Role
+                                                            {t("profilePage.roles")}
                                                             </th>
-                                                            <th className="text-secondary opacity-7">Action</th>
+                                                            <th className="text-secondary opacity-7">{t("seniorPage.actions")}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody key="tbody">
@@ -382,13 +380,13 @@ class Staff extends Component {
                                                                             <td className="align-middle">
                                                                                 <div className="col-lg-6 col-5 my-auto text-end" >
                                                                                     <div className="dropdown float-lg-end ">
-                                                                                        <a className="cursor-pointer" href="#" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                        <a className="cursor-pointer" href="/#" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
                                                                                             <i className="fa fa-ellipsis-v text-secondary"></i>
                                                                                         </a>
-                                                                                        <ul className="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                                                                                            <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#" onClick={(e) => this.handleShow(user, true)}> Edit <MdEditNote /></a></li>
+                                                                                        <ul className="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable" dir={dir} >
+                                                                                            <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#/" onClick={(e) => this.handleShow(user, true)}> {t("seniorPage.edit")} <MdEditNote /></a></li>
 
-                                                                                            <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#" onClick={(e) => this.deleteSenior(user, e)}>Delete <IoTrashOutline />  </a></li>
+                                                                                            <li><a className="dropdown-item border-radius-md" style={{ color: "black" }} href="#/" onClick={(e) => this.deleteSenior(user, e)}>{t("seniorPage.delete")} <IoTrashOutline />  </a></li>
                                                                                         </ul>
                                                                                     </div>
                                                                                 </div>
@@ -427,7 +425,7 @@ class Staff extends Component {
                         </div>
                         :
                         <>
-                            <RegisterComponent toastAddShow={this.toastAddShow} getAllUsers={this.getAllUsers} isAddStaff={this.ChangeisAddStaff} />
+                            <RegisterComponent toastAddShow={this.toastAddShow} users={this.state.users} getAllUsers={this.getAllUsers} isAddStaff={this.ChangeisAddStaff} />
                         </>
                     }
 

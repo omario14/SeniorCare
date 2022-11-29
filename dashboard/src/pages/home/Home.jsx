@@ -45,14 +45,23 @@ class Home extends Component {
       countInterestsList: [],
       data: [],
       menu: [],
-      toggleConfig: false
+      toggleConfig: false,
+      loadingMenu:false,
 
 
     };
   }
 
   componentDidMount() {
-
+    this.setState({
+      loadingMenu:true
+    })
+    chefService.getAllMenus().then((result) => {
+      this.setState({
+        menu: result.data,
+        loadingMenu:false,
+      })
+    });
     seniorService.countInterests().then((res) => {
       this.setState({
         countInterestsList: res.data
@@ -70,11 +79,7 @@ class Home extends Component {
         seniorNumber: res.data,
       })
     })
-    chefService.getAllMenus().then((result) => {
-      this.setState({
-        menu: result.data,
-      })
-    });
+   
   }
 
   mapToObj = () => {
@@ -182,6 +187,7 @@ class Home extends Component {
                   <div className="card-body p-3">
                     <div className="row">
                       <div className="col-8">
+                      {!this.state.loadingMenu ?
                         <div className="numbers">
                           <p className="text-sm mb-0 text-capitalize font-weight-bold">Menus : {this.state.menu.length}</p>
                           <h5 className="font-weight-bolder mb-0">
@@ -209,7 +215,10 @@ class Home extends Component {
                             }
                             </NavLink>
                           </h5>
-                        </div>
+                          </div>
+                          :
+                          <span className="spinner-border spinner-border-sm"></span>
+                        }
                       </div>
                       <div className="col-4 text-end">
                         <div className="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">

@@ -40,7 +40,6 @@ class Ingredients extends Component {
             ingredients: [],
             label: "",
             description: "",
-            fileInfo: [],
             fileId: null,
             category: "s",
             addIngredients: true,
@@ -62,12 +61,6 @@ class Ingredients extends Component {
 
     getIngredients = () => {
         try {
-            seniorService.getFiles().then(response => {
-
-                this.setState({
-                    fileInfo: response.data,
-                })
-            })
 
             chefService.getAllIngCategory()
                 .then(res => {

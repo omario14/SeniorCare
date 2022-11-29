@@ -39,6 +39,9 @@
   
   
 }, 
+"staffPage":{
+  "user":"مستخدم"
+},
 "alerts":{
   "profile_update":" تم تحديث معلوماتك الخاصة بنجاح " ,
   "senior_delete":"تم حذف المسن بنجاح"  ,

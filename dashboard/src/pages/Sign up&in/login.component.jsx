@@ -77,7 +77,7 @@ class Login extends Component {
     TabTitle('Login');
     const { isLoggedIn, message } = this.props;
     if (isLoggedIn) {
-      return <Navigate  to="/" />;
+      return <Navigate  to="/profile" />;
     }
 
     return (

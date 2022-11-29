@@ -37,6 +37,9 @@
     "lunch":"lunch",
     "dinner":"dinner"
   },
+  "staffPage":{
+    "user":"User"
+  },
   "alerts":{
     "profile_update":"Your informations are up to date " ,
     "senior_delete":"Senior is deleted successfully" ,

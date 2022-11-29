@@ -50,7 +50,7 @@ export default function SideBar({setTitle,socket,bg}) {
         
         if (socket) {
             socket.on("getNotification", (data) => {
-              console.log(data.type,"type")
+             
               if (data.type==="Menu"){
                 setNotifications((prev) => [...prev, data]);
               }
@@ -255,16 +255,7 @@ function toggleSidenav() {
           {showAdminBoard && (
           <ul className="navbar-nav">
             
-            <li className="nav-item">
-              
-            <NavLink  to="/" onClick={()=>onButtonClick(t("dashboard"))}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
-                <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                 <div> <FaHome className="color-backgroundIcon" size="1.5em" /></div>
-                </div>
-                <span className="nav-link-text ms-1 text-uppercase">{t("dashboard")}</span>
-            </NavLink>
-              
-            </li>             
+                 
             <li className="nav-item">
             
               
@@ -289,7 +280,7 @@ function toggleSidenav() {
               </h6>
             </li>
             <li className="nav-item">
-            <NavLink to="/profile" onClick={()=>onButtonClick('Profile')} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+            <NavLink to="/profile" onClick={()=>onButtonClick(`${t("profile")}`)} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                   <svg
                     width="12px"
@@ -343,7 +334,7 @@ function toggleSidenav() {
             <li className="nav-item">
             
               
-              <NavLink to="/meal"  onClick={()=>onButtonClick('Meal')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+              <NavLink to="/meal"  onClick={()=>onButtonClick(t("meal"))}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                 
                 <div><GiMeal className="color-backgroundIcon" size="1.5em" /></div>
@@ -359,7 +350,7 @@ function toggleSidenav() {
             <li className="nav-item">
             
               
-            <NavLink to="/ingredients"  onClick={()=>onButtonClick('Ingredients')}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+            <NavLink to="/ingredients"  onClick={()=>onButtonClick(t("ingredients"))}  className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
               <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               
               <div><GiMeatCleaver className="color-backgroundIcon" size="1.5em" /></div>
@@ -380,7 +371,7 @@ function toggleSidenav() {
               </h6>
             </li>
             <li className="nav-item">
-            <NavLink to="/profile" onClick={()=>onButtonClick('Profile')} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
+            <NavLink to="/profile" onClick={()=>onButtonClick(t("profile"))} className={({isActive}) => (isActive ? "nav-link active" : 'nav-link')}>
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                   <svg
                     width="12px"

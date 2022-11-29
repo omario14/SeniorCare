@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import CalendarContent from './CalendarContent';
-import CalendarState, { CalendarContext } from "./context/CalendarContext";
+import  { CalendarContext } from "./context/CalendarContext";
 import Header from './Header';
 import TaskForm from './TaskForm';
 import "./Calendar.css"

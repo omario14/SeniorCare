@@ -28,7 +28,7 @@
         "icons/128x128.png",
         "icons/128x128@2x.png",
         "icons/icon.icns",
-        "icons/seniguardLogo.ico"
+        "icons/SeniguardLogoIcon.ico"
       ],
       "identifier": "com.tauri.dev",
       "longDescription": "",

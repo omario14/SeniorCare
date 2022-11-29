@@ -685,7 +685,7 @@ class Profile extends Component {
                     <div className="card-body pt-4 p-3" >
                       <ul className="list-group" style={{ maxHeight: "550px", overflow: "auto" }}>
                         {this.state.notifications && this.state.notifications.sort((a, b) =>
-                          a.type < b.type ? 1 : -1).map((notif, index) => (
+                          a.date < b.date ? 1 : -1).map((notif, index) => (
                             <li
                               key={index}
                               className="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg"

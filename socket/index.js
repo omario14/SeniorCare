@@ -65,7 +65,9 @@ io.on("connection", (socket) => {
     if (receiver){
 
     receiver.map((rec)=>{
+      var sid= rec.socketId;
       io.to(rec.socketId).emit("getNotification",{
+         sid,
          senderName,
          content,
          time,

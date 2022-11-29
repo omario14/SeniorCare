@@ -5,6 +5,7 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   SET_MESSAGE,
+  CLEAR_MESSAGE,
 } from "./types";
 
 import AuthService from "../services/auth.service";
@@ -23,7 +24,7 @@ export const register = (name,lastName,username, email, password,mobile,gender,a
         type: SET_MESSAGE,
         payload: response.data.message,
       });
-
+   
       return Promise.resolve();
     },
     (error) => {
@@ -45,7 +46,12 @@ export const register = (name,lastName,username, email, password,mobile,gender,a
 
       return Promise.reject();
     }
-  );
+  ).then(()=>{
+    dispatch({
+      type: CLEAR_MESSAGE,
+    });
+  
+  })
 }; 
 
 export const login = (username, password) => (dispatch) => {

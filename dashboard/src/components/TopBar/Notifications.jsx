@@ -55,8 +55,8 @@ export default function Notifications({ socket }) {
             >
                 {notifications.length>0 ? (
                     <>
-                    {notifications.filter((item)=>item.sid===socket.id).map((n) => (
-                    <li className="mb-2">
+                    {notifications.filter((item)=>item.sid===socket.id).map((n,ind) => (
+                    <li className="mb-2" key={ind}>
                         <NavLink to={n.type==="Menu" && "/food"}
                             className="dropdown-item border-radius-md"
                             

@@ -6,10 +6,8 @@ import chefService from "../../services/chef.service";
 import Filter from "./FilterActions";
 import Pagination from "./Pagination";
 import { SiJusteat } from "react-icons/si";
-import { MdOutlineExpandLess, MdOutlineExpandMore } from "react-icons/md";
 import '../Food/Food.css'
 import '../Food/Food.scss'
-import { IoTrashOutline } from "react-icons/io5";
 function MealCard(props) {
     const [loading, setLoading] = useState(false);
     const [meals, setMeals] = useState([]);
@@ -22,12 +20,12 @@ function MealCard(props) {
 
     const retrieveMeals = () => {
         try {
-            setLoading(false);
+            setLoading(true);
             chefService.getAllMeals().then((result) => {
                 setMeals(result.data);
             });
 
-            setLoading(true);
+            setLoading(false);
         } catch (e) {
             console.log(e);
         }
@@ -102,9 +100,10 @@ function MealCard(props) {
                                 <div
                                     className="rowIng menu-container"
                                     data-aos="fade-up"
-                                    data-aos-delay="200"
+                                    data-aos-delay="200" 
                                 >
-                                    {filtered.length !== 0 ? (
+                                     {!loading ? (
+                                    filtered.length !== 0 ? (
                                         <div className="container-fluid py-4">
                                             {currentFiltered
                                                 .filter((meal) => {
@@ -179,7 +178,6 @@ function MealCard(props) {
                                         </div>
                                     ) : (
                                         <>
-                                            {loading ? (
                                                 <div className="container-fluid py-4">
                                                     {currentMeals
                                                         .filter((meal) => {
@@ -252,7 +250,9 @@ function MealCard(props) {
                                                         paginate={paginate}
                                                     />
                                                 </div>
-                                            ) : (
+                                                </>
+                                            )) : (
+                                                <div className="container-fluid py-4">
                                                 <div className="mt-5">
                                                     <ul className="o-vertical-spacing o-vertical-spacing--l">
                                                         <li className="blog-post o-media">
@@ -383,8 +383,9 @@ function MealCard(props) {
                                                         </li>
                                                     </ul>
                                                 </div>
-                                            )}
-                                        </>
+                                                </div>
+                                            
+                                       
                                     )}
                                 </div>
                             </div>
